@@ -29,7 +29,7 @@
             android:value="@string/facebook_app_id"
             tools:replace="android:value" />
 
-        <activity android:name=".authentication.Authentication">
+        <activity android:name=".authentication.AuthenticationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

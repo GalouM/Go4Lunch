@@ -3,6 +3,11 @@ package com.galou.go4lunch.authentication;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,31 +17,39 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.galou.go4lunch.Main.MainActivity;
 import com.galou.go4lunch.R;
+import com.galou.go4lunch.util.SnackBarUtil;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Arrays;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
-public class Authentication extends AppCompatActivity {
+public class AuthenticationActivity extends AppCompatActivity implements AuthentificationNavigator {
 
-    @BindView(R.id.auth_activity_root_view) CoordinatorLayout rootView;
+    private AuthentificationViewModel viewModel;
 
     public static final int RC_SIGN_IN = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_authentication);
-        ButterKnife.bind(this);
+        ViewDataBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_authentication);
         startSignInActivity();
+        viewModel = obtainViewModel();
+        setupSnackBar();
+        setupOpenMainActivity();
+    }
+
+    private AuthentificationViewModel obtainViewModel(){
+        return ViewModelProviders.of(this)
+                .get(AuthentificationViewModel.class);
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        this.handleResponseAfterSignIn(requestCode, resultCode, data);
+        IdpResponse response = IdpResponse.fromResultIntent(data);
+        viewModel.handleResponseAfterSignIn(requestCode, resultCode, response);
     }
 
     private void startSignInActivity(){
@@ -54,31 +67,22 @@ public class Authentication extends AppCompatActivity {
         .build(), RC_SIGN_IN);
     }
 
-    private void handleResponseAfterSignIn(int requestCode, int resultCode, Intent data) {
-        IdpResponse response = IdpResponse.fromResultIntent(data);
-
-        if (requestCode == RC_SIGN_IN) {
-            if (resultCode == RESULT_OK) { // SUCCESS
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-            } else { // ERRORS
-                if (response == null) {
-                    showSnackBar(rootView, getString(R.string.error_authentication_canceled));
-                } else if (response.getErrorCode() == ErrorCodes.NO_NETWORK) {
-                    showSnackBar(rootView, getString(R.string.error_no_internet));
-                } else if (response.getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
-                    showSnackBar(rootView, getString(R.string.error_unknown_error));
-                }
+    private void setupSnackBar(){
+        viewModel.getSnackBarMessage().observe(this, message -> {
+            if(message != null){
+                SnackBarUtil.showSnackBar(getWindow().getDecorView().getRootView(), getString(message));
             }
-        }
-    }
-
-    private void showSnackBar(CoordinatorLayout rootView, String message){
-        Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT).show();
+        });
 
     }
 
+    private void setupOpenMainActivity(){
+        viewModel.getOpenNewActivityEvent().observe(this, openActivity -> openMainActivity());
+    }
 
-
-
+    @Override
+    public void openMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
 }
