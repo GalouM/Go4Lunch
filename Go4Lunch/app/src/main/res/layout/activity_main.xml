@@ -15,19 +15,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-    <include
-        layout="@layout/toolbar"
-        android:layout_height="wrap_content"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_alignParentTop="true"/>
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_toolbar">
+
+        <include
+            layout="@layout/toolbar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" />
+    </LinearLayout>
 
 
     <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottom_nav"/>
+        android:layout_above="@id/bottom_nav"
+        android:layout_below="@id/layout_toolbar"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
@@ -41,6 +46,7 @@
         android:layout_alignParentBottom="true" />
 
 </RelativeLayout>
+
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/main_activity_nav_view"
         android:layout_width="wrap_content"

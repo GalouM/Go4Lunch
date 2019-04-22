@@ -73,6 +73,7 @@ dependencies {
 
     // TWITTER LOGIN SUPPORT
     implementation 'com.twitter.sdk.android:twitter-core:3.3.0'
+    implementation 'com.twitter.sdk.android:twitter:3.0.0'
 
     //BUTTERKNIFE
     implementation 'com.jakewharton:butterknife:10.1.0'

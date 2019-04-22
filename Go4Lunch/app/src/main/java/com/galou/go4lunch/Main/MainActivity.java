@@ -3,13 +3,18 @@ package com.galou.go4lunch.Main;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.galou.go4lunch.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -20,29 +25,30 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    @BindView(R.id.bottom_nav) BottomNavigationView bottomNavigationView;
-    @BindView(R.id.main_activity_drawer) DrawerLayout drawerLayout;
-    @BindView(R.id.main_activity_nav_view) NavigationView navigationView;
-    @BindView(R.id.toolbar) Toolbar toolbar;
+    private BottomNavigationView bottomNavigationView;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        this.configureToolbar();
         this.configureBottomView();
         this.configureAndShowFirstFragment();
-        this.configureToolbar();
         this.configureDrawerLayout();
         this.configureNavigationView();
     }
 
     private void configureToolbar(){
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
     }
 
     private void configureDrawerLayout(){
+        drawerLayout = (DrawerLayout) findViewById(R.id.main_activity_drawer);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
@@ -51,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void configureNavigationView(){
+        navigationView = (NavigationView) findViewById(R.id.main_activity_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -64,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void configureBottomView() {
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> updateMainFragment(item.getItemId()));
     }
 
@@ -115,5 +123,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_activity_menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.menu_main_activity_search);
+        SearchManager searchManager = (SearchManager) MainActivity.this.getSystemService(Context.SEARCH_SERVICE);
+
+        SearchView searchView = null;
+        if(searchItem != null){
+            searchView = (SearchView) searchItem.getActionView();
+        }
+        if(searchView != null){
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(MainActivity.this.getComponentName()));
+        }
+        return true;
+    }
+
 
 }

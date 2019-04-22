@@ -12,7 +12,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Main.MainActivity"></activity>
+        <activity android:name=".Main.MainActivity"
+            android:label="@string/title_toolbar"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
