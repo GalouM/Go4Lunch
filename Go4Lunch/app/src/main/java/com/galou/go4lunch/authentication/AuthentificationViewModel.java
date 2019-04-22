@@ -1,14 +1,11 @@
 package com.galou.go4lunch.authentication;
 
-import android.content.Intent;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
-import com.galou.go4lunch.Main.MainActivity;
 import com.galou.go4lunch.R;
 
 import static android.app.Activity.RESULT_OK;
