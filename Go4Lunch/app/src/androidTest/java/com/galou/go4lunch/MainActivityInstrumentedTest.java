@@ -10,6 +10,7 @@ import android.view.Gravity;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.contrib.DrawerActions;
+import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import androidx.test.rule.ActivityTestRule;
@@ -30,6 +31,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static com.galou.go4lunch.BottomNavigationItemViewMatcher.withIsChecked;
 import static com.galou.go4lunch.BottomNavigationItemViewMatcher.withTitle;
+import static org.hamcrest.CoreMatchers.not;
 
 @RunWith(AndroidJUnit4ClassRunner.class)
 public class MainActivityInstrumentedTest {
@@ -51,6 +53,15 @@ public class MainActivityInstrumentedTest {
                 .perform(DrawerActions.open());
         onView(isRoot()).perform(ViewActions.pressBack());
         onView(withId(R.id.main_activity_drawer)).check(matches(isClosed(Gravity.LEFT)));
+    }
+
+    @Test
+    public void clickItemNavDrawer_closeDrawer(){
+        onView(withId(R.id.main_activity_drawer)).check(matches(isClosed(Gravity.LEFT)))
+                .perform(DrawerActions.open());
+        onView(withId(R.id.main_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.main_activity_drawer_lunch));
+        //onView(withId(R.id.main_activity_nav_view)).check(matches(not(isDisplayed())));
+
     }
 
     @Test
@@ -102,4 +113,5 @@ public class MainActivityInstrumentedTest {
         onView(withId(R.id.action_chat)).perform(click());
         onView(withId(R.id.chat_view)).check(matches(isDisplayed()));
     }
+
 }
