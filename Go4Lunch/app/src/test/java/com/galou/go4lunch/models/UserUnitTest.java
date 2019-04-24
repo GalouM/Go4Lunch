@@ -24,7 +24,7 @@ public class UserUnitTest {
         uid = "12345";
         photoUrl = "http://photo";
         restaurant = new Restaurant();
-        user = new User(uid, name, photoUrl, restaurant);
+        user = new User(uid, name, photoUrl);
     }
 
     @Test
@@ -32,7 +32,6 @@ public class UserUnitTest {
         assertEquals(uid, user.getUid());
         assertEquals(name, user.getUsername());
         assertEquals(photoUrl, user.getUrlPicture());
-        assertEquals(restaurant, user.getRestaurantPicked());
     }
 
     @Test
@@ -40,16 +39,15 @@ public class UserUnitTest {
         String newName = "Michel Jean";
         String newUid = "4321";
         String newPhotoUrl = "http://newphoto";
-        Restaurant newRestaurant = new Restaurant();
         user.setUsername(newName);
-        user.setRestaurantPicked(newRestaurant);
+        user.setRestaurantPicked(restaurant);
         user.setUid(newUid);
         user.setUrlPicture(newPhotoUrl);
 
         assertEquals(newUid, user.getUid());
         assertEquals(newName, user.getUsername());
         assertEquals(newPhotoUrl, user.getUrlPicture());
-        assertEquals(newRestaurant, user.getRestaurantPicked());
+        assertEquals(restaurant, user.getRestaurantPicked());
     }
 
 }

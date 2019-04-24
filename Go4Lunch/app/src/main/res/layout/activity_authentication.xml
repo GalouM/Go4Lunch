@@ -5,7 +5,7 @@
         <import type="androidx.core.content.ContextCompat" />
         <variable
             name="viewmodel"
-            type="com.galou.go4lunch.authentication.AuthentificationViewModel" />
+            type="com.galou.go4lunch.authentication.AuthenticationViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

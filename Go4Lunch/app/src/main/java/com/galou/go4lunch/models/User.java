@@ -14,11 +14,10 @@ public class User {
 
     public User(){}
 
-    public User(String uid, String username, @Nullable String urlPicture, @Nullable Restaurant restaurantPicked) {
+    public User(String uid, String username, @Nullable String urlPicture) {
         this.uid = uid;
         this.username = username;
         this.urlPicture = urlPicture;
-        this.restaurantPicked = restaurantPicked;
     }
 
     //-----------

@@ -18,9 +18,9 @@ import com.galou.go4lunch.util.SnackBarUtil;
 import java.util.Arrays;
 
 
-public class AuthenticationActivity extends AppCompatActivity implements AuthentificationNavigator {
+public class AuthenticationActivity extends AppCompatActivity implements AuthenticationNavigator {
 
-    private AuthentificationViewModel viewModel;
+    private AuthenticationViewModel viewModel;
 
     public static final int RC_SIGN_IN = 123;
 
@@ -28,15 +28,17 @@ public class AuthenticationActivity extends AppCompatActivity implements Authent
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ViewDataBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_authentication);
-        startSignInActivity();
         viewModel = obtainViewModel();
-        setupSnackBar();
         setupOpenMainActivity();
+        setupOpenSignInActivity();
+        setupSnackBar();
+        viewModel.checkIfUserIsLogged();
+
     }
 
-    private AuthentificationViewModel obtainViewModel(){
+    private AuthenticationViewModel obtainViewModel(){
         return ViewModelProviders.of(this)
-                .get(AuthentificationViewModel.class);
+                .get(AuthenticationViewModel.class);
 
     }
 
@@ -47,20 +49,7 @@ public class AuthenticationActivity extends AppCompatActivity implements Authent
         viewModel.handleResponseAfterSignIn(requestCode, resultCode, response);
     }
 
-    private void startSignInActivity(){
-        startActivityForResult(AuthUI.getInstance()
-        .createSignInIntentBuilder()
-        .setTheme(R.style.LoginTheme)
-        .setAvailableProviders(
-                Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                        new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
-                        new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build(),
-                        new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build())
-        )
-        .setIsSmartLockEnabled(false, true)
-        .setLogo(R.drawable.go4lunch_icon)
-        .build(), RC_SIGN_IN);
-    }
+
 
     private void setupSnackBar(){
         viewModel.getSnackBarMessage().observe(this, message -> {
@@ -75,9 +64,29 @@ public class AuthenticationActivity extends AppCompatActivity implements Authent
         viewModel.getOpenNewActivityEvent().observe(this, openActivity -> openMainActivity());
     }
 
+    private void setupOpenSignInActivity(){
+        viewModel.getOpenSignInActivityEvent().observe(this, openSignIn -> startSignInActivity());
+    }
+
     @Override
     public void openMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void startSignInActivity(){
+        startActivityForResult(AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setTheme(R.style.LoginTheme)
+                .setAvailableProviders(
+                        Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
+                                new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build(),
+                                new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build())
+                )
+                .setIsSmartLockEnabled(false, true)
+                .setLogo(R.drawable.go4lunch_icon)
+                .build(), RC_SIGN_IN);
     }
 }
