@@ -31,6 +31,7 @@
     <string name="drawer_menu_logout">LOGOUT</string>
     <string name="title_toolbar">I\'m Hungry</string>
     <string name="search_hint">Search Restaurants</string>
+    <string name="logged_out_success">User logged out</string>
 
     <!-- NEW -->
 

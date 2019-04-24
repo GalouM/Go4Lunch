@@ -14,17 +14,22 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 
+import com.firebase.ui.auth.AuthUI;
 import com.galou.go4lunch.R;
+import com.galou.go4lunch.util.SnackBarUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainActivityContract {
 
     private BottomNavigationView bottomNavigationView;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private Toolbar toolbar;
+
+    private MainActivityViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +40,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.configureAndShowFirstFragment();
         this.configureDrawerLayout();
         this.configureNavigationView();
+        viewModel = obtainViewModel();
+        setupSnackBar();
+        setupLogoutRequest();
+    }
+
+    private MainActivityViewModel obtainViewModel() {
+        return ViewModelProviders.of(this)
+                .get(MainActivityViewModel.class);
     }
 
     private void configureToolbar(){
@@ -116,6 +129,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
+        switch (id){
+            case R.id.main_activity_drawer_logout:
+                viewModel.logoutUserFromApp();
+                break;
+        }
         this.drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -137,5 +155,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    private void setupSnackBar(){
+        viewModel.getSnackBarMessage().observe(this, message -> {
+            if(message != null){
+                SnackBarUtil.showSnackBar(getWindow().getDecorView().getRootView(), getString(message));
+            }
+        });
+
+    }
+
+    private void setupLogoutRequest(){
+        viewModel.getLogout().observe(this, logout -> logoutUser());
+    }
+
+    @Override
+    public void logoutUser() {
+        AuthUI.getInstance()
+                .signOut(this);
+        this.finish();
+
+    }
 
 }

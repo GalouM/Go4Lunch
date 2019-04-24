@@ -14,6 +14,7 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.api.UserHelper;
+import com.galou.go4lunch.base.BaseViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,17 +25,12 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 /**
  * Created by galou on 2019-04-22
  */
-public class AuthenticationViewModel extends ViewModel {
+public class AuthenticationViewModel extends BaseViewModel {
 
-    private final MutableLiveData<Integer> snackBarText = new MutableLiveData<>();
     private final MutableLiveData<Object> openNewActivityEvent = new MutableLiveData<>();
     private final MutableLiveData<Object> openSignInActivityEvent = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> isUserLogged = new MutableLiveData<>();
 
     // LiveData getters
-    public LiveData<Integer> getSnackBarMessage(){
-        return snackBarText;
-    }
 
     public LiveData<Object> getOpenNewActivityEvent() {
         return openNewActivityEvent;
@@ -42,11 +38,6 @@ public class AuthenticationViewModel extends ViewModel {
 
     public LiveData<Object> getOpenSignInActivityEvent() {
         return openSignInActivityEvent;
-    }
-
-    public LiveData<Boolean> getIsUserLogged(){
-        isUserLogged.setValue(isCurrentUserLogged());
-        return isUserLogged;
     }
 
 
@@ -88,24 +79,5 @@ public class AuthenticationViewModel extends ViewModel {
 
     }
 
-    // --------------------
-    // UTILS
-    // --------------------
-
-    @Nullable
-    private FirebaseUser getCurrentUser(){
-        return FirebaseAuth.getInstance().getCurrentUser();
-    }
-
-    private Boolean isCurrentUserLogged(){
-        return (this.getCurrentUser() != null);
-    }
-
-    // --------------------
-    // ERROR HANDLER
-    // --------------------
-    private OnFailureListener onFailureListener(){
-        return e -> snackBarText.setValue(R.string.error_unknown_error);
-    }
 
 }

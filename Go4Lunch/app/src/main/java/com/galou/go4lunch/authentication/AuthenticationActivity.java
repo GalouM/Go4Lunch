@@ -32,8 +32,13 @@ public class AuthenticationActivity extends AppCompatActivity implements Authent
         setupOpenMainActivity();
         setupOpenSignInActivity();
         setupSnackBar();
-        viewModel.checkIfUserIsLogged();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        viewModel.checkIfUserIsLogged();
     }
 
     private AuthenticationViewModel obtainViewModel(){
