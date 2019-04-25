@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <import type="android.view.View" />
+
         <variable
-            name="user"
-            type="com.google.firebase.auth.FirebaseUser" />
+            name="viewmodel"
+            type="com.galou.go4lunch.main.MainActivityViewModel" />
 
     </data>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -19,9 +19,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
-        android:textColor="@color/colorTextPrimary"
-        android:textSize="30sp"
-        android:textStyle="bold"/>
+        android:textSize="@dimen/nave_header_title_size"
+        android:textStyle="bold"
+        android:layout_margin="@dimen/small_margin"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,9 +29,10 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="@dimen/small_margin"/>
+            android:layout_width="@dimen/nav_header_image_user_size"
+            android:layout_height="@dimen/nav_header_image_user_size"
+            android:layout_margin="@dimen/small_margin"
+            app:imageUrl="@{viewmodel.urlPicture}"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,16 +42,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{user.displayName}"
-                android:textColor="@color/colorTextPrimary"
+                android:text="@{viewmodel.username}"
                 android:textStyle="bold"
-                android:textSize="20sp"/>
+                android:textSize="@dimen/nav_header_username_size"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{user.email}"
-                android:textColor="@color/colorTextPrimary"
-                android:textSize="15sp"/>
+                android:text="@{viewmodel.email}"
+                android:textSize="@dimen/nav_header_email_size"/>
         </LinearLayout>
 
     </LinearLayout>

@@ -15,7 +15,7 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import androidx.test.rule.ActivityTestRule;
 
-import com.galou.go4lunch.Main.MainActivity;
+import com.galou.go4lunch.main.MainActivity;
 
 import org.junit.Before;
 import org.junit.Rule;

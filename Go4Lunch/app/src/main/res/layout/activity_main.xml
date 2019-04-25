@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
     <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="viewmodel"
+            type="com.galou.go4lunch.main.MainActivityViewModel" />
 
     </data>
 <androidx.drawerlayout.widget.DrawerLayout

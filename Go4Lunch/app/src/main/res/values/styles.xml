@@ -6,6 +6,11 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textViewStyle">@style/Go4LunchText</item>
+    </style>
+
+    <style name="Go4LunchText" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/colorTextPrimary</item>
     </style>
 
     <!-- TOOLBAR THEME -->

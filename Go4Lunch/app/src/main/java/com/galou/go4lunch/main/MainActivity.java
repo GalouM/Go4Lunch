@@ -1,4 +1,4 @@
-package com.galou.go4lunch.Main;
+package com.galou.go4lunch.main;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private Toolbar toolbar;
-    private FirebaseUser user;
     private ActivityMainBinding binding;
 
     private MainActivityViewModel viewModel;
@@ -46,18 +45,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        viewModel = obtainViewModel();
+        binding.setViewmodel(viewModel);
+        binding.setLifecycleOwner(this);
         this.configureToolbar();
         this.configureBottomView();
         this.configureAndShowFirstFragment();
         this.configureDrawerLayout();
         this.configureNavigationView();
-        viewModel = obtainViewModel();
+
         setupSnackBar();
         setupLogoutRequest();
-
-        viewModel.setLoggedUser();
-        setupLoggedUser();
-
+        viewModel.onUserLogged();
 
 
     }
@@ -86,6 +85,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = binding.navigationView;
         MainActivityNavHeaderBinding navHeaderBinding = DataBindingUtil.inflate(getLayoutInflater(),
                 R.layout.main_activity_nav_header, navigationView, false);
+        navHeaderBinding.setViewmodel(viewModel);
+        navHeaderBinding.setLifecycleOwner(this);
         binding.navigationView.addHeaderView(navHeaderBinding.getRoot());
         navigationView.setNavigationItemSelectedListener(this);
     }
@@ -200,12 +201,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void setupLogoutRequest(){
         viewModel.getLogout().observe(this, logout -> logoutUser());
     }
-
-    private void setupLoggedUser(){
-        viewModel.getLoggedUser().observe(this, userLogged -> user = userLogged);
-        //Log.e("tag", this.user.getDisplayName());
-    }
-
 
     @Override
     public void logoutUser() {

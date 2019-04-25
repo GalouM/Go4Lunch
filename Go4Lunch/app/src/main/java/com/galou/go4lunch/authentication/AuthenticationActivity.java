@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
-import com.galou.go4lunch.Main.MainActivity;
+import com.galou.go4lunch.main.MainActivity;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.util.SnackBarUtil;
 
