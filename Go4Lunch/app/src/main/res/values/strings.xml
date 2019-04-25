@@ -34,6 +34,11 @@
 
     <!-- TOOLBAR SEARCH HINT -->
     <string name="search_hint">Search Restaurants</string>
+    <string name="settings_update_user_information">Update user information</string>
+    <string name="settings_delete_account">Delete account</string>
+    <string name="settings_enable_notifications">Enable notifications</string>
+    <string name="settings_email_address">Email address</string>
+    <string name="settings_username">Username</string>
 
 
     <!-- NEW -->

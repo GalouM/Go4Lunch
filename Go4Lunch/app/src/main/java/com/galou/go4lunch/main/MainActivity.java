@@ -2,6 +2,7 @@ package com.galou.go4lunch.main;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +25,7 @@ import com.galou.go4lunch.R;
 import com.galou.go4lunch.chat.ChatFragment;
 import com.galou.go4lunch.databinding.ActivityMainBinding;
 import com.galou.go4lunch.databinding.MainActivityNavHeaderBinding;
+import com.galou.go4lunch.settings.SettingsActivity;
 import com.galou.go4lunch.util.SnackBarUtil;
 import com.galou.go4lunch.workmates.WorkmatesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         setupSnackBar();
         setupLogoutRequest();
+        setupSettingsRequest();
         viewModel.onUserLogged();
 
 
@@ -153,6 +156,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         switch (id){
+            case R.id.main_activity_drawer_settings:
+                viewModel.openSettings();
+                break;
             case R.id.main_activity_drawer_logout:
                 viewModel.logoutUserFromApp();
                 break;
@@ -183,8 +189,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-
-
     private void setupSnackBar(){
         viewModel.getSnackBarMessage().observe(this, message -> {
             if(message != null){
@@ -194,9 +198,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-
     private void setupLogoutRequest(){
         viewModel.getLogout().observe(this, logout -> logoutUser());
+    }
+
+    private void setupSettingsRequest(){
+        viewModel.getSettings().observe(this, settings -> settings());
     }
 
     @Override
@@ -207,7 +214,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    @Override
+    public void settings() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
 
-
+    }
 }
 

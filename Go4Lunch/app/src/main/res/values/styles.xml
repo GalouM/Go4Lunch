@@ -7,10 +7,18 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textViewStyle">@style/Go4LunchText</item>
+        <item name="android:buttonStyle">@style/Go4LunchButton</item>
     </style>
 
+    <!-- DEFAULT TEXT THEME -->
     <style name="Go4LunchText" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/colorTextPrimary</item>
+    </style>
+
+    <!-- DEFAULT BUTTON THEME -->
+    <style name="Go4LunchButton" parent="Widget.AppCompat.Button">
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:background">@color/colorPrimary</item>
     </style>
 
     <!-- TOOLBAR THEME -->

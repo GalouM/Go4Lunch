@@ -1,15 +1,10 @@
 package com.galou.go4lunch.main;
 
-import android.util.Log;
-import android.view.MenuItem;
-
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.base.BaseViewModel;
-import com.google.firebase.auth.FirebaseUser;
 
 /**
  * Created by galou on 2019-04-23
@@ -17,6 +12,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivityViewModel extends BaseViewModel {
 
     private final MutableLiveData<Boolean> logoutRequested = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> settingsRequested = new MutableLiveData<>();
     public final MutableLiveData<String> username = new MutableLiveData<>();
     public final MutableLiveData<String> email = new MutableLiveData<>();
     public final MutableLiveData<String> urlPicture = new MutableLiveData<>();
@@ -26,6 +22,7 @@ public class MainActivityViewModel extends BaseViewModel {
     public LiveData<Boolean> getLogout() {
         return logoutRequested;
     }
+    public LiveData<Boolean> getSettings() { return settingsRequested; }
 
     void logoutUserFromApp(){
         logoutRequested.setValue(true);
@@ -40,6 +37,10 @@ public class MainActivityViewModel extends BaseViewModel {
             urlPicture.setValue((getCurrentUser().getPhotoUrl() != null) ?
                     getCurrentUser().getPhotoUrl().toString() : null);
         }
+    }
+
+    void openSettings(){
+        settingsRequested.setValue(true);
     }
 
 }
