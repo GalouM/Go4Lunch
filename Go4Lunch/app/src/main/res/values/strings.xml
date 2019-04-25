@@ -39,6 +39,8 @@
     <string name="settings_enable_notifications">Enable notifications</string>
     <string name="settings_email_address">Email address</string>
     <string name="settings_username">Username</string>
+    <string name="notification_disabled">Notification disabled</string>
+    <string name="notifications_enabled">Notifications enabled</string>
 
 
     <!-- NEW -->

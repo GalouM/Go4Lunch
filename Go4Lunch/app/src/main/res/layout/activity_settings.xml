@@ -8,13 +8,15 @@
             name="viewmodel"
             type="com.galou.go4lunch.settings.SettingsViewModel" />
 
-    </data>
+        <variable
+            name="listener"
+            type="com.galou.go4lunch.settings.NotificationActionListener" />
 
+    </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -35,7 +37,8 @@
         android:layout_margin="@dimen/big_margin"
         app:layout_constraintTop_toBottomOf="@id/layout_toolbar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:imageUrl="@{viewmodel.urlPicture}"/>
 
     <EditText
         android:id="@+id/username"
@@ -43,7 +46,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/photo_user"
         android:hint="@string/settings_username"
-        android:layout_margin="@dimen/small_margin"/>
+        android:layout_margin="@dimen/small_margin"
+        android:text="@{viewmodel.username}"/>
 
     <EditText
         android:id="@+id/email"
@@ -51,7 +55,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/username"
         android:hint="@string/settings_email_address"
-        android:layout_margin="@dimen/small_margin"/>
+        android:layout_margin="@dimen/small_margin"
+        android:text="@{viewmodel.email}"/>
 
     <LinearLayout
         android:id="@+id/notifications_layout"
@@ -65,12 +70,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/settings_enable_notifications"
-            android:textColor="@color/colorTextOnWhite" />
+            android:textColor="@color/colorTextOnWhite"
+            android:textSize="@dimen/settings_notification_text_size"/>
 
         <androidx.appcompat.widget.SwitchCompat
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:checked="@{viewmodel.isNotificationEnabled}"
+            android:onClick="@{(view) -> listener.onClick(view)}"/>
     </LinearLayout>
 
     <ProgressBar

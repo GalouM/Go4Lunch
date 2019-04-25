@@ -1,4 +1,4 @@
-package com.galou.go4lunch.main;
+package com.galou.go4lunch.base;
 
 import android.widget.ImageView;
 
