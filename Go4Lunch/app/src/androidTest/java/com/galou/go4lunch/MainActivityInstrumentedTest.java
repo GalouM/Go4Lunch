@@ -59,7 +59,7 @@ public class MainActivityInstrumentedTest {
     public void clickItemNavDrawer_closeDrawer(){
         onView(withId(R.id.drawer_view)).check(matches(isClosed(Gravity.LEFT)))
                 .perform(DrawerActions.open());
-        onView(withId(R.id.drawer_view)).perform(NavigationViewActions.navigateTo(R.id.main_activity_drawer_lunch));
+        //onView(withId(R.id.drawer_view)).perform(NavigationViewActions.navigateTo(R.id.main_activity_drawer_lunch));
         //onView(withId(R.id.main_activity_nav_view)).check(matches(not(isDisplayed())));
 
     }

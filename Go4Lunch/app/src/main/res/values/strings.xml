@@ -11,6 +11,7 @@
     <string name="error_authentication_canceled">Authentication was cancelled</string>
     <string name="error_no_internet">No Internet Connection</string>
     <string name="error_unknown_error">Unknown error</string>
+    <string name="logged_out_success">User logged out</string>
 
     <!-- BOTTOM NAVIGATION VIEW -->
     <string name="bottom_navigation_menu_map_view">Map View</string>
@@ -30,8 +31,10 @@
     <string name="drawer_menu_settings">SETTINGS</string>
     <string name="drawer_menu_logout">LOGOUT</string>
     <string name="title_toolbar">I\'m Hungry</string>
+
+    <!-- TOOLBAR SEARCH HINT -->
     <string name="search_hint">Search Restaurants</string>
-    <string name="logged_out_success">User logged out</string>
+
 
     <!-- NEW -->
 

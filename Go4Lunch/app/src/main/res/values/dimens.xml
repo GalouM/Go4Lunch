@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- margin size -->
     <dimen name="big_margin">30dip</dimen>
     <dimen name="small_margin">15dip</dimen>
+    <dimen name="really_small_margin">5dip</dimen>
 
+    <!-- text size -->
     <dimen name="toolbar_text_size">20sp</dimen>
-    <dimen name="nav_drawer_height">185dip</dimen>
+    <dimen name="nav_drawer_height">230dip</dimen>
     <dimen name="nav_header_email_size">12sp</dimen>
     <dimen name="nav_header_username_size">15sp</dimen>
     <dimen name="nav_header_image_user_size">60dp</dimen>
     <dimen name="nave_header_title_size">30sp</dimen>
+    <dimen name="nav_view_logo_size">120dip</dimen>
+
 </resources>

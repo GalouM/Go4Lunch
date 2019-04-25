@@ -21,30 +21,34 @@
         android:text="@string/app_name"
         android:textSize="@dimen/nave_header_title_size"
         android:textStyle="bold"
-        android:layout_margin="@dimen/small_margin"/>
+        android:layout_margin="@dimen/big_margin"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_margin="@dimen/small_margin">
 
         <ImageView
             android:layout_width="@dimen/nav_header_image_user_size"
             android:layout_height="@dimen/nav_header_image_user_size"
-            android:layout_margin="@dimen/small_margin"
+            android:layout_gravity="center"
             app:imageUrl="@{viewmodel.urlPicture}"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_margin="@dimen/small_margin">
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/really_small_margin">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{viewmodel.username}"
                 android:textStyle="bold"
                 android:textSize="@dimen/nav_header_username_size"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

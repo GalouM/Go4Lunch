@@ -3,7 +3,6 @@ package com.galou.go4lunch.main;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -19,8 +18,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.firebase.ui.auth.AuthUI;
-import com.galou.go4lunch.List.ListViewFragment;
-import com.galou.go4lunch.Map.MapViewFragment;
+import com.galou.go4lunch.list.ListViewFragment;
+import com.galou.go4lunch.map.MapViewFragment;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.chat.ChatFragment;
 import com.galou.go4lunch.databinding.ActivityMainBinding;
@@ -29,7 +28,6 @@ import com.galou.go4lunch.util.SnackBarUtil;
 import com.galou.go4lunch.workmates.WorkmatesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainActivityContract {
 
@@ -168,7 +166,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         getMenuInflater().inflate(R.menu.main_activity_menu, menu);
 
         MenuItem searchItem = menu.findItem(R.id.menu_main_activity_search);

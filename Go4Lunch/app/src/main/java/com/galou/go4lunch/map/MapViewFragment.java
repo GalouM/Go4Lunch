@@ -1,4 +1,4 @@
-package com.galou.go4lunch.Map;
+package com.galou.go4lunch.map;
 
 
 import android.os.Bundle;

@@ -11,4 +11,6 @@
     <color name="colorTextPrimaryAlpha">#ffab91</color>
     <color name="colorTextAccent">#fffde7</color>
     <color name="colorTextAccentAlpha">#fff59d</color>
+
+    <color name="colorBottomNavUnchecked">#9e9e9e</color>
 </resources>
