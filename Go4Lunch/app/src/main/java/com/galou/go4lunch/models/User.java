@@ -9,14 +9,16 @@ public class User {
 
     private String uid;
     private String username;
+    private String email;
     @Nullable private String urlPicture;
     @Nullable private Restaurant restaurantPicked;
 
     public User(){}
 
-    public User(String uid, String username, @Nullable String urlPicture) {
+    public User(String uid, String username, String email, @Nullable String urlPicture) {
         this.uid = uid;
         this.username = username;
+        this.email = email;
         this.urlPicture = urlPicture;
     }
 
@@ -56,5 +58,13 @@ public class User {
 
     public void setRestaurantPicked(@Nullable Restaurant restaurantPicked) {
         this.restaurantPicked = restaurantPicked;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

@@ -3,6 +3,7 @@ package com.galou.go4lunch.Main;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -12,15 +13,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
+import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.firebase.ui.auth.AuthUI;
+import com.galou.go4lunch.List.ListViewFragment;
+import com.galou.go4lunch.Map.MapViewFragment;
 import com.galou.go4lunch.R;
+import com.galou.go4lunch.chat.ChatFragment;
+import com.galou.go4lunch.databinding.ActivityMainBinding;
+import com.galou.go4lunch.databinding.MainActivityNavHeaderBinding;
 import com.galou.go4lunch.util.SnackBarUtil;
+import com.galou.go4lunch.workmates.WorkmatesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainActivityContract {
 
@@ -28,13 +37,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private Toolbar toolbar;
+    private FirebaseUser user;
+    private ActivityMainBinding binding;
 
     private MainActivityViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         this.configureToolbar();
         this.configureBottomView();
         this.configureAndShowFirstFragment();
@@ -43,6 +54,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         viewModel = obtainViewModel();
         setupSnackBar();
         setupLogoutRequest();
+
+        viewModel.setLoggedUser();
+        setupLoggedUser();
+
+
+
     }
 
     private MainActivityViewModel obtainViewModel() {
@@ -57,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void configureDrawerLayout(){
-        drawerLayout = (DrawerLayout) findViewById(R.id.main_activity_drawer);
+        drawerLayout = binding.drawerView;
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
@@ -66,7 +83,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void configureNavigationView(){
-        navigationView = (NavigationView) findViewById(R.id.main_activity_nav_view);
+        navigationView = binding.navigationView;
+        MainActivityNavHeaderBinding navHeaderBinding = DataBindingUtil.inflate(getLayoutInflater(),
+                R.layout.main_activity_nav_header, navigationView, false);
+        binding.navigationView.addHeaderView(navHeaderBinding.getRoot());
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -79,8 +99,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+
     private void configureBottomView() {
-        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav);
+        bottomNavigationView = binding.bottomNav;
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> updateMainFragment(item.getItemId()));
     }
 
@@ -108,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+
     private void configureAndShowFirstFragment(){
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame_layout);
         if(fragment == null) {
@@ -119,12 +141,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+
     private void replaceAndShowFragment(Fragment fragment){
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.frame_layout, fragment)
                 .addToBackStack(null)
                 .commit();
     }
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -135,11 +159,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
         this.drawerLayout.closeDrawer(GravityCompat.START);
+
         return true;
     }
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         getMenuInflater().inflate(R.menu.main_activity_menu, menu);
 
         MenuItem searchItem = menu.findItem(R.id.menu_main_activity_search);
@@ -152,8 +180,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(searchView != null){
             searchView.setSearchableInfo(searchManager.getSearchableInfo(MainActivity.this.getComponentName()));
         }
+
         return true;
+
     }
+
+
 
     private void setupSnackBar(){
         viewModel.getSnackBarMessage().observe(this, message -> {
@@ -164,9 +196,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+
     private void setupLogoutRequest(){
         viewModel.getLogout().observe(this, logout -> logoutUser());
     }
+
+    private void setupLoggedUser(){
+        viewModel.getLoggedUser().observe(this, userLogged -> user = userLogged);
+        //Log.e("tag", this.user.getDisplayName());
+    }
+
 
     @Override
     public void logoutUser() {
@@ -176,4 +215,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+
+
 }
+

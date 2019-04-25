@@ -20,8 +20,8 @@ public class UserHelper {
     }
 
     //---- CREATE ----
-    public static Task<Void> createUser(String uid, String username, String urlPicture){
-        User userToCreate = new User(uid, username, urlPicture);
+    public static Task<Void> createUser(String uid, String username, String email, String urlPicture){
+        User userToCreate = new User(uid, username, email, urlPicture);
         return UserHelper.getUserCollection().document(uid).set(userToCreate);
     }
 
@@ -33,6 +33,10 @@ public class UserHelper {
     //---- UPDATE ----
     public static Task<Void> updateUserName(String username, String uid){
         return UserHelper.getUserCollection().document(uid).update("username", username);
+    }
+
+    public static Task<Void> updateEmail(String email, String uid){
+        return UserHelper.getUserCollection().document(uid).update("email", email);
     }
 
     public static Task<Void> updateRestaurant(Restaurant restaurant, String uid){

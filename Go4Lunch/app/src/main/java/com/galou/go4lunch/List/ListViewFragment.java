@@ -1,4 +1,4 @@
-package com.galou.go4lunch.Main;
+package com.galou.go4lunch.List;
 
 
 import android.os.Bundle;

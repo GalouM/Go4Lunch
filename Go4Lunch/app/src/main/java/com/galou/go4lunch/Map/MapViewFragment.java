@@ -1,4 +1,4 @@
-package com.galou.go4lunch.Main;
+package com.galou.go4lunch.Map;
 
 
 import android.os.Bundle;
@@ -13,17 +13,19 @@ import com.galou.go4lunch.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ChatFragment extends Fragment {
+public class MapViewFragment extends Fragment {
 
 
-    public ChatFragment() {}
+    public MapViewFragment() {
+        // Required empty public constructor
+    }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_chat, container, false);
+        return inflater.inflate(R.layout.fragment_map_view, container, false);
     }
 
 }
