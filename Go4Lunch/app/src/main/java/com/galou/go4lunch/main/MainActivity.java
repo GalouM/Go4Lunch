@@ -57,9 +57,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setupSnackBar();
         setupLogoutRequest();
         setupSettingsRequest();
-        viewModel.onUserLogged();
 
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        viewModel.onStart();
     }
 
     private MainActivityViewModel obtainViewModel() {

@@ -1,5 +1,6 @@
 package com.galou.go4lunch.authentication;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -8,6 +9,8 @@ import com.firebase.ui.auth.IdpResponse;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.api.UserHelper;
 import com.galou.go4lunch.base.BaseViewModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -67,6 +70,15 @@ public class AuthenticationViewModel extends BaseViewModel {
             UserHelper.createUser(uid, username, email, urlPicture).addOnFailureListener(this.onFailureListener());
         }
 
+    }
+
+    @Nullable
+    private FirebaseUser getCurrentUser(){
+        return FirebaseAuth.getInstance().getCurrentUser();
+    }
+
+    private Boolean isCurrentUserLogged(){
+        return (this.getCurrentUser() != null);
     }
 
 

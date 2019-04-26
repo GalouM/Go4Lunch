@@ -9,8 +9,11 @@
             type="com.galou.go4lunch.settings.SettingsViewModel" />
 
         <variable
-            name="listener"
+            name="listener_notification"
             type="com.galou.go4lunch.settings.NotificationActionListener" />
+        <variable
+            name="listener_update"
+            type="com.galou.go4lunch.settings.UpdateActionListener" />
 
     </data>
 
@@ -47,7 +50,7 @@
         app:layout_constraintTop_toBottomOf="@id/photo_user"
         android:hint="@string/settings_username"
         android:layout_margin="@dimen/small_margin"
-        android:text="@{viewmodel.username}"/>
+        android:text="@={viewmodel.username}"/>
 
     <EditText
         android:id="@+id/email"
@@ -56,7 +59,7 @@
         app:layout_constraintTop_toBottomOf="@id/username"
         android:hint="@string/settings_email_address"
         android:layout_margin="@dimen/small_margin"
-        android:text="@{viewmodel.email}"/>
+        android:text="@={viewmodel.email}"/>
 
     <LinearLayout
         android:id="@+id/notifications_layout"
@@ -78,7 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:checked="@{viewmodel.isNotificationEnabled}"
-            android:onClick="@{(view) -> listener.onClick(view)}"/>
+            android:onClick="@{(view) -> listener_notification.onClick(view)}"/>
     </LinearLayout>
 
     <ProgressBar
@@ -87,14 +90,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/notifications_layout"
-        android:layout_margin="@dimen/big_margin"/>
+        android:layout_margin="@dimen/big_margin"
+        android:visibility="@{viewmodel.isLoading ? View.VISIBLE : View.GONE}"/>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/settings_update_user_information"
         app:layout_constraintBottom_toTopOf="@id/delete_button"
-        android:layout_margin="@dimen/small_margin"/>
+        android:layout_margin="@dimen/small_margin"
+        android:onClick="@{(view) -> listener_update.onClick(view)}"/>
 
     <Button
         android:id="@+id/delete_button"

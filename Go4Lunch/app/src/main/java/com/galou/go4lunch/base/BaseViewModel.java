@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.galou.go4lunch.R;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -25,14 +26,10 @@ public abstract class BaseViewModel extends ViewModel {
     // UTILS
     // --------------------
 
-    @Nullable
-    protected FirebaseUser getCurrentUser(){
-        return FirebaseAuth.getInstance().getCurrentUser();
+    protected String getCurrentUserUid(){
+        return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
-    protected Boolean isCurrentUserLogged(){
-        return (this.getCurrentUser() != null);
-    }
 
     // --------------------
     // ERROR HANDLER
@@ -40,4 +37,6 @@ public abstract class BaseViewModel extends ViewModel {
     protected OnFailureListener onFailureListener(){
         return e -> snackBarText.setValue(R.string.error_unknown_error);
     }
+
+
 }

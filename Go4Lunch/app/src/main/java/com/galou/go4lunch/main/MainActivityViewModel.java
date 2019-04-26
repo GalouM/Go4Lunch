@@ -4,7 +4,12 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.galou.go4lunch.R;
+import com.galou.go4lunch.api.UserHelper;
 import com.galou.go4lunch.base.BaseViewModel;
+import com.galou.go4lunch.models.User;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 /**
  * Created by galou on 2019-04-23
@@ -17,6 +22,8 @@ public class MainActivityViewModel extends BaseViewModel {
     public final MutableLiveData<String> email = new MutableLiveData<>();
     public final MutableLiveData<String> urlPicture = new MutableLiveData<>();
 
+    private User user;
+
     // LiveData getters
 
     public LiveData<Boolean> getLogout() {
@@ -24,23 +31,36 @@ public class MainActivityViewModel extends BaseViewModel {
     }
     public LiveData<Boolean> getSettings() { return settingsRequested; }
 
+    void onStart(){
+        UserHelper.getUser(getCurrentUserUid())
+                .addOnFailureListener(this.onFailureListener())
+                .addOnSuccessListener(documentSnapshot -> {
+                    user = documentSnapshot.toObject(User.class);
+                    onUserLogged();
+                });
+    }
+
     void logoutUserFromApp(){
         logoutRequested.setValue(true);
         snackBarText.setValue(R.string.logged_out_success);
 
     }
 
-    void onUserLogged(){
-        if (getCurrentUser()!= null) {
-            username.setValue(getCurrentUser().getDisplayName());
-            email.setValue(getCurrentUser().getEmail());
-            urlPicture.setValue((getCurrentUser().getPhotoUrl() != null) ?
-                    getCurrentUser().getPhotoUrl().toString() : null);
+    private void onUserLogged(){
+        if (isUserLogged()) {
+            username.setValue(user.getUsername());
+            email.setValue(user.getEmail());
+            urlPicture.setValue(user.getUrlPicture());
         }
     }
 
     void openSettings(){
         settingsRequested.setValue(true);
     }
+
+    private boolean isUserLogged(){
+        return (user != null);
+    }
+
 
 }

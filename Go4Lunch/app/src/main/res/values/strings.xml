@@ -41,6 +41,7 @@
     <string name="settings_username">Username</string>
     <string name="notification_disabled">Notification disabled</string>
     <string name="notifications_enabled">Notifications enabled</string>
+    <string name="information_updated">Your information was updated</string>
 
 
     <!-- NEW -->
