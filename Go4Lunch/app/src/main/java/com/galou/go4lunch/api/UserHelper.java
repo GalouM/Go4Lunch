@@ -31,12 +31,9 @@ public class UserHelper {
     }
 
     //---- UPDATE ----
-    public static Task<Void> updateUserName(String username, String uid){
-        return UserHelper.getUserCollection().document(uid).update("username", username);
-    }
-
-    public static Task<Void> updateEmail(String email, String uid){
-        return UserHelper.getUserCollection().document(uid).update("email", email);
+    public static Task<Void> updateUserNameAndEmail(String username, String email, String uid){
+        return UserHelper.getUserCollection().document(uid).update(
+                "username", username, "email", email);
     }
 
     public static Task<Void> updateRestaurant(Restaurant restaurant, String uid){

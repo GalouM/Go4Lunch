@@ -28,6 +28,7 @@ import com.galou.go4lunch.databinding.MainActivityNavHeaderBinding;
 import com.galou.go4lunch.settings.SettingsActivity;
 import com.galou.go4lunch.util.SnackBarUtil;
 import com.galou.go4lunch.workmates.WorkmatesFragment;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -41,22 +42,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private MainActivityViewModel viewModel;
 
+    // --------------------
+    // LIFE CYCLE STATE
+    // --------------------
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        viewModel = obtainViewModel();
-        binding.setViewmodel(viewModel);
-        binding.setLifecycleOwner(this);
-        this.configureToolbar();
-        this.configureBottomView();
-        this.configureAndShowFirstFragment();
-        this.configureDrawerLayout();
-        this.configureNavigationView();
-
-        setupSnackBar();
-        setupLogoutRequest();
-        setupSettingsRequest();
+        this.setBindingAndViewModel();
+        this.configureUI();
+        this.createViewModelConnections();
 
     }
 
@@ -66,16 +61,100 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         viewModel.onStart();
     }
 
+    // --------------------
+    // VIEW MODEL CONNECTIONS
+    // --------------------
+
+    private void setBindingAndViewModel(){
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        viewModel = obtainViewModel();
+        binding.setViewmodel(viewModel);
+        binding.setLifecycleOwner(this);
+
+    }
+
     private MainActivityViewModel obtainViewModel() {
         return ViewModelProviders.of(this)
                 .get(MainActivityViewModel.class);
     }
+
+    private void createViewModelConnections() {
+        setupSnackBar();
+        setupLogoutRequest();
+        setupSettingsRequest();
+    }
+
+    private void setupSnackBar(){
+        viewModel.getSnackBarMessage().observe(this, message -> {
+            if(message != null){
+                SnackBarUtil.showSnackBar(getWindow().getDecorView().getRootView(), getString(message));
+            }
+        });
+
+    }
+
+    private void setupLogoutRequest(){
+        viewModel.getLogout().observe(this, logout -> logoutUser());
+    }
+
+    private void setupSettingsRequest(){
+        viewModel.getSettings().observe(this, settings -> settings());
+    }
+
+    // --------------------
+    // CONFIGURE NAV UI
+    // --------------------
+
+    private void configureUI(){
+        this.configureToolbar();
+        this.configureBottomView();
+        this.configureAndShowFirstFragment();
+        this.configureDrawerLayout();
+        this.configureNavigationView();
+
+    }
+
+    //----- INITIAL STATE -----
+
+    private void configureAndShowFirstFragment(){
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame_layout);
+        if(fragment == null) {
+            fragment = (MapViewFragment) new MapViewFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.frame_layout, fragment)
+                    .commit();
+        }
+
+    }
+
+    //----- TOOLBAR -----
 
     private void configureToolbar(){
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_activity_menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.menu_main_activity_search);
+        SearchManager searchManager = (SearchManager) MainActivity.this.getSystemService(Context.SEARCH_SERVICE);
+
+        SearchView searchView = null;
+        if(searchItem != null){
+            searchView = (SearchView) searchItem.getActionView();
+        }
+        if(searchView != null){
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(MainActivity.this.getComponentName()));
+        }
+
+        return true;
+
+    }
+
+    //----- NAV DRAWER -----
 
     private void configureDrawerLayout(){
         drawerLayout = binding.drawerView;
@@ -105,6 +184,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.main_activity_drawer_settings:
+                viewModel.openSettings();
+                break;
+            case R.id.main_activity_drawer_logout:
+                viewModel.logoutUserFromApp();
+                break;
+        }
+        this.drawerLayout.closeDrawer(GravityCompat.START);
+
+        return true;
+    }
+
+    //----- BOTTOM NAV -----
+
 
     private void configureBottomView() {
         bottomNavigationView = binding.bottomNav;
@@ -129,24 +226,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 ChatFragment chatView = new ChatFragment();
                 replaceAndShowFragment(chatView);
                 break;
-
         }
 
         return true;
     }
-
-
-    private void configureAndShowFirstFragment(){
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame_layout);
-        if(fragment == null) {
-            fragment = (MapViewFragment) new MapViewFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.frame_layout, fragment)
-                    .commit();
-        }
-
-    }
-
 
     private void replaceAndShowFragment(Fragment fragment){
         getSupportFragmentManager().beginTransaction()
@@ -155,66 +238,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .commit();
     }
 
+    // --------------------
+    // ACTIONS FROM VIEW MODEL
+    // --------------------
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        switch (id){
-            case R.id.main_activity_drawer_settings:
-                viewModel.openSettings();
-                break;
-            case R.id.main_activity_drawer_logout:
-                viewModel.logoutUserFromApp();
-                break;
-        }
-        this.drawerLayout.closeDrawer(GravityCompat.START);
-
-        return true;
-    }
-
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_activity_menu, menu);
-
-        MenuItem searchItem = menu.findItem(R.id.menu_main_activity_search);
-        SearchManager searchManager = (SearchManager) MainActivity.this.getSystemService(Context.SEARCH_SERVICE);
-
-        SearchView searchView = null;
-        if(searchItem != null){
-            searchView = (SearchView) searchItem.getActionView();
-        }
-        if(searchView != null){
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(MainActivity.this.getComponentName()));
-        }
-
-        return true;
-
-    }
-
-    private void setupSnackBar(){
-        viewModel.getSnackBarMessage().observe(this, message -> {
-            if(message != null){
-                SnackBarUtil.showSnackBar(getWindow().getDecorView().getRootView(), getString(message));
-            }
-        });
-
-    }
-
-    private void setupLogoutRequest(){
-        viewModel.getLogout().observe(this, logout -> logoutUser());
-    }
-
-    private void setupSettingsRequest(){
-        viewModel.getSettings().observe(this, settings -> settings());
-    }
 
     @Override
     public void logoutUser() {
-        AuthUI.getInstance()
-                .signOut(this);
-        this.finish();
+        AuthUI.getInstance().signOut(this)
+                .addOnSuccessListener(aVoid -> finish())
+                .addOnFailureListener(viewModel.onFailureListener());
 
     }
 

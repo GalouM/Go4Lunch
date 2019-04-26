@@ -5,5 +5,6 @@ package com.galou.go4lunch.settings;
  */
 public enum SuccessOrign {
     UPDATE_USER,
-    DELETE_USER
+    DELETE_USER,
+    UPDATE_PHOTO
 }

@@ -42,6 +42,9 @@
     <string name="notification_disabled">Notification disabled</string>
     <string name="notifications_enabled">Notifications enabled</string>
     <string name="information_updated">Your information was updated</string>
+    <string name="deleted_account_message">Your account has been deleted</string>
+    <string name="photo_updated_message">Your photo has been updated</string>
+    <string name="need_permission_message">This application needs permission to run</string>
 
 
     <!-- NEW -->

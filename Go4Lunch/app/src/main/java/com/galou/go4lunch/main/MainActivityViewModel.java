@@ -7,6 +7,7 @@ import com.galou.go4lunch.R;
 import com.galou.go4lunch.api.UserHelper;
 import com.galou.go4lunch.base.BaseViewModel;
 import com.galou.go4lunch.models.User;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -36,7 +37,7 @@ public class MainActivityViewModel extends BaseViewModel {
                 .addOnFailureListener(this.onFailureListener())
                 .addOnSuccessListener(documentSnapshot -> {
                     user = documentSnapshot.toObject(User.class);
-                    onUserLogged();
+                    this.onUserLogged();
                 });
     }
 
@@ -45,6 +46,7 @@ public class MainActivityViewModel extends BaseViewModel {
         snackBarText.setValue(R.string.logged_out_success);
 
     }
+
 
     private void onUserLogged(){
         if (isUserLogged()) {
@@ -61,6 +63,7 @@ public class MainActivityViewModel extends BaseViewModel {
     private boolean isUserLogged(){
         return (user != null);
     }
+
 
 
 }

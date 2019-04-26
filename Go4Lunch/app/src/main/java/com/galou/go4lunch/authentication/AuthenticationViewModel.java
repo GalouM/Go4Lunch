@@ -36,8 +36,8 @@ public class AuthenticationViewModel extends BaseViewModel {
     void handleResponseAfterSignIn(int requestCode, int resultCode, IdpResponse response){
         if (requestCode == AuthenticationActivity.RC_SIGN_IN) {
             if (resultCode == RESULT_OK) { // SUCCESS
-                openNewActivityEvent.setValue(new Object());
-                createUserInFirestore();
+                this.checkIfUserIsLogged();
+                this.createUserInFirestore();
             } else { // ERRORS
                 if (response == null) {
                     snackBarText.setValue(R.string.error_authentication_canceled);
@@ -71,6 +71,10 @@ public class AuthenticationViewModel extends BaseViewModel {
         }
 
     }
+
+    // --------------------
+    // UTILS
+    // --------------------
 
     @Nullable
     private FirebaseUser getCurrentUser(){

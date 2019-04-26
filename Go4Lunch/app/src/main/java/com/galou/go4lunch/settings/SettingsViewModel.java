@@ -1,7 +1,8 @@
 package com.galou.go4lunch.settings;
 
-import android.util.Log;
+import android.net.Uri;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.galou.go4lunch.R;
@@ -9,7 +10,14 @@ import com.galou.go4lunch.api.UserHelper;
 import com.galou.go4lunch.base.BaseViewModel;
 import com.galou.go4lunch.models.User;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.util.UUID;
+
+import static com.galou.go4lunch.settings.SuccessOrign.DELETE_USER;
+import static com.galou.go4lunch.settings.SuccessOrign.UPDATE_PHOTO;
 import static com.galou.go4lunch.settings.SuccessOrign.UPDATE_USER;
 
 /**
@@ -22,6 +30,13 @@ public class SettingsViewModel extends BaseViewModel {
     public final MutableLiveData<String> urlPicture = new MutableLiveData<>();
     public final MutableLiveData<Boolean> isNotificationEnabled = new MutableLiveData<>();
     public final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+
+    private final MutableLiveData<Boolean> isAccountDeleted = new MutableLiveData<>();
+
+    //---getters
+    public LiveData<Boolean> getIsAccountDeleted(){
+        return isAccountDeleted;
+    }
 
     private User user;
 
@@ -60,11 +75,9 @@ public class SettingsViewModel extends BaseViewModel {
         isLoading.setValue(true);
         String newUsername = username.getValue();
         String newEmail = email.getValue();
-        UserHelper.updateUserName(newUsername, getCurrentUserUid())
+        UserHelper.updateUserNameAndEmail(newUsername, newEmail, getCurrentUserUid())
                 .addOnFailureListener(this.onFailureListener())
-                .addOnSuccessListener(this.updateUserSuccessful(UPDATE_USER));
-        UserHelper.updateEmail(newEmail, getCurrentUserUid()).addOnFailureListener(this.onFailureListener())
-        .addOnSuccessListener(this.updateUserSuccessful(UPDATE_USER));
+                .addOnSuccessListener(this.onSuccessListener(UPDATE_USER));
 
     }
 
@@ -78,12 +91,21 @@ public class SettingsViewModel extends BaseViewModel {
 
     }
 
-    private OnSuccessListener<Void> updateUserSuccessful(final SuccessOrign origin){
+    private OnSuccessListener<Void> onSuccessListener(final SuccessOrign origin){
         return aVoid -> {
             switch (origin){
                 case UPDATE_USER:
                     isLoading.setValue(false);
                     snackBarText.setValue(R.string.information_updated);
+                    break;
+                case DELETE_USER:
+                    isLoading.setValue(false);
+                    snackBarText.setValue(R.string.deleted_account_message);
+                    isAccountDeleted.setValue(true);
+                    break;
+                case UPDATE_PHOTO:
+                    isLoading.setValue(false);
+                    snackBarText.setValue(R.string.photo_updated_message);
                     break;
             }
 
@@ -93,5 +115,34 @@ public class SettingsViewModel extends BaseViewModel {
 
     private boolean isUserLogged(){
         return (user != null);
+    }
+
+    void deleteUserFromDB() {
+        isLoading.setValue(true);
+        UserHelper.deleteUser(getCurrentUserUid())
+                .addOnSuccessListener(this.onSuccessListener(DELETE_USER))
+                .addOnFailureListener(this.onFailureListener());
+    }
+
+    void updateUserPhoto(String urlPhoto) {
+        isLoading.setValue(true);
+        uploadPhotoInFirebase(urlPhoto);
+    }
+
+    private void uploadPhotoInFirebase(final String urlPhoto) {
+        String uuid = UUID.randomUUID().toString();
+        StorageReference imageRef = FirebaseStorage.getInstance().getReference(uuid);
+        imageRef.putFile(Uri.parse(urlPhoto)).addOnSuccessListener(taskSnapshot -> {
+            taskSnapshot.getMetadata().getReference().getDownloadUrl()
+                    .addOnSuccessListener(uri -> {
+                        String pathImageInFirebase = uri.toString();
+                        UserHelper.updateUrlPicture(pathImageInFirebase, getCurrentUserUid())
+                                .addOnSuccessListener(onSuccessListener(UPDATE_PHOTO))
+                                .addOnFailureListener(onFailureListener());
+                        urlPicture.setValue(urlPhoto);
+                    }).addOnFailureListener(onFailureListener());
+
+        }).addOnFailureListener(onFailureListener());
+
     }
 }

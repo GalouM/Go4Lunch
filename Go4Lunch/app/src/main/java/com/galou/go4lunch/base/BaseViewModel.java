@@ -34,9 +34,11 @@ public abstract class BaseViewModel extends ViewModel {
     // --------------------
     // ERROR HANDLER
     // --------------------
-    protected OnFailureListener onFailureListener(){
+    public OnFailureListener onFailureListener(){
         return e -> snackBarText.setValue(R.string.error_unknown_error);
     }
+
+
 
 
 }

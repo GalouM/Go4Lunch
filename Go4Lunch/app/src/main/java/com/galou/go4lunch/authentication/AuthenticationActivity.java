@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
+import com.galou.go4lunch.databinding.ActivityAuthenticationBinding;
 import com.galou.go4lunch.main.MainActivity;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.util.SnackBarUtil;
@@ -21,30 +22,25 @@ import java.util.Arrays;
 public class AuthenticationActivity extends AppCompatActivity implements AuthenticationNavigator {
 
     private AuthenticationViewModel viewModel;
+    private ActivityAuthenticationBinding binding;
 
     public static final int RC_SIGN_IN = 123;
+
+    // --------------------
+    // LIFE CYCLE STATE
+    // --------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ViewDataBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_authentication);
-        viewModel = obtainViewModel();
-        setupOpenMainActivity();
-        setupOpenSignInActivity();
-        setupSnackBar();
-
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_authentication);
+        this.createViewModelConnection();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         viewModel.checkIfUserIsLogged();
-    }
-
-    private AuthenticationViewModel obtainViewModel(){
-        return ViewModelProviders.of(this)
-                .get(AuthenticationViewModel.class);
-
     }
 
     @Override
@@ -54,7 +50,22 @@ public class AuthenticationActivity extends AppCompatActivity implements Authent
         viewModel.handleResponseAfterSignIn(requestCode, resultCode, response);
     }
 
+    // --------------------
+    // VIEW MODEL CONNECTIONS
+    // --------------------
 
+    private void createViewModelConnection() {
+        viewModel = obtainViewModel();
+        this.setupOpenMainActivity();
+        this.setupOpenSignInActivity();
+        this.setupSnackBar();
+    }
+
+    private AuthenticationViewModel obtainViewModel(){
+        return ViewModelProviders.of(this)
+                .get(AuthenticationViewModel.class);
+
+    }
 
     private void setupSnackBar(){
         viewModel.getSnackBarMessage().observe(this, message -> {
@@ -72,6 +83,10 @@ public class AuthenticationActivity extends AppCompatActivity implements Authent
     private void setupOpenSignInActivity(){
         viewModel.getOpenSignInActivityEvent().observe(this, openSignIn -> startSignInActivity());
     }
+
+    // --------------------
+    // ACTIONS FROM VIEW MODEL
+    // --------------------
 
     @Override
     public void openMainActivity() {
