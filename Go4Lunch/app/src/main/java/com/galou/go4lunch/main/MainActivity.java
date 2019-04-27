@@ -19,16 +19,15 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.firebase.ui.auth.AuthUI;
-import com.galou.go4lunch.list.ListViewFragment;
-import com.galou.go4lunch.map.MapViewFragment;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.chat.ChatFragment;
 import com.galou.go4lunch.databinding.ActivityMainBinding;
 import com.galou.go4lunch.databinding.MainActivityNavHeaderBinding;
+import com.galou.go4lunch.list.ListViewFragment;
+import com.galou.go4lunch.map.MapViewFragment;
 import com.galou.go4lunch.settings.SettingsActivity;
 import com.galou.go4lunch.util.SnackBarUtil;
 import com.galou.go4lunch.workmates.WorkmatesFragment;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 

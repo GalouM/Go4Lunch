@@ -17,20 +17,26 @@ import com.google.firebase.firestore.DocumentSnapshot;
  */
 public class MainActivityViewModel extends BaseViewModel {
 
-    private final MutableLiveData<Boolean> logoutRequested = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> settingsRequested = new MutableLiveData<>();
+    //----- PRIVATE LIVE DATA -----
+    private final MutableLiveData<Object> logoutRequested = new MutableLiveData<>();
+    private final MutableLiveData<Object> settingsRequested = new MutableLiveData<>();
+
+    //----- PUBLIC LIVE DATA -----
     public final MutableLiveData<String> username = new MutableLiveData<>();
     public final MutableLiveData<String> email = new MutableLiveData<>();
     public final MutableLiveData<String> urlPicture = new MutableLiveData<>();
 
     private User user;
 
-    // LiveData getters
-
-    public LiveData<Boolean> getLogout() {
+    //----- GETTER LIVE DATA -----
+    public LiveData<Object> getLogout() {
         return logoutRequested;
     }
-    public LiveData<Boolean> getSettings() { return settingsRequested; }
+    public LiveData<Object> getSettings() { return settingsRequested; }
+
+    // --------------------
+    // START
+    // --------------------
 
     void onStart(){
         UserHelper.getUser(getCurrentUserUid())
@@ -41,29 +47,30 @@ public class MainActivityViewModel extends BaseViewModel {
                 });
     }
 
+    // --------------------
+    // GET USER ACTION
+    // --------------------
+
     void logoutUserFromApp(){
-        logoutRequested.setValue(true);
+        logoutRequested.setValue(new Object());
         snackBarText.setValue(R.string.logged_out_success);
 
     }
 
+    void openSettings(){
+        settingsRequested.setValue(new Object());
+    }
+
+    // --------------------
+    // UPDATE BINDING INFOS
+    // --------------------
 
     private void onUserLogged(){
-        if (isUserLogged()) {
+        if (user != null) {
             username.setValue(user.getUsername());
             email.setValue(user.getEmail());
             urlPicture.setValue(user.getUrlPicture());
         }
     }
-
-    void openSettings(){
-        settingsRequested.setValue(true);
-    }
-
-    private boolean isUserLogged(){
-        return (user != null);
-    }
-
-
 
 }

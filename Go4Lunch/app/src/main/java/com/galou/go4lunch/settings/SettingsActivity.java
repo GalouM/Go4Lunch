@@ -1,5 +1,13 @@
 package com.galou.go4lunch.settings;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.MediaStore;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -8,14 +16,6 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
-
-import android.Manifest;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.Bundle;
-import android.provider.MediaStore;
 
 import com.firebase.ui.auth.AuthUI;
 import com.galou.go4lunch.R;

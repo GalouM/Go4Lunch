@@ -13,6 +13,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.UUID;
 
@@ -26,7 +27,6 @@ import static com.galou.go4lunch.settings.SuccessOrign.UPDATE_USER;
 public class SettingsViewModel extends BaseViewModel {
 
     //----- PUBLIC LIVE DATA -----
-
     public final MutableLiveData<String> username = new MutableLiveData<>();
     public final MutableLiveData<String> email = new MutableLiveData<>();
     public final MutableLiveData<String> urlPicture = new MutableLiveData<>();
@@ -43,6 +43,10 @@ public class SettingsViewModel extends BaseViewModel {
 
     private User user;
 
+    // --------------------
+    // START
+    // --------------------
+
     void onStart(){
         isLoading.setValue(true);
         UserHelper.getUser(getCurrentUserUid())
@@ -50,18 +54,25 @@ public class SettingsViewModel extends BaseViewModel {
                 .addOnSuccessListener(documentSnapshot -> {
                     user = documentSnapshot.toObject(User.class);
                     configureInfoUser();
-                    isLoading.setValue(false);
                 });
-
     }
 
+    // --------------------
+    // UPDATE BINDING INFOS
+    // --------------------
+
     private void configureInfoUser(){
-        if (isUserLogged()) {
+        if (user != null) {
+            isLoading.setValue(false);
             username.setValue(user.getUsername());
             email.setValue(user.getEmail());
             urlPicture.setValue(user.getUrlPicture());
         }
     }
+
+    // --------------------
+    // GET USER ACTION
+    // --------------------
 
     void notificationStateChanged(boolean enabled){
         if(enabled){
@@ -84,6 +95,23 @@ public class SettingsViewModel extends BaseViewModel {
 
     }
 
+    void deleteUserFromDB() {
+        isLoading.setValue(true);
+        UserHelper.deleteUser(getCurrentUserUid())
+                .addOnSuccessListener(this.onSuccessListener(DELETE_USER))
+                .addOnFailureListener(this.onFailureListener());
+    }
+
+    void updateUserPhoto(String urlPhoto) {
+        isLoading.setValue(true);
+        uploadPhotoInFirebase(urlPhoto);
+        urlPicture.setValue(urlPhoto);
+    }
+
+    // --------------------
+    // SET NOTIFICATION
+    // --------------------
+
     private void disableNotification(){
         snackBarText.setValue(R.string.notification_disabled);
 
@@ -93,6 +121,34 @@ public class SettingsViewModel extends BaseViewModel {
         snackBarText.setValue(R.string.notifications_enabled);
 
     }
+
+    // --------------------
+    // SET PICTURE
+    // --------------------
+
+    private void uploadPhotoInFirebase(final String urlPhoto) {
+        String uuid = UUID.randomUUID().toString();
+        StorageReference imageRef = FirebaseStorage.getInstance().getReference(uuid);
+        imageRef.putFile(Uri.parse(urlPhoto))
+                .addOnSuccessListener(this::getUrlPhotoFromFirebase)
+                .addOnFailureListener(onFailureListener());
+
+    }
+
+    private void getUrlPhotoFromFirebase(UploadTask.TaskSnapshot taskSnapshot){
+        taskSnapshot.getMetadata().getReference().getDownloadUrl()
+                .addOnSuccessListener(uri -> {
+                    String pathImageInFirebase = uri.toString();
+                    UserHelper.updateUrlPicture(pathImageInFirebase, getCurrentUserUid())
+                            .addOnSuccessListener(onSuccessListener(UPDATE_PHOTO))
+                            .addOnFailureListener(onFailureListener());
+                }).addOnFailureListener(onFailureListener());
+
+    }
+
+    // --------------------
+    // UTILS
+    // --------------------
 
     private OnSuccessListener<Void> onSuccessListener(final SuccessOrign origin){
         return aVoid -> {
@@ -113,39 +169,6 @@ public class SettingsViewModel extends BaseViewModel {
             }
 
         };
-
-    }
-
-    private boolean isUserLogged(){
-        return (user != null);
-    }
-
-    void deleteUserFromDB() {
-        isLoading.setValue(true);
-        UserHelper.deleteUser(getCurrentUserUid())
-                .addOnSuccessListener(this.onSuccessListener(DELETE_USER))
-                .addOnFailureListener(this.onFailureListener());
-    }
-
-    void updateUserPhoto(String urlPhoto) {
-        isLoading.setValue(true);
-        uploadPhotoInFirebase(urlPhoto);
-    }
-
-    private void uploadPhotoInFirebase(final String urlPhoto) {
-        String uuid = UUID.randomUUID().toString();
-        StorageReference imageRef = FirebaseStorage.getInstance().getReference(uuid);
-        imageRef.putFile(Uri.parse(urlPhoto)).addOnSuccessListener(taskSnapshot -> {
-            taskSnapshot.getMetadata().getReference().getDownloadUrl()
-                    .addOnSuccessListener(uri -> {
-                        String pathImageInFirebase = uri.toString();
-                        UserHelper.updateUrlPicture(pathImageInFirebase, getCurrentUserUid())
-                                .addOnSuccessListener(onSuccessListener(UPDATE_PHOTO))
-                                .addOnFailureListener(onFailureListener());
-                        urlPicture.setValue(urlPhoto);
-                    }).addOnFailureListener(onFailureListener());
-
-        }).addOnFailureListener(onFailureListener());
 
     }
 

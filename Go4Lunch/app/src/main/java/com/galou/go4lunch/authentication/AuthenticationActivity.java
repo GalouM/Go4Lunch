@@ -6,14 +6,13 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
+import com.galou.go4lunch.R;
 import com.galou.go4lunch.databinding.ActivityAuthenticationBinding;
 import com.galou.go4lunch.main.MainActivity;
-import com.galou.go4lunch.R;
 import com.galou.go4lunch.util.SnackBarUtil;
 
 import java.util.Arrays;
