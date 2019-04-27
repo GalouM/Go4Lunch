@@ -1,6 +1,5 @@
 package com.galou.go4lunch.util;
 
-import android.view.View;
 import android.widget.ImageView;
 
 import androidx.databinding.BindingAdapter;

@@ -21,7 +21,8 @@
         android:text="@string/app_name"
         android:textSize="@dimen/nave_header_title_size"
         android:textStyle="bold"
-        android:layout_margin="@dimen/big_margin"/>
+        android:layout_margin="@dimen/big_margin"
+        android:textColor="@color/colorTextPrimary"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -48,13 +49,16 @@
                 android:layout_height="wrap_content"
                 android:text="@{viewmodel.username}"
                 android:textStyle="bold"
-                android:textSize="@dimen/nav_header_username_size"/>
+                android:textSize="@dimen/nav_header_username_size"
+                android:textColor="@color/colorTextPrimary"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{viewmodel.email}"
-                android:textSize="@dimen/nav_header_email_size"/>
+                android:textSize="@dimen/nav_header_email_size"
+                android:textColor="@color/colorTextPrimary"/>
         </LinearLayout>
 
     </LinearLayout>

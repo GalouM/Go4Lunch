@@ -1,8 +1,5 @@
 package com.galou.go4lunch.authentication;
 
-import android.util.Log;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -13,11 +10,8 @@ import com.galou.go4lunch.R;
 import com.galou.go4lunch.api.UserHelper;
 import com.galou.go4lunch.base.BaseViewModel;
 import com.galou.go4lunch.models.User;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 
 import static android.app.Activity.RESULT_OK;
 

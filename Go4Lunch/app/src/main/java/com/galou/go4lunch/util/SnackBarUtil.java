@@ -1,7 +1,6 @@
 package com.galou.go4lunch.util;
 
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.android.material.snackbar.Snackbar;
 

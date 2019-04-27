@@ -1,7 +1,6 @@
 package com.galou.go4lunch.settings;
 
 import android.net.Uri;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -10,7 +9,6 @@ import com.galou.go4lunch.R;
 import com.galou.go4lunch.api.UserHelper;
 import com.galou.go4lunch.base.BaseViewModel;
 import com.galou.go4lunch.models.User;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;

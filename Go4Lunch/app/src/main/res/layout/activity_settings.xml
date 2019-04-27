@@ -87,7 +87,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/settings_enable_notifications"
-            android:textColor="@color/colorTextOnWhite"
             android:textSize="@dimen/settings_notification_text_size"/>
 
         <androidx.appcompat.widget.SwitchCompat
