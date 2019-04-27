@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -85,9 +86,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void setupSnackBar(){
+        View view = findViewById(android.R.id.content);
         viewModel.getSnackBarMessage().observe(this, message -> {
             if(message != null){
-                SnackBarUtil.showSnackBar(getWindow().getDecorView().getRootView(), getString(message));
+                SnackBarUtil.showSnackBar(view, getString(message));
             }
         });
 

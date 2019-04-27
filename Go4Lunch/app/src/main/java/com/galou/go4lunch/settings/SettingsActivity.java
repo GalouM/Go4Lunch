@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -106,9 +107,10 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
     }
 
     private void setupSnackBar(){
+        View view = findViewById(android.R.id.content);
         viewModel.getSnackBarMessage().observe(this, message -> {
             if(message != null){
-                SnackBarUtil.showSnackBar(getWindow().getDecorView().getRootView(), getString(message));
+                SnackBarUtil.showSnackBar(view, getString(message));
             }
         });
     }

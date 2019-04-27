@@ -6,6 +6,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 /**
  * Created by galou on 2019-04-23
@@ -28,6 +29,10 @@ public class UserHelper {
     //---- GET ----
     public static Task<DocumentSnapshot> getUser(String uid){
         return UserHelper.getUserCollection().document(uid).get();
+    }
+
+    public static Query getAllUsersFromFirebase(){
+        return UserHelper.getUserCollection().orderBy("username");
     }
 
     //---- UPDATE ----

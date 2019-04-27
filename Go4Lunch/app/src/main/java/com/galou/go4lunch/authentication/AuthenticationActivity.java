@@ -2,6 +2,7 @@ package com.galou.go4lunch.authentication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -67,9 +68,10 @@ public class AuthenticationActivity extends AppCompatActivity implements Authent
     }
 
     private void setupSnackBar(){
+        View view = findViewById(android.R.id.content);
         viewModel.getSnackBarMessage().observe(this, message -> {
             if(message != null){
-                SnackBarUtil.showSnackBar(getWindow().getDecorView().getRootView(), getString(message));
+                SnackBarUtil.showSnackBar(view, getString(message));
             }
         });
 

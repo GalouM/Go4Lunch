@@ -64,10 +64,10 @@ public class SettingsViewModel extends BaseViewModel {
 
     private void configureInfoUser(){
         if (user != null) {
-            isLoading.setValue(false);
             username.setValue(user.getUsername());
             email.setValue(user.getEmail());
             urlPicture.setValue(user.getUrlPicture());
+            isLoading.setValue(false);
         }
     }
 
@@ -155,17 +155,17 @@ public class SettingsViewModel extends BaseViewModel {
         return aVoid -> {
             switch (origin){
                 case UPDATE_USER:
-                    isLoading.setValue(false);
                     snackBarText.setValue(R.string.information_updated);
+                    isLoading.setValue(false);
                     break;
                 case DELETE_USER:
-                    isLoading.setValue(false);
                     snackBarText.setValue(R.string.deleted_account_message);
                     deleteUser.setValue(new Object());
+                    isLoading.setValue(false);
                     break;
                 case UPDATE_PHOTO:
-                    isLoading.setValue(false);
                     snackBarText.setValue(R.string.photo_updated_message);
+                    isLoading.setValue(false);
                     break;
             }
 
@@ -173,9 +173,4 @@ public class SettingsViewModel extends BaseViewModel {
 
     }
 
-    @Override
-    public OnFailureListener onFailureListener() {
-        isLoading.setValue(false);
-        return super.onFailureListener();
-    }
 }

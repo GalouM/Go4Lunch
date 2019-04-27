@@ -1,6 +1,7 @@
 package com.galou.go4lunch.util;
 
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -13,6 +14,9 @@ public abstract class SnackBarUtil {
         if(view == null || message == null){
             return;
         }
-        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+        Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
+        SnackBarHelper.configSnackBar(view.getContext(), snackbar);
+        snackbar.show();
+
     }
 }
