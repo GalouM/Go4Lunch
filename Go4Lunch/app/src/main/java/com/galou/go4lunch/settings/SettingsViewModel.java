@@ -1,6 +1,7 @@
 package com.galou.go4lunch.settings;
 
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -58,7 +59,7 @@ public class SettingsViewModel extends BaseViewModel {
     }
 
     // --------------------
-    // UPDATE BINDING INFOS
+    // UPDATE BINDING INFO
     // --------------------
 
     private void configureInfoUser(){
@@ -123,7 +124,7 @@ public class SettingsViewModel extends BaseViewModel {
     }
 
     // --------------------
-    // SET PICTURE
+    // SET NEW PICTURE
     // --------------------
 
     private void uploadPhotoInFirebase(final String urlPhoto) {

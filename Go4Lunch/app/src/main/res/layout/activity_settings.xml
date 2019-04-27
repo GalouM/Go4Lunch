@@ -14,6 +14,12 @@
 
     </data>
 
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -39,7 +45,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:imageUrl="@{viewmodel.urlPicture}"
+        android:src="@drawable/ic_anon_user_48dp"
         android:onClick="@{(view) -> listener.onClick(view)}"/>
+
+    <ImageView
+        android:layout_width="@dimen/settings_photo_size"
+        android:layout_height="@dimen/settings_photo_size"
+        android:src="@drawable/add_photo_icon"
+        android:layout_margin="@dimen/big_margin"
+        app:layout_constraintTop_toBottomOf="@id/layout_toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <EditText
         android:id="@+id/username"
@@ -111,4 +127,5 @@
         android:onClick="@{(view) -> listener.onClick(view)}"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

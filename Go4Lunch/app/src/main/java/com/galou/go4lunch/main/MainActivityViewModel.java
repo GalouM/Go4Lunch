@@ -7,10 +7,6 @@ import com.galou.go4lunch.R;
 import com.galou.go4lunch.api.UserHelper;
 import com.galou.go4lunch.base.BaseViewModel;
 import com.galou.go4lunch.models.User;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
 
 /**
  * Created by galou on 2019-04-23
@@ -43,7 +39,7 @@ public class MainActivityViewModel extends BaseViewModel {
                 .addOnFailureListener(this.onFailureListener())
                 .addOnSuccessListener(documentSnapshot -> {
                     user = documentSnapshot.toObject(User.class);
-                    this.onUserLogged();
+                    this.configureInfoUser();
                 });
     }
 
@@ -65,11 +61,15 @@ public class MainActivityViewModel extends BaseViewModel {
     // UPDATE BINDING INFOS
     // --------------------
 
-    private void onUserLogged(){
+    private void configureInfoUser(){
         if (user != null) {
             username.setValue(user.getUsername());
             email.setValue(user.getEmail());
             urlPicture.setValue(user.getUrlPicture());
+
+
+        } else {
+            onStart();
         }
     }
 

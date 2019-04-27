@@ -1,5 +1,8 @@
 package com.galou.go4lunch.authentication;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -9,8 +12,12 @@ import com.firebase.ui.auth.IdpResponse;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.api.UserHelper;
 import com.galou.go4lunch.base.BaseViewModel;
+import com.galou.go4lunch.models.User;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -21,6 +28,8 @@ public class AuthenticationViewModel extends BaseViewModel {
 
     private final MutableLiveData<Object> openNewActivityEvent = new MutableLiveData<>();
     private final MutableLiveData<Object> openSignInActivityEvent = new MutableLiveData<>();
+
+    private User user;
 
     // LiveData getters
 
@@ -36,8 +45,7 @@ public class AuthenticationViewModel extends BaseViewModel {
     void handleResponseAfterSignIn(int requestCode, int resultCode, IdpResponse response){
         if (requestCode == AuthenticationActivity.RC_SIGN_IN) {
             if (resultCode == RESULT_OK) { // SUCCESS
-                this.checkIfUserIsLogged();
-                this.createUserInFirestore();
+                this.checkIfUserExistInFirestore();
             } else { // ERRORS
                 if (response == null) {
                     snackBarText.setValue(R.string.error_authentication_canceled);
@@ -59,16 +67,32 @@ public class AuthenticationViewModel extends BaseViewModel {
         }
     }
 
-    private void createUserInFirestore(){
-        if(isCurrentUserLogged()){
-            String urlPicture = (getCurrentUser().getPhotoUrl() != null) ?
-                    this.getCurrentUser().getPhotoUrl().toString() : null;
-            String email = getCurrentUser().getEmail();
-            String username = getCurrentUser().getDisplayName();
-            String uid = getCurrentUser().getUid();
+    private void checkIfUserExistInFirestore(){
+        if (isCurrentUserLogged()) {
+            UserHelper.getUser(getCurrentUser().getUid())
+                    .addOnFailureListener(e -> createUserInFirestore())
+                    .addOnSuccessListener(documentSnapshot -> {
+                        user = documentSnapshot.toObject(User.class);
+                        if (user == null){
+                            createUserInFirestore();
+                        }
+                    });
+            openNewActivityEvent.setValue(new Object());
 
-            UserHelper.createUser(uid, username, email, urlPicture).addOnFailureListener(this.onFailureListener());
         }
+
+
+    }
+
+    private void createUserInFirestore() {
+        String urlPicture = (getCurrentUser().getPhotoUrl() != null) ?
+                this.getCurrentUser().getPhotoUrl().toString() : null;
+        String email = getCurrentUser().getEmail();
+        String username = getCurrentUser().getDisplayName();
+        String uid = getCurrentUser().getUid();
+        UserHelper.createUser(uid, username, email, urlPicture)
+                .addOnFailureListener(this.onFailureListener());
+
 
     }
 

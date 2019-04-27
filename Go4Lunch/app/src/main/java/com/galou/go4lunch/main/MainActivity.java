@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.firebase.ui.auth.AuthUI;
 import com.galou.go4lunch.R;
+import com.galou.go4lunch.authentication.AuthenticationActivity;
 import com.galou.go4lunch.chat.ChatFragment;
 import com.galou.go4lunch.databinding.ActivityMainBinding;
 import com.galou.go4lunch.databinding.MainActivityNavHeaderBinding;
@@ -245,7 +246,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void logoutUser() {
         AuthUI.getInstance().signOut(this)
-                .addOnSuccessListener(aVoid -> finish())
+                .addOnSuccessListener(aVoid -> {
+                    Intent intent = new Intent(this, AuthenticationActivity.class);
+                    startActivity(intent);
+                })
                 .addOnFailureListener(viewModel.onFailureListener());
 
     }

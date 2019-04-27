@@ -1,5 +1,6 @@
 package com.galou.go4lunch.util;
 
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.databinding.BindingAdapter;
@@ -14,6 +15,9 @@ public class CutomSetter {
 
     @BindingAdapter("bind:imageUrl")
     public static void loadImage(ImageView view, String url){
-        Glide.with(view.getContext()).load(url).apply(RequestOptions.circleCropTransform()).into(view);
+        if(url != null) {
+            Glide.with(view.getContext()).load(url).apply(RequestOptions.circleCropTransform()).into(view);
+        }
     }
+
 }
