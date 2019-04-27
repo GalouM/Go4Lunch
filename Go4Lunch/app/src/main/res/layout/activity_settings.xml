@@ -9,17 +9,8 @@
             type="com.galou.go4lunch.settings.SettingsViewModel" />
 
         <variable
-            name="listener_notification"
-            type="com.galou.go4lunch.settings.NotificationActionListener" />
-        <variable
-            name="listener_update"
-            type="com.galou.go4lunch.settings.UpdateActionListener" />
-        <variable
-            name="listener_delete"
-            type="com.galou.go4lunch.settings.DeleteAccountActionListener" />
-        <variable
-            name="listener_photo"
-            type="com.galou.go4lunch.settings.UpdatePhotoActionListener" />
+            name="listener"
+            type="com.galou.go4lunch.settings.ButtonActionListener" />
 
     </data>
 
@@ -48,7 +39,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:imageUrl="@{viewmodel.urlPicture}"
-        android:onClick="@{(view) -> listener_photo.onClick(view)}"/>
+        android:onClick="@{(view) -> listener.onClick(view)}"/>
 
     <EditText
         android:id="@+id/username"
@@ -84,11 +75,12 @@
             android:textSize="@dimen/settings_notification_text_size"/>
 
         <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/notification_switch"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:checked="@{viewmodel.isNotificationEnabled}"
-            android:onClick="@{(view) -> listener_notification.onClick(view)}"/>
+            android:onClick="@{(view) -> listener.onClick(view)}"/>
     </LinearLayout>
 
     <ProgressBar
@@ -101,12 +93,13 @@
         android:visibility="@{viewmodel.isLoading ? View.VISIBLE : View.GONE}"/>
 
     <Button
+        android:id="@+id/update_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/settings_update_user_information"
         app:layout_constraintBottom_toTopOf="@id/delete_button"
         android:layout_margin="@dimen/small_margin"
-        android:onClick="@{(view) -> listener_update.onClick(view)}"/>
+        android:onClick="@{(view) -> listener.onClick(view)}"/>
 
     <Button
         android:id="@+id/delete_button"
@@ -115,7 +108,7 @@
         android:text="@string/settings_delete_account"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_margin="@dimen/small_margin"
-        android:onClick="@{(view) -> listener_delete.onClick(view)}"/>
+        android:onClick="@{(view) -> listener.onClick(view)}"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

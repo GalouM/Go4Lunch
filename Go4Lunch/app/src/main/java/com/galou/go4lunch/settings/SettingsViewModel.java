@@ -9,10 +9,10 @@ import com.galou.go4lunch.R;
 import com.galou.go4lunch.api.UserHelper;
 import com.galou.go4lunch.base.BaseViewModel;
 import com.galou.go4lunch.models.User;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.util.UUID;
 
@@ -25,17 +25,20 @@ import static com.galou.go4lunch.settings.SuccessOrign.UPDATE_USER;
  */
 public class SettingsViewModel extends BaseViewModel {
 
+    //----- PUBLIC LIVE DATA -----
+
     public final MutableLiveData<String> username = new MutableLiveData<>();
     public final MutableLiveData<String> email = new MutableLiveData<>();
     public final MutableLiveData<String> urlPicture = new MutableLiveData<>();
     public final MutableLiveData<Boolean> isNotificationEnabled = new MutableLiveData<>();
     public final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
 
-    private final MutableLiveData<Boolean> isAccountDeleted = new MutableLiveData<>();
+    //----- PRIVATE LIVE DATA -----
+    private final MutableLiveData<Object> deleteUser = new MutableLiveData<>();
 
-    //---getters
-    public LiveData<Boolean> getIsAccountDeleted(){
-        return isAccountDeleted;
+    //----- GETTER -----
+    public LiveData<Object> getDeleteUser(){
+        return deleteUser;
     }
 
     private User user;
@@ -46,13 +49,13 @@ public class SettingsViewModel extends BaseViewModel {
                 .addOnFailureListener(this.onFailureListener())
                 .addOnSuccessListener(documentSnapshot -> {
                     user = documentSnapshot.toObject(User.class);
-                    onUserLogged();
+                    configureInfoUser();
                     isLoading.setValue(false);
                 });
 
     }
 
-    private void onUserLogged(){
+    private void configureInfoUser(){
         if (isUserLogged()) {
             username.setValue(user.getUsername());
             email.setValue(user.getEmail());
@@ -101,7 +104,7 @@ public class SettingsViewModel extends BaseViewModel {
                 case DELETE_USER:
                     isLoading.setValue(false);
                     snackBarText.setValue(R.string.deleted_account_message);
-                    isAccountDeleted.setValue(true);
+                    deleteUser.setValue(new Object());
                     break;
                 case UPDATE_PHOTO:
                     isLoading.setValue(false);
@@ -144,5 +147,11 @@ public class SettingsViewModel extends BaseViewModel {
 
         }).addOnFailureListener(onFailureListener());
 
+    }
+
+    @Override
+    public OnFailureListener onFailureListener() {
+        isLoading.setValue(false);
+        return super.onFailureListener();
     }
 }

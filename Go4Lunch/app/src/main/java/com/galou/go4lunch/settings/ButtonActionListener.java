@@ -5,6 +5,6 @@ import android.view.View;
 /**
  * Created by galou on 2019-04-25
  */
-public interface NotificationActionListener {
+public interface ButtonActionListener {
     void onClick(View view);
 }

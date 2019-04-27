@@ -16,11 +16,10 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.View;
-import android.widget.CheckBox;
 
 import com.firebase.ui.auth.AuthUI;
 import com.galou.go4lunch.R;
+import com.galou.go4lunch.authentication.AuthenticationActivity;
 import com.galou.go4lunch.databinding.ActivitySettingsBinding;
 import com.galou.go4lunch.util.SnackBarUtil;
 
@@ -42,26 +41,17 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
     public static final String KEY_PREF_NOTIFICATION_ENABLE = "notificationEnabled";
     public static final String KEY_PREF = "prefNotification";
 
+    // --------------------
+    // LIFE CYCLE STATE
+    // --------------------
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_settings);
-        viewModel = obtainViewModel();
-        getNotificationSettingsFromPreferences();
-        NotificationActionListener notificationActionListener = getNotificationActionListener();
-        UpdateActionListener updateActionListener = getUpdateActionListener();
-        DeleteAccountActionListener deleteAccountActionListener = getDeleteAccountActionListener();
-        UpdatePhotoActionListener updatePhotoActionListener = getUpdatePhotoActionListener();
-        binding.setViewmodel(viewModel);
-        binding.setListenerNotification(notificationActionListener);
-        binding.setListenerUpdate(updateActionListener);
-        binding.setListenerDelete(deleteAccountActionListener);
-        binding.setListenerPhoto(updatePhotoActionListener);
-        binding.setLifecycleOwner(this);
+        this.setBindingAndViewModel();
+        this.getNotificationSettingsFromPreferences();
+        this.createViewModelConnections();
         configureToolbar();
-        setupSnackBar();
-        setupAccountDeleted();
-
         viewModel.onStart();
     }
 
@@ -77,13 +67,8 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
         handleResponse(requestCode, resultCode, data);
     }
 
-    private SettingsViewModel obtainViewModel() {
-        return ViewModelProviders.of(this)
-                .get(SettingsViewModel.class);
-    }
-
     // -----------------
-    // CONFIGURATION
+    // CONFIGURATION UI
     // -----------------
 
     private void configureToolbar(){
@@ -94,6 +79,31 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
 
     }
 
+    // --------------------
+    // VIEW MODEL CONNECTIONS
+    // --------------------
+
+    private void setBindingAndViewModel() {
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_settings);
+        viewModel = obtainViewModel();
+        binding.setViewmodel(viewModel);
+        binding.setLifecycleOwner(this);
+
+    }
+
+    private void createViewModelConnections() {
+        ButtonActionListener buttonActionListener = getButtonActionListener();
+        binding.setListener(buttonActionListener);
+        setupSnackBar();
+        setupDeleteAccount();
+
+    }
+
+    private SettingsViewModel obtainViewModel() {
+        return ViewModelProviders.of(this)
+                .get(SettingsViewModel.class);
+    }
+
     private void setupSnackBar(){
         viewModel.getSnackBarMessage().observe(this, message -> {
             if(message != null){
@@ -102,38 +112,39 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
         });
     }
 
-    private void setupAccountDeleted(){
-        viewModel.getIsAccountDeleted().observe(this, deleted -> deleteAccountAndGoBackToAuth());
+    private void setupDeleteAccount(){
+        viewModel.getDeleteUser().observe(this, deleted -> deleteAccountAndGoBackToAuth());
     }
 
-    private void deleteAccountAndGoBackToAuth() {
-        AuthUI.getInstance()
-                .delete(this)
-                .addOnSuccessListener(this, aVoid -> finish());
-    }
+    //----- LISTENER BUTTON -----
 
-    private NotificationActionListener getNotificationActionListener(){
+    private ButtonActionListener getButtonActionListener(){
         return view -> {
-            viewModel.notificationStateChanged(((SwitchCompat) view).isChecked());
-            saveNotificationSettings(((SwitchCompat) view).isChecked());
-        };
-    }
-
-    private UpdateActionListener getUpdateActionListener(){
-        return view -> viewModel.updateUserInfo();
-    }
-
-    private UpdatePhotoActionListener getUpdatePhotoActionListener(){
-        return new UpdatePhotoActionListener() {
-            @AfterPermissionGranted(RC_IMAGE_PERMS)
-            @Override
-            public void onClick(View view) {
-                chooseImageFromPhone();
-
+            int id = view.getId();
+            switch (id){
+                case R.id.notification_switch:
+                    viewModel.notificationStateChanged(((SwitchCompat) view).isChecked());
+                    saveNotificationSettings(((SwitchCompat) view).isChecked());
+                    break;
+                case R.id.update_button:
+                    viewModel.updateUserInfo();
+                    break;
+                case R.id.delete_button:
+                    viewModel.deleteUserFromDB();
+                    break;
+                case R.id.photo_user:
+                    chooseImageFromPhone();
+                    break;
             }
+
         };
     }
 
+    // --------------------
+    // PICK PHOTO INTENT
+    // --------------------
+
+    @AfterPermissionGranted(RC_IMAGE_PERMS)
     private void chooseImageFromPhone() {
         if(! EasyPermissions.hasPermissions(this, PERMS)){
             EasyPermissions.requestPermissions(
@@ -156,9 +167,9 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
 
     }
 
-    private DeleteAccountActionListener getDeleteAccountActionListener(){
-        return view -> viewModel.deleteUserFromDB();
-    }
+    // --------------------
+    // NOTIFICATION SETTINGS
+    // --------------------
 
     private void getNotificationSettingsFromPreferences() {
         preferences = getSharedPreferences(KEY_PREF, Context.MODE_PRIVATE);
@@ -166,11 +177,25 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
         viewModel.isNotificationEnabled.setValue(notificationEnabled);
     }
 
+    // --------------------
+    // ACTIONS FROM VIEW MODEL
+    // --------------------
+
     @Override
     public void saveNotificationSettings(boolean state){
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(KEY_PREF_NOTIFICATION_ENABLE, state);
         editor.apply();
+    }
+
+    @Override
+    public void deleteAccountAndGoBackToAuth() {
+        AuthUI.getInstance()
+                .delete(this)
+                .addOnSuccessListener(this, aVoid -> {
+                    Intent intent = new Intent(this, AuthenticationActivity.class);
+                    startActivity(intent);
+                });
     }
 
 }

@@ -6,4 +6,5 @@ package com.galou.go4lunch.settings;
 public interface SettingsContract {
 
     void saveNotificationSettings(boolean state);
+    void deleteAccountAndGoBackToAuth();
 }
