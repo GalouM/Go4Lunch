@@ -7,7 +7,6 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:buttonStyle">@style/Go4LunchButton</item>
-        <item name="alertDialogTheme">@style/AlertDialogTheme</item>
     </style>
 
     <!-- DEFAULT TEXT THEME -->
@@ -28,18 +27,6 @@
     <!-- TOOLBAR TITLE THEME -->
     <style name="ToolBarTheme.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">@dimen/toolbar_text_size</item>
-    </style>
-
-    <!-- ALERT DALOG THEME -->
-    <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
-        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
-    </style>
-    <style name="NegativeButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
-        <item name="android:textColor">@color/colorPrimary</item>
-    </style>
-    <style name="PositiveButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
-        <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
     <!-- STYLE SIGN-IN ACTIVITY -->

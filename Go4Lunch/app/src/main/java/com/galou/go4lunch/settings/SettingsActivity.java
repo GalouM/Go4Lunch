@@ -2,7 +2,6 @@ package com.galou.go4lunch.settings;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -13,7 +12,6 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
@@ -98,7 +96,6 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
         ButtonActionListener buttonActionListener = getButtonActionListener();
         binding.setListener(buttonActionListener);
         setupSnackBar();
-        setupOpenConfirmationDialog();
         setupDeleteAccount();
 
     }
@@ -121,10 +118,6 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
         viewModel.getDeleteUser().observe(this, deleted -> deleteAccountAndGoBackToAuth());
     }
 
-    private void setupOpenConfirmationDialog(){
-        viewModel.getOpenDialog().observe(this, dialog -> openConfirmationDialog());
-    }
-
     //----- LISTENER BUTTON -----
 
     private ButtonActionListener getButtonActionListener(){
@@ -139,7 +132,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
                     viewModel.updateUserInfo();
                     break;
                 case R.id.delete_button:
-                    viewModel.deleteUserFromDBRequest();
+                    viewModel.deleteUserFromDB();
                     break;
                 case R.id.photo_user:
                     chooseImageFromPhone();
@@ -205,16 +198,6 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
                     Intent intent = new Intent(this, AuthenticationActivity.class);
                     startActivity(intent);
                 });
-    }
-
-    @Override
-    public void openConfirmationDialog() {
-        new AlertDialog.Builder(this)
-                .setMessage(R.string.alert_delete_account_message)
-                .setTitle(R.string.alert_dialog_delete_account_title)
-                .setPositiveButton(R.string.yes_button, (dialogInterface, i) -> viewModel.deleteUserFromDB())
-                .setNegativeButton(R.string.cancel_button, null)
-                .show();
     }
 
 }
