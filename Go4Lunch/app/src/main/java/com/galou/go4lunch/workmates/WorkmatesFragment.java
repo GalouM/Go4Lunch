@@ -2,6 +2,7 @@ package com.galou.go4lunch.workmates;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,14 +10,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.api.UserHelper;
 import com.galou.go4lunch.models.User;
-import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +28,10 @@ import java.util.List;
 public class WorkmatesFragment extends Fragment {
 
     private RecyclerView recyclerView;
-
     private List<User> users;
+    private WorkmatesRecyclerViewAdapter adapter;
+
+    private WorkmatesViewModel viewModel;
 
 
     public WorkmatesFragment() {
@@ -39,46 +42,35 @@ public class WorkmatesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_workmates, container, false);
+        View view = inflater.inflate(R.layout.fragment_workmates, container, false);
+        configureRecycleView(view);
+        viewModel = obtainViewModel();
+        setupListUsers();
+        viewModel.fetchListUsersFromFirebase();
+        return view;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        recyclerView = view.findViewById(R.id.recycler_view);
-        createListUser();
-        configureRecycleView();
+    private WorkmatesViewModel obtainViewModel() {
+        return ViewModelProviders.of(this)
+                .get(WorkmatesViewModel.class);
     }
 
-    private void configureRecycleView(){
-        /*
-        WorkmatesRecyclerViewAdapter adapter = new WorkmatesRecyclerViewAdapter(
-                generateOptionsForAdapter(UserHelper.getAllUsersFromFirebase()));
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(adapter);
-        */
-        TestAdapter adapter = new TestAdapter(users);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(adapter);
-
-
+    private void setupListUsers(){
+        viewModel.getUsers().observe(this, this::showUsers);
     }
 
-    private FirestoreRecyclerOptions<User> generateOptionsForAdapter(Query query){
-        return new FirestoreRecyclerOptions.Builder<User>()
-                .setQuery(query, User.class)
-                .setLifecycleOwner(this)
-                .build();
-    }
 
-    private void createListUser(){
-        User user1 = new User("qwerr", "name", "email", null);
-        User user2 = new User("qwerr", "name", "email", null);
-        User user3 = new User("qwerr", "name", "email", null);
+    private void configureRecycleView(View view){
         users = new ArrayList<>();
-        users.add(user1);
-        users.add(user2);
-        users.add(user3);
+        adapter = new WorkmatesRecyclerViewAdapter(users);
+        recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(adapter);
     }
 
+    private void showUsers(List<User> users){
+        this.users = users;
+        adapter.update(this.users);
+
+    }
 }

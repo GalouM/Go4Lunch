@@ -3,9 +3,12 @@ package com.galou.go4lunch.workmates;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.galou.go4lunch.api.UserHelper;
 import com.galou.go4lunch.base.BaseViewModel;
 import com.galou.go4lunch.models.User;
+import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,4 +21,18 @@ public class WorkmatesViewModel extends BaseViewModel {
 
     //----- GETTER LIVE DATA -----
     public LiveData<List<User>> getUsers(){ return users; }
+
+    // --------------------
+    // GET USER ACTION
+    // --------------------
+    void fetchListUsersFromFirebase() {
+        UserHelper.getAllUsersFromFirebase().addOnSuccessListener(queryDocumentSnapshots -> {
+            List<User> fetchedUser = new ArrayList<>();
+            for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()){
+                User user = documentSnapshot.toObject(User.class);
+                fetchedUser.add(user);
+            }
+            users.setValue(fetchedUser);
+        });
+    }
 }
