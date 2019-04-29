@@ -1,6 +1,7 @@
 package com.galou.go4lunch.workmates;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.RequestManager;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.galou.go4lunch.R;
@@ -21,13 +23,16 @@ import java.util.List;
 public class WorkmatesRecyclerViewAdapter extends RecyclerView.Adapter<WorkmatesRecyclerViewViewHolder> {
 
     private List<User> users;
+    private RequestManager glide;
 
-    public WorkmatesRecyclerViewAdapter(List<User> users) {
+    public WorkmatesRecyclerViewAdapter(List<User> users, RequestManager glide) {
         this.users = users;
+        this.glide = glide;
     }
 
     @Override
     public void onBindViewHolder(@NonNull WorkmatesRecyclerViewViewHolder holder, int position) {
+        holder.updateWithUser(users.get(position), this.glide);
 
     }
 

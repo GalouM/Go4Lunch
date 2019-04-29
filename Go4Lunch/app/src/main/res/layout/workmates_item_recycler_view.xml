@@ -7,18 +7,19 @@
     android:layout_margin="@dimen/small_margin">
 
     <ImageView
-        android:id="@+id/recycler_view_image_article"
-        android:layout_width="80dip"
-        android:layout_height="80dip"
+        android:id="@+id/recycler_view_image_user"
+        android:layout_width="@dimen/user_image_recyclerview_workmates_size"
+        android:layout_height="@dimen/user_image_recyclerview_workmates_size"
         android:background="@drawable/ic_anon_user_48dp"
         android:scaleType="fitCenter" />
 
     <TextView
-        android:id="@+id/recycler_view_section_article"
+        android:id="@+id/recycler_view_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Scarlett is eating french (Le Zinc)"
         android:textColor="@color/colorTextOnWhite"
         android:layout_gravity="center"
-        android:layout_margin="@dimen/small_margin"/>
+        android:layout_margin="@dimen/small_margin"
+        android:textSize="@dimen/text_recycler_vew_user_size"/>
 </LinearLayout>

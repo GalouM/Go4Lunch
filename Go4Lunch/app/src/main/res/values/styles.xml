@@ -42,6 +42,12 @@
         <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
+    <!-- TEXT USERS NOT DECIDED -->
+    <style name="UserNotDecidedText" parent="Go4LunchText">
+        <item name="android:textColor">@color/colorTextUnactive</item>
+        <item name="android:textStyle">italic</item>
+    </style>
+
     <!-- STYLE SIGN-IN ACTIVITY -->
     <style name="LoginTheme" parent="AppTheme">
         <item name="colorPrimary">@color/colorPrimary</item>

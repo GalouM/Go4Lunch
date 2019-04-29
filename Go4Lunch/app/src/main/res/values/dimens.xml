@@ -17,5 +17,9 @@
     <dimen name="settings_progressbar_size">80dip</dimen>
     <dimen name="settings_photo_size">80dip</dimen>
     <dimen name="settings_notification_text_size">15sp</dimen>
+    <dimen name="text_recycler_vew_user_size">15sp</dimen>
+
+    <!-- image size -->
+    <dimen name="user_image_recyclerview_workmates_size">60dip</dimen>
 
 </resources>

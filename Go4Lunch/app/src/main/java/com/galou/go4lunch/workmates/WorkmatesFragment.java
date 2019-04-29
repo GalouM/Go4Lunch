@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.api.UserHelper;
 import com.galou.go4lunch.models.User;
@@ -62,7 +63,7 @@ public class WorkmatesFragment extends Fragment {
 
     private void configureRecycleView(View view){
         users = new ArrayList<>();
-        adapter = new WorkmatesRecyclerViewAdapter(users);
+        adapter = new WorkmatesRecyclerViewAdapter(users, Glide.with(this));
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
