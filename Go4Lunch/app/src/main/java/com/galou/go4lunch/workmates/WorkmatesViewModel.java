@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.galou.go4lunch.api.UserHelper;
 import com.galou.go4lunch.base.BaseViewModel;
+import com.galou.go4lunch.databinding.WorkmatesItemRecyclerViewBinding;
 import com.galou.go4lunch.models.User;
 import com.google.firebase.firestore.DocumentSnapshot;
 

@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="user"
+            type="com.galou.go4lunch.models.User" />
+
+    </data>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -11,7 +20,8 @@
         android:layout_width="80dip"
         android:layout_height="80dip"
         android:background="@drawable/ic_anon_user_48dp"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitCenter"
+        app:imageUrl="@{user.getUrlPicture()}"/>
 
     <TextView
         android:id="@+id/recycler_view_section_article"
@@ -22,3 +32,4 @@
         android:layout_gravity="center"
         android:layout_margin="@dimen/small_margin"/>
 </LinearLayout>
+</layout>
