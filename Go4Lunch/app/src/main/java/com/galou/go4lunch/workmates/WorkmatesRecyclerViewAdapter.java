@@ -22,14 +22,7 @@ public class WorkmatesRecyclerViewAdapter extends FirestoreRecyclerAdapter<User,
     }
 
     @Override
-<<<<<<< HEAD
     public void onBindViewHolder(@NonNull WorkmatesRecyclerViewViewHolder holder, int position) {
-        holder.updateWithUser(users.get(position));
-=======
-    protected void onBindViewHolder(@NonNull WorkmatesRecyclerViewViewHolder holder, int i, @NonNull User user) {
-        holder.updateWithUser(user);
->>>>>>> parent of 0ec76f8... workmates in mvvm
-
     }
 
     @NonNull
