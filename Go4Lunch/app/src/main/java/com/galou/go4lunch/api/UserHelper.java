@@ -7,6 +7,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 /**
  * Created by galou on 2019-04-23
@@ -31,8 +32,8 @@ public class UserHelper {
         return UserHelper.getUserCollection().document(uid).get();
     }
 
-    public static Query getAllUsersFromFirebase(){
-        return UserHelper.getUserCollection().orderBy("username");
+    public static Task<QuerySnapshot> getAllUsersFromFirebase(){
+        return UserHelper.getUserCollection().orderBy("username").get();
     }
 
     //---- UPDATE ----

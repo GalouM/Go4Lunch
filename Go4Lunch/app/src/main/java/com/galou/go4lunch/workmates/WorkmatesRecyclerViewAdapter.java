@@ -6,37 +6,29 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.models.User;
 
+import java.util.List;
+
 /**
  * Created by galou on 2019-04-27
  */
-public class WorkmatesRecyclerViewAdapter extends FirestoreRecyclerAdapter<User, WorkmatesRecyclerViewViewHolder> {
+public class WorkmatesRecyclerViewAdapter extends RecyclerView.Adapter<WorkmatesRecyclerViewViewHolder> {
 
-    public WorkmatesRecyclerViewAdapter(@NonNull FirestoreRecyclerOptions<User> options) {
-        super(options);
+    private List<User> users;
+
+    public WorkmatesRecyclerViewAdapter(List<User> users) {
+        this.users = users;
     }
 
-<<<<<<< HEAD
-=======
     @Override
-    protected void onBindViewHolder(@NonNull WorkmatesRecyclerViewViewHolder holder, int i, @NonNull User user) {
-        holder.updateWithUser(user);
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> parent of 0ec76f8... workmates in mvvm
-=======
->>>>>>> parent of 0ec76f8... workmates in mvvm
-=======
->>>>>>> parent of 0ec76f8... workmates in mvvm
+    public void onBindViewHolder(@NonNull WorkmatesRecyclerViewViewHolder holder, int position) {
 
-    @Override
-    protected void onBindViewHolder(@NonNull WorkmatesRecyclerViewViewHolder holder, int i, @NonNull User user) {
-        holder.updateWithUser(user);
     }
 
     @NonNull
@@ -45,13 +37,17 @@ public class WorkmatesRecyclerViewAdapter extends FirestoreRecyclerAdapter<User,
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.workmates_item_recycler_view, parent, false);
-        return new WorkmatesRecyclerViewViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.workmates_item_recycler_view, parent, false));
+        return new WorkmatesRecyclerViewViewHolder(view);
     }
 
 
     @Override
     public int getItemCount() {
-        return 0;
+        return users.size();
+    }
+
+    void update(List<User> users){
+        this.users = users;
+        notifyDataSetChanged();
     }
 }

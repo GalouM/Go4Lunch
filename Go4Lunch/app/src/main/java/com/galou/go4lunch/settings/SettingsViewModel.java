@@ -34,10 +34,14 @@ public class SettingsViewModel extends BaseViewModel {
 
     //----- PRIVATE LIVE DATA -----
     private final MutableLiveData<Object> deleteUser = new MutableLiveData<>();
+    private final MutableLiveData<Object> openDialog = new MutableLiveData<>();
 
     //----- GETTER -----
     public LiveData<Object> getDeleteUser(){
         return deleteUser;
+    }
+    public LiveData<Object> getOpenDialog() {
+        return openDialog;
     }
 
     private User user;
@@ -91,6 +95,11 @@ public class SettingsViewModel extends BaseViewModel {
         UserHelper.updateUserNameAndEmail(newUsername, newEmail, getCurrentUserUid())
                 .addOnFailureListener(this.onFailureListener())
                 .addOnSuccessListener(this.onSuccessListener(UPDATE_USER));
+
+    }
+
+    void deleteUserFromDBRequest() {
+        openDialog.setValue(new Object());
 
     }
 
