@@ -21,8 +21,6 @@ public class WorkmatesRecyclerViewAdapter extends FirestoreRecyclerAdapter<User,
         super(options);
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull WorkmatesRecyclerViewViewHolder holder, int position) {
     }
 
     @NonNull
