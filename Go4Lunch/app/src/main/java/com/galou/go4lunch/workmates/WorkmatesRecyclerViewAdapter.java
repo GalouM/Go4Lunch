@@ -27,6 +27,9 @@ public class WorkmatesRecyclerViewAdapter extends FirestoreRecyclerAdapter<User,
     protected void onBindViewHolder(@NonNull WorkmatesRecyclerViewViewHolder holder, int i, @NonNull User user) {
         holder.updateWithUser(user);
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of 0ec76f8... workmates in mvvm
+=======
 >>>>>>> parent of 0ec76f8... workmates in mvvm
 =======
 >>>>>>> parent of 0ec76f8... workmates in mvvm

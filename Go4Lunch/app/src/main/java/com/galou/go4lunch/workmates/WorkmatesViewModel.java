@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.galou.go4lunch.base.BaseViewModel;
-import com.galou.go4lunch.databinding.WorkmatesItemRecyclerViewBinding;
 import com.galou.go4lunch.models.User;
 
 import java.util.List;
