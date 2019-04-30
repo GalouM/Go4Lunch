@@ -55,6 +55,7 @@
     <!-- LIST USER DISPLAY -->
     <string name="display_text_user_list">%s is eating %s (%s)</string>
     <string name="display_text_user_list_not_decided">%s hasn\'t decided yet</string>
+    <string name="incorrect_email">Incorrect Email</string>
 
 
     <!-- NEW -->

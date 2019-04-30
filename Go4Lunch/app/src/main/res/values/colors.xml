@@ -15,4 +15,5 @@
     <color name="colorTextUnactive">#9e9e9e</color>
 
     <color name="colorBottomNavUnchecked">#9e9e9e</color>
+    <color name="color_separator">#e0e0e0</color>
 </resources>

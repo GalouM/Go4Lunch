@@ -19,6 +19,8 @@ import java.util.UUID;
 import static com.galou.go4lunch.settings.SuccessOrign.DELETE_USER;
 import static com.galou.go4lunch.settings.SuccessOrign.UPDATE_PHOTO;
 import static com.galou.go4lunch.settings.SuccessOrign.UPDATE_USER;
+import static com.galou.go4lunch.util.TextUtil.isEmailCorrect;
+import static com.galou.go4lunch.util.TextUtil.isTextLongEnough;
 
 /**
  * Created by galou on 2019-04-25
@@ -31,6 +33,10 @@ public class SettingsViewModel extends BaseViewModel {
     public final MutableLiveData<String> urlPicture = new MutableLiveData<>();
     public final MutableLiveData<Boolean> isNotificationEnabled = new MutableLiveData<>();
     public final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    public final MutableLiveData<Boolean> isEmailError = new MutableLiveData<>();
+    public final MutableLiveData<String> errorMessageEmail = new MutableLiveData<>();
+    public final MutableLiveData<Boolean> isUsernameError = new MutableLiveData<>();
+    public final MutableLiveData<String> errorMessageUsername = new MutableLiveData<>();
 
     //----- PRIVATE LIVE DATA -----
     private final MutableLiveData<Object> deleteUser = new MutableLiveData<>();
@@ -90,11 +96,17 @@ public class SettingsViewModel extends BaseViewModel {
 
     void updateUserInfo(){
         isLoading.setValue(true);
+        isEmailError.setValue(false);
+        isUsernameError.setValue(false);
         String newUsername = username.getValue();
         String newEmail = email.getValue();
-        UserHelper.updateUserNameAndEmail(newUsername, newEmail, getCurrentUserUid())
-                .addOnFailureListener(this.onFailureListener())
-                .addOnSuccessListener(this.onSuccessListener(UPDATE_USER));
+        if(isNewUserInfosCorrect(newEmail, newUsername)){
+            UserHelper.updateUserNameAndEmail(newUsername, newEmail, getCurrentUserUid())
+                    .addOnFailureListener(this.onFailureListener())
+                    .addOnSuccessListener(this.onSuccessListener(UPDATE_USER));
+        } else {
+            isLoading.setValue(false);
+        }
 
     }
 
@@ -157,6 +169,22 @@ public class SettingsViewModel extends BaseViewModel {
     // --------------------
     // UTILS
     // --------------------
+
+    private boolean isNewUserInfosCorrect(String email, String username){
+        if(!isEmailCorrect(email)){
+            isEmailError.setValue(true);
+            errorMessageEmail.setValue("Incorrect Email");
+            return false;
+        }
+        if(!isTextLongEnough(username, 3)){
+            isUsernameError.setValue(true);
+            errorMessageUsername.setValue("Username not long enough");
+            return false;
+        }
+
+        return true;
+
+    }
 
     private OnSuccessListener<Void> onSuccessListener(final SuccessOrign origin){
         return aVoid -> {

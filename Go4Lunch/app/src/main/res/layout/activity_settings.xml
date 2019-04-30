@@ -57,29 +57,43 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
-    <EditText
-        android:id="@+id/username"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/username_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/photo_user"
-        android:hint="@string/settings_username"
         android:layout_margin="@dimen/small_margin"
-        android:text="@={viewmodel.username}"/>
+        app:errorEnabled="@{viewmodel.isUsernameError}"
+        app:errorMessage="@{viewmodel.errorMessageUsername}"
+        app:layout_constraintTop_toBottomOf="@id/photo_user">
 
-    <EditText
-        android:id="@+id/email"
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/settings_username"
+            android:text="@={viewmodel.username}"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/email_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/username"
-        android:hint="@string/settings_email_address"
         android:layout_margin="@dimen/small_margin"
-        android:text="@={viewmodel.email}"/>
+        app:errorEnabled="@{viewmodel.isEmailError}"
+        app:errorMessage="@{viewmodel.errorMessageEmail}"
+        app:layout_constraintTop_toBottomOf="@id/username_input">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/settings_email_address"
+            android:text="@={viewmodel.email}"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
         android:id="@+id/notifications_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/email"
+        app:layout_constraintTop_toBottomOf="@id/email_input"
         android:orientation="horizontal"
         android:layout_margin="@dimen/small_margin">
 

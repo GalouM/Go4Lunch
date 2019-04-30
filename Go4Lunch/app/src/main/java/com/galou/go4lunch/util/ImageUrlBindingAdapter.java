@@ -10,7 +10,7 @@ import com.bumptech.glide.request.RequestOptions;
 /**
  * Created by galou on 2019-04-24
  */
-public class CutomSetter {
+public class ImageUrlBindingAdapter {
 
     @BindingAdapter("bind:imageUrl")
     public static void loadImage(ImageView view, String url){
