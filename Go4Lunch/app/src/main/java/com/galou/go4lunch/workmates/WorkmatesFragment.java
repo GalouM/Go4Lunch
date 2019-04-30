@@ -22,6 +22,7 @@ import com.galou.go4lunch.R;
 import com.galou.go4lunch.api.UserHelper;
 import com.galou.go4lunch.databinding.FragmentWorkmatesBinding;
 import com.galou.go4lunch.models.User;
+import com.galou.go4lunch.util.SnackBarUtil;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
@@ -64,6 +65,7 @@ public class WorkmatesFragment extends Fragment {
         binding.setLifecycleOwner(getActivity());
         setupListUsers();
         setupForegroundAlpha();
+        setupSnackBar();
 
     }
 
@@ -84,6 +86,15 @@ public class WorkmatesFragment extends Fragment {
                 frameLayout.getForeground().setAlpha(0);
             }
         });
+    }
+
+    private void setupSnackBar(){
+        viewModel.getSnackBarMessage().observe(this, message -> {
+            if(message != null){
+                SnackBarUtil.showSnackBar(getView(), getString(message));
+            }
+        });
+
     }
 
 

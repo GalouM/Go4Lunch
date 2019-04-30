@@ -31,16 +31,18 @@ public class WorkmatesViewModel extends BaseViewModel {
     // GET USER ACTION
     // --------------------
     void fetchListUsersFromFirebase() {
-        UserHelper.getAllUsersFromFirebase().addOnSuccessListener(queryDocumentSnapshots -> {
-            List<User> fetchedUser = new ArrayList<>();
-            for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()){
-                User user = documentSnapshot.toObject(User.class);
-                if(!user.getUid().equals(getCurrentUserUid())) {
-                    fetchedUser.add(user);
-                }
-            }
-            users.setValue(fetchedUser);
-        });
+        UserHelper.getAllUsersFromFirebase()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<User> fetchedUser = new ArrayList<>();
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()){
+                        User user = documentSnapshot.toObject(User.class);
+                        if(!user.getUid().equals(getCurrentUserUid())) {
+                            fetchedUser.add(user);
+                        }
+                    }
+                    users.setValue(fetchedUser);
+                })
+                .addOnFailureListener(this.onFailureListener());
         isLoading.setValue(false);
     }
 
