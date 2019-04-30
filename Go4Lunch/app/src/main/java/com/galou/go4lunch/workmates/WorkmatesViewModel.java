@@ -1,5 +1,7 @@
 package com.galou.go4lunch.workmates;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -19,6 +21,9 @@ public class WorkmatesViewModel extends BaseViewModel {
     //----- PRIVATE LIVE DATA -----
     private MutableLiveData<List<User>> users = new MutableLiveData<>();
 
+    //----- PRIVATE LIVE DATA -----
+    public MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+
     //----- GETTER LIVE DATA -----
     public LiveData<List<User>> getUsers(){ return users; }
 
@@ -30,9 +35,18 @@ public class WorkmatesViewModel extends BaseViewModel {
             List<User> fetchedUser = new ArrayList<>();
             for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()){
                 User user = documentSnapshot.toObject(User.class);
-                fetchedUser.add(user);
+                if(!user.getUid().equals(getCurrentUserUid())) {
+                    fetchedUser.add(user);
+                }
             }
             users.setValue(fetchedUser);
         });
+        isLoading.setValue(false);
+    }
+
+    public void onRefreshUserList(){
+        isLoading.setValue(true);
+        this.fetchListUsersFromFirebase();
+
     }
 }

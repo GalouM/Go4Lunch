@@ -1,11 +1,14 @@
 package com.galou.go4lunch.workmates;
 
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.api.UserHelper;
+import com.galou.go4lunch.databinding.FragmentWorkmatesBinding;
 import com.galou.go4lunch.models.User;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -31,8 +35,10 @@ public class WorkmatesFragment extends Fragment {
     private RecyclerView recyclerView;
     private List<User> users;
     private WorkmatesRecyclerViewAdapter adapter;
+    private FrameLayout frameLayout;
 
     private WorkmatesViewModel viewModel;
+    private FragmentWorkmatesBinding binding;
 
 
     public WorkmatesFragment() {
@@ -44,11 +50,21 @@ public class WorkmatesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_workmates, container, false);
-        configureRecycleView(view);
-        viewModel = obtainViewModel();
-        setupListUsers();
+        this.configureRecycleView(view);
+        this.configureForeground(view);
+        this.configureBindingAndViewModel(view);
         viewModel.fetchListUsersFromFirebase();
         return view;
+    }
+
+    private void configureBindingAndViewModel(View view) {
+        binding = FragmentWorkmatesBinding.bind(view);
+        viewModel = obtainViewModel();
+        binding.setViewmodel(viewModel);
+        binding.setLifecycleOwner(getActivity());
+        setupListUsers();
+        setupForegroundAlpha();
+
     }
 
     private WorkmatesViewModel obtainViewModel() {
@@ -60,6 +76,16 @@ public class WorkmatesFragment extends Fragment {
         viewModel.getUsers().observe(this, this::showUsers);
     }
 
+    private void setupForegroundAlpha(){
+        viewModel.isLoading.observe(this, isLoading -> {
+            if(isLoading){
+                frameLayout.getForeground().setAlpha(50);
+            } else {
+                frameLayout.getForeground().setAlpha(0);
+            }
+        });
+    }
+
 
     private void configureRecycleView(View view){
         users = new ArrayList<>();
@@ -67,6 +93,12 @@ public class WorkmatesFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
+    }
+
+    private void configureForeground(View view){
+        frameLayout = (FrameLayout) view.findViewById(R.id.frame_layout);
+        frameLayout.setForeground(new ColorDrawable(Color.BLACK));
+        frameLayout.getForeground().setAlpha(0);
     }
 
     private void showUsers(List<User> users){

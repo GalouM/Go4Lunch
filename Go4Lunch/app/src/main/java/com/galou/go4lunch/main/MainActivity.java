@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setBindingAndViewModel();
+        this.configureBindingAndViewModel();
         this.configureUI();
         this.createViewModelConnections();
 
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // VIEW MODEL CONNECTIONS
     // --------------------
 
-    private void setBindingAndViewModel(){
+    private void configureBindingAndViewModel(){
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         viewModel = obtainViewModel();
         binding.setViewmodel(viewModel);
