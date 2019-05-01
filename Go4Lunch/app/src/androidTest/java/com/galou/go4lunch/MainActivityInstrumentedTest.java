@@ -88,14 +88,6 @@ public class MainActivityInstrumentedTest {
     }
 
     @Test
-    public void checkBottomNavigation_buttonSelection(){
-        onView(ViewMatchers.withId(R.id.action_map)).check(matches(withIsChecked(true)));
-        onView(ViewMatchers.withId(R.id.action_list)).check(matches(withIsChecked(false)));
-        onView(ViewMatchers.withId(R.id.action_workmates)).check(matches(withIsChecked(false)));
-        onView(ViewMatchers.withId(R.id.action_chat)).check(matches(withIsChecked(false)));
-    }
-
-    @Test
     public void checkBottomNavigationButtonTitle(){
         onView(ViewMatchers.withId(R.id.action_map)).check(matches(withTitle(context.getString(R.string.bottom_navigation_menu_map_view))));
         onView(ViewMatchers.withId(R.id.action_list)).check(matches(withTitle(context.getString(R.string.bottom_navigation_menu_list_view))));
@@ -141,7 +133,7 @@ public class MainActivityInstrumentedTest {
         onView(withId(R.id.drawer_view)).check(matches(isClosed(Gravity.LEFT)))
                 .perform(DrawerActions.open());
         onView(withId(R.id.navigation_view)).perform(NavigationViewActions.navigateTo(R.id.main_activity_drawer_logout));
-        waitForNetworkCall();
+        //waitForNetworkCall();
 
         //onView(withId(R.id.auth_activity_layout)).check(matches(isDisplayed()));
     }
