@@ -9,6 +9,8 @@ import com.galou.go4lunch.R;
 import com.galou.go4lunch.api.UserHelper;
 import com.galou.go4lunch.base.BaseViewModel;
 import com.galou.go4lunch.models.User;
+import com.galou.go4lunch.util.RetryAction;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -20,8 +22,14 @@ import java.util.UUID;
 import static com.galou.go4lunch.settings.SuccessOrign.DELETE_USER;
 import static com.galou.go4lunch.settings.SuccessOrign.UPDATE_PHOTO;
 import static com.galou.go4lunch.settings.SuccessOrign.UPDATE_USER;
+import static com.galou.go4lunch.util.RetryAction.DELETE_USER_DB;
+import static com.galou.go4lunch.util.RetryAction.FETCH_USER;
+import static com.galou.go4lunch.util.RetryAction.UPDATE_INFO_USER_DB;
+import static com.galou.go4lunch.util.RetryAction.UPDATE_PHOTO_DB;
 import static com.galou.go4lunch.util.TextUtil.isEmailCorrect;
 import static com.galou.go4lunch.util.TextUtil.isTextLongEnough;
+import static com.galou.go4lunch.util.UserConverter.convertJsonInUser;
+import static com.galou.go4lunch.util.UserConverter.convertUserInJson;
 
 /**
  * Created by galou on 2019-04-25
@@ -55,6 +63,7 @@ public class SettingsViewModel extends BaseViewModel {
     private String newUsername;
     private String newEmail;
     private String newPhotoUrl;
+    private String urlPhotoSelected;
 
     // --------------------
     // START
@@ -63,8 +72,7 @@ public class SettingsViewModel extends BaseViewModel {
     void configureUser(String jsonUser){
         isLoading.setValue(true);
         if(jsonUser != null){
-            Gson gson = new Gson();
-            this.user = gson.fromJson(jsonUser, User.class);
+            this.user = convertJsonInUser(jsonUser);
             configureInfoUser();
         }
     }
@@ -105,7 +113,7 @@ public class SettingsViewModel extends BaseViewModel {
         newEmail = email.getValue();
         if(isNewUserInfosCorrect(newEmail, newUsername)){
             UserHelper.updateUserNameAndEmail(newUsername, newEmail, getCurrentUserUid())
-                    .addOnFailureListener(this.onFailureListener())
+                    .addOnFailureListener(this.onFailureListener(UPDATE_INFO_USER_DB))
                     .addOnSuccessListener(this.onSuccessListener(UPDATE_USER));
         } else {
             isLoading.setValue(false);
@@ -122,13 +130,13 @@ public class SettingsViewModel extends BaseViewModel {
         isLoading.setValue(true);
         UserHelper.deleteUser(getCurrentUserUid())
                 .addOnSuccessListener(this.onSuccessListener(DELETE_USER))
-                .addOnFailureListener(this.onFailureListener());
+                .addOnFailureListener(this.onFailureListener(DELETE_USER_DB));
     }
 
     void updateUserPhoto(String urlPhoto) {
         isLoading.setValue(true);
+        urlPhotoSelected = urlPhoto;
         uploadPhotoInFirebase(urlPhoto);
-        urlPicture.setValue(urlPhoto);
     }
 
     // --------------------
@@ -154,7 +162,7 @@ public class SettingsViewModel extends BaseViewModel {
         StorageReference imageRef = FirebaseStorage.getInstance().getReference(uuid);
         imageRef.putFile(Uri.parse(urlPhoto))
                 .addOnSuccessListener(this::getUrlPhotoFromFirebase)
-                .addOnFailureListener(onFailureListener());
+                .addOnFailureListener(this.onFailureListener(UPDATE_PHOTO_DB));
 
     }
 
@@ -164,8 +172,8 @@ public class SettingsViewModel extends BaseViewModel {
                     newPhotoUrl = uri.toString();
                     UserHelper.updateUrlPicture(newPhotoUrl, getCurrentUserUid())
                             .addOnSuccessListener(onSuccessListener(UPDATE_PHOTO))
-                            .addOnFailureListener(onFailureListener());
-                }).addOnFailureListener(onFailureListener());
+                            .addOnFailureListener(this.onFailureListener(UPDATE_PHOTO_DB));
+                }).addOnFailureListener(this.onFailureListener(UPDATE_PHOTO_DB));
 
     }
 
@@ -207,6 +215,7 @@ public class SettingsViewModel extends BaseViewModel {
                 case UPDATE_PHOTO:
                     snackBarText.setValue(R.string.photo_updated_message);
                     isLoading.setValue(false);
+                    urlPicture.setValue(newPhotoUrl);
                     user.setUrlPicture(newPhotoUrl);
                     configureModifiedUser();
                     break;
@@ -217,9 +226,24 @@ public class SettingsViewModel extends BaseViewModel {
     }
 
     private void configureModifiedUser(){
-        Gson gson = new Gson();
-        String userJson = gson.toJson(user);
-        modifiedUser.setValue(userJson);
+        modifiedUser.setValue(convertUserInJson(user));
+    }
+
+    @Override
+    public void retry(RetryAction retryAction) {
+        switch (retryAction){
+            case UPDATE_PHOTO_DB:
+                updateUserPhoto(urlPhotoSelected);
+                break;
+            case UPDATE_INFO_USER_DB:
+                updateUserInfo();
+                break;
+            case DELETE_USER_DB:
+                deleteUserFromDB();
+                break;
+
+        }
+
     }
 
 }

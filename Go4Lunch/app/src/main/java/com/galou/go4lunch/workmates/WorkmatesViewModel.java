@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.galou.go4lunch.api.UserHelper;
 import com.galou.go4lunch.base.BaseViewModel;
 import com.galou.go4lunch.models.User;
+import com.galou.go4lunch.util.RetryAction;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
@@ -27,6 +28,11 @@ public class WorkmatesViewModel extends BaseViewModel {
     // --------------------
     // GET USER ACTION
     // --------------------
+
+    void start(User user){
+        this.user = user;
+    }
+
     void fetchListUsersFromFirebase() {
         UserHelper.getAllUsersFromFirebase()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -40,13 +46,22 @@ public class WorkmatesViewModel extends BaseViewModel {
                     users.setValue(fetchedUser);
                     isLoading.setValue(false);
                 })
-                .addOnFailureListener(this.onFailureListener());
+                .addOnFailureListener(this.onFailureListener(RetryAction.FETCH_ALL_USERS));
 
     }
 
     public void onRefreshUserList(){
         isLoading.setValue(true);
         this.fetchListUsersFromFirebase();
+
+    }
+
+    @Override
+    public void retry(RetryAction retryAction) {
+        if(retryAction == RetryAction.FETCH_ALL_USERS){
+            fetchListUsersFromFirebase();
+        }
+
 
     }
 }

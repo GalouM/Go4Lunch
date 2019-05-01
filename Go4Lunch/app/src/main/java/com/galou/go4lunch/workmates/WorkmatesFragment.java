@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.api.UserHelper;
 import com.galou.go4lunch.databinding.FragmentWorkmatesBinding;
+import com.galou.go4lunch.main.MainActivity;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.util.SnackBarUtil;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -53,6 +54,8 @@ public class WorkmatesFragment extends Fragment implements WorkmateContract {
         View view = inflater.inflate(R.layout.fragment_workmates, container, false);
         this.configureRecycleView(view);
         this.configureBindingAndViewModel(view);
+        MainActivity mainActivity = (MainActivity) getActivity();
+        viewModel.start(mainActivity.getUser());
         viewModel.fetchListUsersFromFirebase();
         return view;
     }
@@ -64,6 +67,7 @@ public class WorkmatesFragment extends Fragment implements WorkmateContract {
         binding.setLifecycleOwner(getActivity());
         setupListUsers();
         setupSnackBar();
+        setupSnackBarWithAction();
 
     }
 
@@ -80,6 +84,15 @@ public class WorkmatesFragment extends Fragment implements WorkmateContract {
         viewModel.getSnackBarMessage().observe(this, message -> {
             if(message != null){
                 SnackBarUtil.showSnackBar(getView(), getString(message));
+            }
+        });
+
+    }
+
+    private void setupSnackBarWithAction(){
+        viewModel.getSnackBarWithAction().observe(this, action -> {
+            if(action != null){
+                SnackBarUtil.showSnackBarWithRetryButton(getView(), getString(R.string.error_unknown_error), viewModel, action);
             }
         });
 

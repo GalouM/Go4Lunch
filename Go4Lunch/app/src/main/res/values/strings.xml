@@ -58,6 +58,7 @@
 
     <string name="incorrect_email">Incorrect Email</string>
     <string name="incorrect_username">Username not long enough</string>
+    <string name="retry_button">Retry</string>
 
 
     <!-- NEW -->

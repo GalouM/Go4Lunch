@@ -1,5 +1,6 @@
 package com.galou.go4lunch.authentication;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -10,12 +11,16 @@ import com.galou.go4lunch.R;
 import com.galou.go4lunch.api.UserHelper;
 import com.galou.go4lunch.base.BaseViewModel;
 import com.galou.go4lunch.models.User;
+import com.galou.go4lunch.util.RetryAction;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 
 import static android.app.Activity.RESULT_OK;
+import static com.galou.go4lunch.util.RetryAction.FETCH_USER;
+import static com.galou.go4lunch.util.UserConverter.convertUserInJson;
 
 /**
  * Created by galou on 2019-04-22
@@ -46,9 +51,9 @@ public class AuthenticationViewModel extends BaseViewModel {
                 if (response == null) {
                     snackBarText.setValue(R.string.error_authentication_canceled);
                 } else if (response.getErrorCode() == ErrorCodes.NO_NETWORK) {
-                    snackBarText.setValue(R.string.error_no_internet);
+                    snackBarWithAction.setValue(FETCH_USER);
                 } else if (response.getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
-                    snackBarText.setValue(R.string.error_unknown_error);
+                    snackBarWithAction.setValue(FETCH_USER);
                 }
             }
         }
@@ -66,15 +71,13 @@ public class AuthenticationViewModel extends BaseViewModel {
     private void fetchCurrentUserFromFirestore(){
         if (isCurrentUserLogged()) {
             UserHelper.getUser(getCurrentUser().getUid())
-                    .addOnFailureListener(this.onFailureListener())
+                    .addOnFailureListener(this.onFailureListener(FETCH_USER))
                     .addOnSuccessListener(documentSnapshot -> {
                         user = documentSnapshot.toObject(User.class);
                         if (user == null){
                             createUserInFirestore();
                         } else {
-                            Gson gson = new Gson();
-                            String jsonUser = gson.toJson(user);
-                            openNewActivityEvent.setValue(jsonUser);
+                            openNewActivityEvent.setValue(convertUserInJson(user));
                         }
                     });
 
@@ -91,7 +94,7 @@ public class AuthenticationViewModel extends BaseViewModel {
         String username = getCurrentUser().getDisplayName();
         String uid = getCurrentUser().getUid();
         UserHelper.createUser(uid, username, email, urlPicture)
-                .addOnFailureListener(this.onFailureListener())
+                .addOnFailureListener(this.onFailureListener(FETCH_USER))
                 .addOnSuccessListener(aVoid -> fetchCurrentUserFromFirestore());
 
 
@@ -110,5 +113,12 @@ public class AuthenticationViewModel extends BaseViewModel {
         return (this.getCurrentUser() != null);
     }
 
+    @Override
+    public void retry(RetryAction retryAction) {
+        if(retryAction == FETCH_USER){
+            fetchCurrentUserFromFirestore();
+        }
+
+    }
 
 }

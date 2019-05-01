@@ -60,6 +60,7 @@ public class AuthenticationActivity extends AppCompatActivity implements Authent
         this.setupOpenMainActivity();
         this.setupOpenSignInActivity();
         this.setupSnackBar();
+        this.setupSnackBarWithAction();
     }
 
     private AuthenticationViewModel obtainViewModel(){
@@ -73,6 +74,16 @@ public class AuthenticationActivity extends AppCompatActivity implements Authent
         viewModel.getSnackBarMessage().observe(this, message -> {
             if(message != null){
                 SnackBarUtil.showSnackBar(view, getString(message));
+            }
+        });
+
+    }
+
+    private void setupSnackBarWithAction(){
+        View view = findViewById(android.R.id.content);
+        viewModel.getSnackBarWithAction().observe(this, action -> {
+            if(action != null){
+                SnackBarUtil.showSnackBarWithRetryButton(view, getString(R.string.error_unknown_error), viewModel, action);
             }
         });
 

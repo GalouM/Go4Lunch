@@ -131,6 +131,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
         ButtonActionListener buttonActionListener = getButtonActionListener();
         binding.setListener(buttonActionListener);
         setupSnackBar();
+        setupSnackBarWithAction();
         setupOpenConfirmationDialog();
         setupDeleteAccount();
         setupNewUser();
@@ -154,6 +155,16 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
                 SnackBarUtil.showSnackBar(view, getString(message));
             }
         });
+    }
+
+    private void setupSnackBarWithAction(){
+        View view = findViewById(android.R.id.content);
+        viewModel.getSnackBarWithAction().observe(this, action -> {
+            if(action != null){
+                SnackBarUtil.showSnackBarWithRetryButton(view, getString(R.string.error_unknown_error), viewModel, action);
+            }
+        });
+
     }
 
     private void setupDeleteAccount(){

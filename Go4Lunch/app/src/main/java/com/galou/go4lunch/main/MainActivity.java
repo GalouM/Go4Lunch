@@ -33,6 +33,7 @@ import com.galou.go4lunch.list.ListViewFragment;
 import com.galou.go4lunch.map.MapViewFragment;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.settings.SettingsActivity;
+import com.galou.go4lunch.util.RetryAction;
 import com.galou.go4lunch.util.SnackBarUtil;
 import com.galou.go4lunch.workmates.WorkmatesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -282,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Intent intent = new Intent(this, AuthenticationActivity.class);
                     startActivity(intent);
                 })
-                .addOnFailureListener(viewModel.onFailureListener());
+                .addOnFailureListener(viewModel.onFailureListener(RetryAction.LOGOUT));
 
     }
 
@@ -292,6 +293,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         intent.putExtra(USER_BUNDLE_KEY, user);
         startActivityForResult(intent, RC_SETTING);
 
+    }
+
+    public User getUser(){
+        return viewModel.getCurrentUser();
     }
 
     // --------------------

@@ -10,7 +10,11 @@ import com.galou.go4lunch.R;
 import com.galou.go4lunch.api.UserHelper;
 import com.galou.go4lunch.base.BaseViewModel;
 import com.galou.go4lunch.models.User;
+import com.galou.go4lunch.util.RetryAction;
 import com.google.gson.Gson;
+
+import static com.galou.go4lunch.util.UserConverter.convertJsonInUser;
+import static com.galou.go4lunch.util.UserConverter.convertUserInJson;
 
 /**
  * Created by galou on 2019-04-23
@@ -44,10 +48,13 @@ public class MainActivityViewModel extends BaseViewModel {
 
     void configureUser(String jsonUser){
         if(jsonUser != null){
-            Gson gson = new Gson();
-            this.user = gson.fromJson(jsonUser, User.class);
+            this.user = convertJsonInUser(jsonUser);
             configureInfoUser();
         }
+    }
+
+    User getCurrentUser(){
+        return user;
     }
 
     // --------------------
@@ -63,9 +70,7 @@ public class MainActivityViewModel extends BaseViewModel {
     }
 
     void openSettings(){
-        Gson gson = new Gson();
-        String userInJson = gson.toJson(user);
-        settingsRequested.setValue(userInJson);
+        settingsRequested.setValue(convertUserInJson(user));
     }
 
     // --------------------
@@ -98,4 +103,8 @@ public class MainActivityViewModel extends BaseViewModel {
         if (BuildConfig.DEBUG) this.espressoTestIdlingResource.decrement();
     }
 
+    @Override
+    public void retry(RetryAction retryAction) {
+
+    }
 }
