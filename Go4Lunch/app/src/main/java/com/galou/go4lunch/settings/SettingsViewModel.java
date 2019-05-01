@@ -32,7 +32,6 @@ public class SettingsViewModel extends BaseViewModel {
     public final MutableLiveData<String> email = new MutableLiveData<>();
     public final MutableLiveData<String> urlPicture = new MutableLiveData<>();
     public final MutableLiveData<Boolean> isNotificationEnabled = new MutableLiveData<>();
-    public final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     public final MutableLiveData<Boolean> isEmailError = new MutableLiveData<>();
     public final MutableLiveData<Integer> errorMessageEmail = new MutableLiveData<>();
     public final MutableLiveData<Boolean> isUsernameError = new MutableLiveData<>();

@@ -15,6 +15,8 @@ public abstract class BaseViewModel extends ViewModel {
 
     protected final MutableLiveData<Integer> snackBarText = new MutableLiveData<>();
 
+    public final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+
     public LiveData<Integer> getSnackBarMessage(){
         return snackBarText;
     }
@@ -32,7 +34,10 @@ public abstract class BaseViewModel extends ViewModel {
     // ERROR HANDLER
     // --------------------
     public OnFailureListener onFailureListener(){
-        return e -> snackBarText.setValue(R.string.error_unknown_error);
+        return e -> {
+            isLoading.setValue(false);
+            snackBarText.setValue(R.string.error_unknown_error);
+        };
     }
 
 

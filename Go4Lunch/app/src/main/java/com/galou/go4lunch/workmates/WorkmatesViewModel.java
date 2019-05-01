@@ -21,9 +21,6 @@ public class WorkmatesViewModel extends BaseViewModel {
     //----- PRIVATE LIVE DATA -----
     private MutableLiveData<List<User>> users = new MutableLiveData<>();
 
-    //----- PRIVATE LIVE DATA -----
-    public MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
-
     //----- GETTER LIVE DATA -----
     public LiveData<List<User>> getUsers(){ return users; }
 
@@ -41,9 +38,10 @@ public class WorkmatesViewModel extends BaseViewModel {
                         }
                     }
                     users.setValue(fetchedUser);
+                    isLoading.setValue(false);
                 })
                 .addOnFailureListener(this.onFailureListener());
-        isLoading.setValue(false);
+
     }
 
     public void onRefreshUserList(){
