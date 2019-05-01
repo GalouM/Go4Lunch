@@ -105,7 +105,7 @@ public class MainActivityInstrumentedTest {
     @Test
     public void clickWorkmatesButton_showWorkmates(){
         onView(withId(R.id.action_workmates)).perform(click());
-        onView(withId(R.id.workmates_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.frame_layout_workmates)).check(matches(isDisplayed()));
     }
 
     @Test

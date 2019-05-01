@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WorkmatesFragment extends Fragment {
+public class WorkmatesFragment extends Fragment implements WorkmateContract {
 
     private RecyclerView recyclerView;
     private List<User> users;
@@ -95,7 +95,8 @@ public class WorkmatesFragment extends Fragment {
     }
 
 
-    private void showUsers(List<User> users){
+    @Override
+    public void showUsers(List<User> users){
         this.users = users;
         adapter.update(this.users);
 
