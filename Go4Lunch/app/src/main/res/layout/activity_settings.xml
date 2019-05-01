@@ -68,6 +68,7 @@
         app:layout_constraintTop_toBottomOf="@id/photo_user">
 
         <EditText
+            android:id="@+id/username_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/settings_username"
@@ -84,6 +85,7 @@
         app:layout_constraintTop_toBottomOf="@id/username_input">
 
         <EditText
+            android:id="@+id/email_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/settings_email_address"

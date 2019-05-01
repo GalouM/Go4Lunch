@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.Gravity;
 
-import androidx.annotation.NonNull;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
@@ -21,20 +20,12 @@ import androidx.test.rule.ActivityTestRule;
 
 import com.galou.go4lunch.main.MainActivity;
 import com.galou.go4lunch.models.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -46,7 +37,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static com.galou.go4lunch.BottomNavigationItemViewMatcher.withIsChecked;
 import static com.galou.go4lunch.BottomNavigationItemViewMatcher.withTitle;
 import static com.galou.go4lunch.authentication.AuthenticationActivity.USER_BUNDLE_KEY;
-import static org.hamcrest.CoreMatchers.not;
 
 @RunWith(AndroidJUnit4ClassRunner.class)
 public class MainActivityInstrumentedTest {

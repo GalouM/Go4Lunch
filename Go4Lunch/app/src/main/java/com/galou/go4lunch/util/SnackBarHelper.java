@@ -3,6 +3,7 @@ package com.galou.go4lunch.util;
 import android.content.Context;
 import android.view.ViewGroup;
 
+import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
 import com.galou.go4lunch.R;
@@ -20,7 +21,7 @@ public class SnackBarHelper {
     }
 
     private static void setRoundBordersBg(Context context, Snackbar snackbar) {
-        snackbar.getView().setBackground(context.getDrawable(R.drawable.snackbar_design));
+        snackbar.getView().setBackground(context.getResources().getDrawable(R.drawable.snackbar_design));
     }
 
     private static void addMargins(Snackbar snackbar) {
