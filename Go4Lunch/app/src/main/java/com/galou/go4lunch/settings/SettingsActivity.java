@@ -2,12 +2,13 @@ package com.galou.go4lunch.settings;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,8 @@ import com.galou.go4lunch.util.SnackBarUtil;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
+import static com.galou.go4lunch.authentication.AuthenticationActivity.USER_BUNDLE_KEY;
+
 public class SettingsActivity extends AppCompatActivity implements SettingsContract {
 
     private ActivitySettingsBinding binding;
@@ -44,6 +47,9 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
     public static final String KEY_PREF_NOTIFICATION_ENABLE = "notificationEnabled";
     public static final String KEY_PREF = "prefNotification";
 
+    public static final String KEY_BUNDLE_USER = "modifiedUser";
+    private Intent intent;
+
     // --------------------
     // LIFE CYCLE STATE
     // --------------------
@@ -51,11 +57,11 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setBindingAndViewModel();
+        this.configureBindingAndViewModel();
+        this.configureUserForViewModel();
         this.getNotificationSettingsFromPreferences();
         this.createViewModelConnections();
         configureToolbar();
-        viewModel.onStart();
     }
 
     @Override
@@ -67,7 +73,23 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        handleResponse(requestCode, resultCode, data);
+        this.handleResponse(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onBackPressed() {
+        configureResultActivity();
+        finish();
+    }
+
+
+
+    private void configureResultActivity() {
+        if (intent == null){
+            setResult(RESULT_OK);
+        } else {
+            setResult(RESULT_OK, intent);
+        }
     }
 
     // -----------------
@@ -79,14 +101,25 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id  = item.getItemId();
+        if(id == android.R.id.home){
+            configureResultActivity();
+            finish();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     // --------------------
     // VIEW MODEL CONNECTIONS
     // --------------------
 
-    private void setBindingAndViewModel() {
+    private void configureBindingAndViewModel() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_settings);
         viewModel = obtainViewModel();
         binding.setViewmodel(viewModel);
@@ -100,12 +133,18 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
         setupSnackBar();
         setupOpenConfirmationDialog();
         setupDeleteAccount();
+        setupNewUser();
 
     }
 
     private SettingsViewModel obtainViewModel() {
         return ViewModelProviders.of(this)
                 .get(SettingsViewModel.class);
+    }
+
+    private void configureUserForViewModel() {
+        String jsonUser = getIntent().getStringExtra(USER_BUNDLE_KEY);
+        viewModel.configureUser(jsonUser);
     }
 
     private void setupSnackBar(){
@@ -123,6 +162,10 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
 
     private void setupOpenConfirmationDialog(){
         viewModel.getOpenDialog().observe(this, dialog -> openConfirmationDialog());
+    }
+
+    private void setupNewUser(){
+        viewModel.getModifiedUser().observe(this, this::configureNewUserData);
     }
 
     //----- LISTENER BUTTON -----
@@ -184,6 +227,12 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
         preferences = getSharedPreferences(KEY_PREF, Context.MODE_PRIVATE);
         boolean notificationEnabled = preferences.getBoolean(KEY_PREF_NOTIFICATION_ENABLE, true);
         viewModel.isNotificationEnabled.setValue(notificationEnabled);
+    }
+
+    private void configureNewUserData(String user){
+        intent = new Intent();
+        intent.putExtra(KEY_BUNDLE_USER, user);
+
     }
 
     // --------------------

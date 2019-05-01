@@ -7,7 +7,10 @@ package com.galou.go4lunch;
 import android.content.Context;
 import android.view.Gravity;
 
+import androidx.annotation.NonNull;
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.IdlingRegistry;
+import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.NavigationViewActions;
@@ -16,11 +19,19 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import androidx.test.rule.ActivityTestRule;
 
 import com.galou.go4lunch.main.MainActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -36,14 +47,38 @@ import static org.hamcrest.CoreMatchers.not;
 @RunWith(AndroidJUnit4ClassRunner.class)
 public class MainActivityInstrumentedTest {
 
+
+    private CountDownLatch authSignal = null;
+    private FirebaseAuth auth;
+
     private Context context;
+    private IdlingResource idlingResource;
 
     @Rule
     public final ActivityTestRule<MainActivity> mainActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Before
     public void setup(){
+        authSignal = new CountDownLatch(1);
+
+        auth = FirebaseAuth.getInstance();
+        if(auth.getCurrentUser() == null) {
+            auth.signInWithEmailAndPassword("urbi@orbi.it", "12345678").addOnCompleteListener(
+                    new OnCompleteListener<AuthResult>() {
+
+                        @Override
+                        public void onComplete(@NonNull final Task<AuthResult> task) {
+
+                            final AuthResult result = task.getResult();
+                            final FirebaseUser user = result.getUser();
+                            authSignal.countDown();
+                        }
+                    });
+        } else {
+            authSignal.countDown();
+        }
         this.context = ApplicationProvider.getApplicationContext();
+
     }
 
 
@@ -112,6 +147,30 @@ public class MainActivityInstrumentedTest {
     public void clickChatButton_showChat(){
         onView(withId(R.id.action_chat)).perform(click());
         onView(withId(R.id.chat_view)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void clickSettings_openSettingsActivity(){
+        onView(withId(R.id.drawer_view)).check(matches(isClosed(Gravity.LEFT)))
+                .perform(DrawerActions.open());
+        onView(withId(R.id.navigation_view)).perform(NavigationViewActions.navigateTo(R.id.main_activity_drawer_settings));
+
+        onView(withId(R.id.activity_setting_layout)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void clickLogout_ShowMainActivity(){
+        onView(withId(R.id.drawer_view)).check(matches(isClosed(Gravity.LEFT)))
+                .perform(DrawerActions.open());
+        onView(withId(R.id.navigation_view)).perform(NavigationViewActions.navigateTo(R.id.main_activity_drawer_logout));
+        waitForNetworkCall();
+
+        onView(withId(R.id.auth_activity_layout)).check(matches(isDisplayed()));
+    }
+
+    private void waitForNetworkCall(){
+        this.idlingResource = mainActivityTestRule.getActivity().getEspressoIdlingResourceForMainActivity();
+        IdlingRegistry.getInstance().register(idlingResource);
     }
 
 }

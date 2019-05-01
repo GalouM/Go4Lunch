@@ -25,6 +25,7 @@ public class AuthenticationActivity extends AppCompatActivity implements Authent
     private ActivityAuthenticationBinding binding;
 
     public static final int RC_SIGN_IN = 123;
+    public static final String USER_BUNDLE_KEY = "userFromFirebase";
 
     // --------------------
     // LIFE CYCLE STATE
@@ -78,7 +79,7 @@ public class AuthenticationActivity extends AppCompatActivity implements Authent
     }
 
     private void setupOpenMainActivity(){
-        viewModel.getOpenNewActivityEvent().observe(this, openActivity -> openMainActivity());
+        viewModel.getOpenNewActivityEvent().observe(this, this::openMainActivity);
     }
 
     private void setupOpenSignInActivity(){
@@ -90,8 +91,9 @@ public class AuthenticationActivity extends AppCompatActivity implements Authent
     // --------------------
 
     @Override
-    public void openMainActivity() {
+    public void openMainActivity(String user) {
         Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(USER_BUNDLE_KEY, user);
         startActivity(intent);
     }
 

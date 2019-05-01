@@ -13,6 +13,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
 
 import java.util.UUID;
 
@@ -40,6 +41,7 @@ public class SettingsViewModel extends BaseViewModel {
     //----- PRIVATE LIVE DATA -----
     private final MutableLiveData<Object> deleteUser = new MutableLiveData<>();
     private final MutableLiveData<Object> openDialog = new MutableLiveData<>();
+    private final MutableLiveData<String> modifiedUser = new MutableLiveData<>();
 
     //----- GETTER -----
     public LiveData<Object> getDeleteUser(){
@@ -48,21 +50,23 @@ public class SettingsViewModel extends BaseViewModel {
     public LiveData<Object> getOpenDialog() {
         return openDialog;
     }
+    public LiveData<String> getModifiedUser() { return modifiedUser; }
 
-    private User user;
+    private String newUsername;
+    private String newEmail;
+    private String newPhotoUrl;
 
     // --------------------
     // START
     // --------------------
 
-    void onStart(){
+    void configureUser(String jsonUser){
         isLoading.setValue(true);
-        UserHelper.getUser(getCurrentUserUid())
-                .addOnFailureListener(this.onFailureListener())
-                .addOnSuccessListener(documentSnapshot -> {
-                    user = documentSnapshot.toObject(User.class);
-                    configureInfoUser();
-                });
+        if(jsonUser != null){
+            Gson gson = new Gson();
+            this.user = gson.fromJson(jsonUser, User.class);
+            configureInfoUser();
+        }
     }
 
     // --------------------
@@ -97,8 +101,8 @@ public class SettingsViewModel extends BaseViewModel {
         isLoading.setValue(true);
         isEmailError.setValue(false);
         isUsernameError.setValue(false);
-        String newUsername = username.getValue();
-        String newEmail = email.getValue();
+        newUsername = username.getValue();
+        newEmail = email.getValue();
         if(isNewUserInfosCorrect(newEmail, newUsername)){
             UserHelper.updateUserNameAndEmail(newUsername, newEmail, getCurrentUserUid())
                     .addOnFailureListener(this.onFailureListener())
@@ -157,8 +161,8 @@ public class SettingsViewModel extends BaseViewModel {
     private void getUrlPhotoFromFirebase(UploadTask.TaskSnapshot taskSnapshot){
         taskSnapshot.getMetadata().getReference().getDownloadUrl()
                 .addOnSuccessListener(uri -> {
-                    String pathImageInFirebase = uri.toString();
-                    UserHelper.updateUrlPicture(pathImageInFirebase, getCurrentUserUid())
+                    newPhotoUrl = uri.toString();
+                    UserHelper.updateUrlPicture(newPhotoUrl, getCurrentUserUid())
                             .addOnSuccessListener(onSuccessListener(UPDATE_PHOTO))
                             .addOnFailureListener(onFailureListener());
                 }).addOnFailureListener(onFailureListener());
@@ -191,6 +195,9 @@ public class SettingsViewModel extends BaseViewModel {
                 case UPDATE_USER:
                     snackBarText.setValue(R.string.information_updated);
                     isLoading.setValue(false);
+                    user.setEmail(newEmail);
+                    user.setUsername(newUsername);
+                    configureModifiedUser();
                     break;
                 case DELETE_USER:
                     snackBarText.setValue(R.string.deleted_account_message);
@@ -200,11 +207,19 @@ public class SettingsViewModel extends BaseViewModel {
                 case UPDATE_PHOTO:
                     snackBarText.setValue(R.string.photo_updated_message);
                     isLoading.setValue(false);
+                    user.setUrlPicture(newPhotoUrl);
+                    configureModifiedUser();
                     break;
             }
 
         };
 
+    }
+
+    private void configureModifiedUser(){
+        Gson gson = new Gson();
+        String userJson = gson.toJson(user);
+        modifiedUser.setValue(userJson);
     }
 
 }

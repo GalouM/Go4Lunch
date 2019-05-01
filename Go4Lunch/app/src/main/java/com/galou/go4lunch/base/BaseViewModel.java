@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.galou.go4lunch.R;
+import com.galou.go4lunch.models.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -21,12 +22,14 @@ public abstract class BaseViewModel extends ViewModel {
         return snackBarText;
     }
 
+    protected User user;
+
     // --------------------
     // UTILS
     // --------------------
 
     protected String getCurrentUserUid(){
-        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+        return user.getUid();
     }
 
 

@@ -4,11 +4,14 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -18,6 +21,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.test.espresso.idling.CountingIdlingResource;
 
 import com.firebase.ui.auth.AuthUI;
 import com.galou.go4lunch.R;
@@ -27,11 +31,16 @@ import com.galou.go4lunch.databinding.ActivityMainBinding;
 import com.galou.go4lunch.databinding.MainActivityNavHeaderBinding;
 import com.galou.go4lunch.list.ListViewFragment;
 import com.galou.go4lunch.map.MapViewFragment;
+import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.settings.SettingsActivity;
 import com.galou.go4lunch.util.SnackBarUtil;
 import com.galou.go4lunch.workmates.WorkmatesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.Gson;
+
+import static com.galou.go4lunch.authentication.AuthenticationActivity.USER_BUNDLE_KEY;
+import static com.galou.go4lunch.settings.SettingsActivity.KEY_BUNDLE_USER;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainActivityContract {
 
@@ -43,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private MainActivityViewModel viewModel;
 
+    public static final int RC_SETTING = 54321;
+
     // --------------------
     // LIFE CYCLE STATE
     // --------------------
@@ -51,15 +62,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.configureBindingAndViewModel();
+        this.configureUserForViewModel();
         this.configureUI();
         this.createViewModelConnections();
 
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        viewModel.onStart();
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        this.handleActivityResult(requestCode, resultCode, data);
+    }
+
+    private void handleActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == RC_SETTING){
+            if(resultCode == RESULT_OK && data != null){
+                String userJson = data.getStringExtra(KEY_BUNDLE_USER);
+                if(userJson != null){
+                    viewModel.configureUser(userJson);
+                }
+            }
+        }
     }
 
     // --------------------
@@ -77,6 +100,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private MainActivityViewModel obtainViewModel() {
         return ViewModelProviders.of(this)
                 .get(MainActivityViewModel.class);
+    }
+
+    private void configureUserForViewModel() {
+        String jsonUser = getIntent().getStringExtra(USER_BUNDLE_KEY);
+        viewModel.configureUser(jsonUser);
     }
 
     private void createViewModelConnections() {
@@ -100,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void setupSettingsRequest(){
-        viewModel.getSettings().observe(this, settings -> settings());
+        viewModel.getSettings().observe(this, this::settings);
     }
 
     // --------------------
@@ -240,6 +268,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .commit();
     }
 
+
     // --------------------
     // ACTIONS FROM VIEW MODEL
     // --------------------
@@ -249,6 +278,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void logoutUser() {
         AuthUI.getInstance().signOut(this)
                 .addOnSuccessListener(aVoid -> {
+                    viewModel.decrementIdleResource();
                     Intent intent = new Intent(this, AuthenticationActivity.class);
                     startActivity(intent);
                 })
@@ -257,10 +287,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void settings() {
+    public void settings(String user) {
         Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
+        intent.putExtra(USER_BUNDLE_KEY, user);
+        startActivityForResult(intent, RC_SETTING);
 
+    }
+
+    // --------------------
+    // TESTING
+    // --------------------
+    @VisibleForTesting
+    public CountingIdlingResource getEspressoIdlingResourceForMainActivity() {
+        return viewModel.getEspressoIdlingResource();
     }
 }
 

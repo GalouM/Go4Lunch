@@ -5,6 +5,6 @@ package com.galou.go4lunch.authentication;
  */
 public interface AuthenticationNavigator {
 
-    void openMainActivity();
+    void openMainActivity(String user);
     void startSignInActivity();
 }

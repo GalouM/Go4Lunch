@@ -10,8 +10,10 @@ import com.galou.go4lunch.R;
 import com.galou.go4lunch.api.UserHelper;
 import com.galou.go4lunch.base.BaseViewModel;
 import com.galou.go4lunch.models.User;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.gson.Gson;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -20,14 +22,14 @@ import static android.app.Activity.RESULT_OK;
  */
 public class AuthenticationViewModel extends BaseViewModel {
 
-    private final MutableLiveData<Object> openNewActivityEvent = new MutableLiveData<>();
+    private final MutableLiveData<String> openNewActivityEvent = new MutableLiveData<>();
     private final MutableLiveData<Object> openSignInActivityEvent = new MutableLiveData<>();
 
     private User user;
 
     // LiveData getters
 
-    public LiveData<Object> getOpenNewActivityEvent() {
+    public LiveData<String> getOpenNewActivityEvent() {
         return openNewActivityEvent;
     }
 
@@ -39,7 +41,7 @@ public class AuthenticationViewModel extends BaseViewModel {
     void handleResponseAfterSignIn(int requestCode, int resultCode, IdpResponse response){
         if (requestCode == AuthenticationActivity.RC_SIGN_IN) {
             if (resultCode == RESULT_OK) { // SUCCESS
-                this.checkIfUserExistInFirestore();
+                this.fetchCurrentUserFromFirestore();
             } else { // ERRORS
                 if (response == null) {
                     snackBarText.setValue(R.string.error_authentication_canceled);
@@ -55,23 +57,27 @@ public class AuthenticationViewModel extends BaseViewModel {
 
     void checkIfUserIsLogged(){
         if (isCurrentUserLogged()){
-            openNewActivityEvent.setValue(new Object());
+            this.fetchCurrentUserFromFirestore();
         } else {
             openSignInActivityEvent.setValue(new Object());
         }
     }
 
-    private void checkIfUserExistInFirestore(){
+    private void fetchCurrentUserFromFirestore(){
         if (isCurrentUserLogged()) {
             UserHelper.getUser(getCurrentUser().getUid())
-                    .addOnFailureListener(e -> createUserInFirestore())
+                    .addOnFailureListener(this.onFailureListener())
                     .addOnSuccessListener(documentSnapshot -> {
                         user = documentSnapshot.toObject(User.class);
                         if (user == null){
                             createUserInFirestore();
+                        } else {
+                            Gson gson = new Gson();
+                            String jsonUser = gson.toJson(user);
+                            openNewActivityEvent.setValue(jsonUser);
                         }
                     });
-            openNewActivityEvent.setValue(new Object());
+
 
         }
 
@@ -85,7 +91,8 @@ public class AuthenticationViewModel extends BaseViewModel {
         String username = getCurrentUser().getDisplayName();
         String uid = getCurrentUser().getUid();
         UserHelper.createUser(uid, username, email, urlPicture)
-                .addOnFailureListener(this.onFailureListener());
+                .addOnFailureListener(this.onFailureListener())
+                .addOnSuccessListener(aVoid -> fetchCurrentUserFromFirestore());
 
 
     }
