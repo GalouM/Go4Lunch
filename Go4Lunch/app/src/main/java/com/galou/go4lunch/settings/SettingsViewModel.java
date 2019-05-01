@@ -34,9 +34,9 @@ public class SettingsViewModel extends BaseViewModel {
     public final MutableLiveData<Boolean> isNotificationEnabled = new MutableLiveData<>();
     public final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     public final MutableLiveData<Boolean> isEmailError = new MutableLiveData<>();
-    public final MutableLiveData<String> errorMessageEmail = new MutableLiveData<>();
+    public final MutableLiveData<Integer> errorMessageEmail = new MutableLiveData<>();
     public final MutableLiveData<Boolean> isUsernameError = new MutableLiveData<>();
-    public final MutableLiveData<String> errorMessageUsername = new MutableLiveData<>();
+    public final MutableLiveData<Integer> errorMessageUsername = new MutableLiveData<>();
 
     //----- PRIVATE LIVE DATA -----
     private final MutableLiveData<Object> deleteUser = new MutableLiveData<>();
@@ -173,12 +173,12 @@ public class SettingsViewModel extends BaseViewModel {
     private boolean isNewUserInfosCorrect(String email, String username){
         if(!isEmailCorrect(email)){
             isEmailError.setValue(true);
-            errorMessageEmail.setValue("Incorrect Email");
+            errorMessageEmail.setValue(R.string.incorrect_email);
             return false;
         }
         if(!isTextLongEnough(username, 3)){
             isUsernameError.setValue(true);
-            errorMessageUsername.setValue("Username not long enough");
+            errorMessageUsername.setValue(R.string.incorrect_username);
             return false;
         }
 
