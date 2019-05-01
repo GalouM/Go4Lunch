@@ -52,7 +52,6 @@ public class WorkmatesFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_workmates, container, false);
         this.configureRecycleView(view);
-        this.configureForeground(view);
         this.configureBindingAndViewModel(view);
         viewModel.fetchListUsersFromFirebase();
         return view;
@@ -64,7 +63,6 @@ public class WorkmatesFragment extends Fragment {
         binding.setViewmodel(viewModel);
         binding.setLifecycleOwner(getActivity());
         setupListUsers();
-        setupForegroundAlpha();
         setupSnackBar();
 
     }
@@ -76,16 +74,6 @@ public class WorkmatesFragment extends Fragment {
 
     private void setupListUsers(){
         viewModel.getUsers().observe(this, this::showUsers);
-    }
-
-    private void setupForegroundAlpha(){
-        viewModel.isLoading.observe(this, isLoading -> {
-            if(isLoading){
-                frameLayout.getForeground().setAlpha(50);
-            } else {
-                frameLayout.getForeground().setAlpha(0);
-            }
-        });
     }
 
     private void setupSnackBar(){
@@ -106,11 +94,6 @@ public class WorkmatesFragment extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
-    private void configureForeground(View view){
-        frameLayout = (FrameLayout) view.findViewById(R.id.frame_layout);
-        frameLayout.setForeground(new ColorDrawable(Color.BLACK));
-        frameLayout.getForeground().setAlpha(0);
-    }
 
     private void showUsers(List<User> users){
         this.users = users;
