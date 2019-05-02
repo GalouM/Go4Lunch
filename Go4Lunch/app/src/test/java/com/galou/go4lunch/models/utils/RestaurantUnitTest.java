@@ -1,4 +1,6 @@
-package com.galou.go4lunch.models;
+package com.galou.go4lunch.models.utils;
+
+import com.galou.go4lunch.models.Restaurant;
 
 import org.junit.Before;
 import org.junit.Test;

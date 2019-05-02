@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.view.Gravity;
 
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.IdlingRegistry;
+import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
@@ -21,6 +23,7 @@ import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -38,6 +41,7 @@ import static com.galou.go4lunch.authentication.AuthenticationActivity.USER_BUND
 public class SettingsActivityInstrumentedTest {
 
     private Context context;
+    private IdlingResource idlingResource;
 
     @Rule
     public final ActivityTestRule<SettingsActivity> settingsActivityTestRule = new ActivityTestRule<>(SettingsActivity.class, false, false);
@@ -56,32 +60,39 @@ public class SettingsActivityInstrumentedTest {
 
     @Test
     public void tooShortUserName_showError(){
-        onView(withId(R.id.username_field)).perform(replaceText("GA"));
+        onView(withId(R.id.username_field)).perform(replaceText("GA"), closeSoftKeyboard());
         onView(withId(R.id.update_button)).perform(click());
         onView(withText(R.string.incorrect_username)).check(matches(isDisplayed()));
     }
 
     @Test
     public void missingAtEmail_showError(){
-        onView(withId(R.id.email_field)).perform(replaceText("email"));
+        onView(withId(R.id.email_field)).perform(replaceText("email"), closeSoftKeyboard());
         onView(withId(R.id.update_button)).perform(click());
         onView(withText(R.string.incorrect_email)).check(matches(isDisplayed()));
     }
 
     @Test
     public void missingDomainExtEmail_showError(){
-        onView(withId(R.id.email_field)).perform(replaceText("email@email"));
+        onView(withId(R.id.email_field)).perform(replaceText("email@email"), closeSoftKeyboard());
         onView(withId(R.id.update_button)).perform(click());
         onView(withText(R.string.incorrect_email)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void correctUserInfo_noError(){
-        onView(withId(R.id.username_field)).perform(replaceText("User Name"));
-        onView(withId(R.id.email_field)).perform(replaceText("email@email.com"));
+    public void correctUserInfo_noErrorAndShowSnack(){
+        onView(withId(R.id.username_field)).perform(replaceText("User Name"), closeSoftKeyboard());
+        onView(withId(R.id.email_field)).perform(replaceText("email@email.com"), closeSoftKeyboard());
         onView(withId(R.id.update_button)).perform(click());
         onView(withText(R.string.incorrect_username)).check(doesNotExist());
         onView(withText(R.string.incorrect_email)).check(doesNotExist());
+        //waitForNetworkCall();
+        //onView(withText(R.string.settings_update_user_information)).check(matches(isDisplayed()));
+    }
+
+    private void waitForNetworkCall(){
+        this.idlingResource = settingsActivityTestRule.getActivity().getEspressoIdlingResource();
+        IdlingRegistry.getInstance().register(idlingResource);
     }
 
 }

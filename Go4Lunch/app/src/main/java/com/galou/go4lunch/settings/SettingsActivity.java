@@ -13,6 +13,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,8 +21,10 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.test.espresso.idling.CountingIdlingResource;
 
 import com.firebase.ui.auth.AuthUI;
+import com.galou.go4lunch.BuildConfig;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.authentication.AuthenticationActivity;
 import com.galou.go4lunch.databinding.ActivitySettingsBinding;
@@ -50,6 +53,10 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
     public static final String KEY_BUNDLE_USER = "modifiedUser";
     private Intent intent;
 
+    // FOR TESTING
+    @VisibleForTesting
+    protected CountingIdlingResource espressoTestIdlingResource;
+
     // --------------------
     // LIFE CYCLE STATE
     // --------------------
@@ -62,6 +69,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
         this.getNotificationSettingsFromPreferences();
         this.createViewModelConnections();
         configureToolbar();
+        configureEspressoIdlingResource();
     }
 
     @Override
@@ -152,6 +160,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
         View view = findViewById(android.R.id.content);
         viewModel.getSnackBarMessage().observe(this, message -> {
             if(message != null){
+                this.decrementIdleResource();
                 SnackBarUtil.showSnackBar(view, getString(message));
             }
         });
@@ -190,6 +199,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
                     saveNotificationSettings(((SwitchCompat) view).isChecked());
                     break;
                 case R.id.update_button:
+                    this.incrementIdleResource();
                     viewModel.updateUserInfo();
                     break;
                 case R.id.delete_button:
@@ -275,6 +285,26 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
                 .setPositiveButton(R.string.yes_button, (dialogInterface, i) -> viewModel.deleteUserFromDB())
                 .setNegativeButton(R.string.cancel_button, null)
                 .show();
+    }
+
+    // -----------------
+    // FOR TESTING
+    // -----------------
+
+    @VisibleForTesting
+    public CountingIdlingResource getEspressoIdlingResource() { return espressoTestIdlingResource; }
+
+    @VisibleForTesting
+    private void configureEspressoIdlingResource(){
+        this.espressoTestIdlingResource = new CountingIdlingResource("Network_Call");
+    }
+
+    void incrementIdleResource(){
+        if (BuildConfig.DEBUG) this.espressoTestIdlingResource.increment();
+    }
+
+    void decrementIdleResource(){
+        if (BuildConfig.DEBUG) this.espressoTestIdlingResource.decrement();
     }
 
 }

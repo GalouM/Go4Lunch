@@ -1,4 +1,4 @@
-package com.galou.go4lunch.models;
+package com.galou.go4lunch.models.utils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

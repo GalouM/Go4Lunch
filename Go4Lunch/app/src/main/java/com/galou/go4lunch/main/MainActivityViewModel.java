@@ -83,6 +83,11 @@ public class MainActivityViewModel extends BaseViewModel {
         urlPicture.setValue(user.getUrlPicture());
     }
 
+    @Override
+    public void retry(RetryAction retryAction) {
+
+    }
+
     // -----------------
     // FOR TESTING
     // -----------------
@@ -103,8 +108,5 @@ public class MainActivityViewModel extends BaseViewModel {
         if (BuildConfig.DEBUG) this.espressoTestIdlingResource.decrement();
     }
 
-    @Override
-    public void retry(RetryAction retryAction) {
 
-    }
 }

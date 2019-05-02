@@ -69,7 +69,7 @@ public class SettingsViewModel extends BaseViewModel {
     // START
     // --------------------
 
-    void configureUser(String jsonUser){
+    public void configureUser(String jsonUser){
         isLoading.setValue(true);
         if(jsonUser != null){
             this.user = convertJsonInUser(jsonUser);
@@ -94,7 +94,7 @@ public class SettingsViewModel extends BaseViewModel {
     // GET USER ACTION
     // --------------------
 
-    void notificationStateChanged(boolean enabled){
+    public void notificationStateChanged(boolean enabled){
         if(enabled){
             enableNotification();
             isNotificationEnabled.setValue(true);
@@ -105,7 +105,7 @@ public class SettingsViewModel extends BaseViewModel {
 
     }
 
-    void updateUserInfo(){
+    public void updateUserInfo(){
         isLoading.setValue(true);
         isEmailError.setValue(false);
         isUsernameError.setValue(false);
@@ -121,19 +121,19 @@ public class SettingsViewModel extends BaseViewModel {
 
     }
 
-    void deleteUserFromDBRequest() {
+    public void deleteUserFromDBRequest() {
         openDialog.setValue(new Object());
 
     }
 
-    void deleteUserFromDB() {
+    public void deleteUserFromDB() {
         isLoading.setValue(true);
         UserHelper.deleteUser(getCurrentUserUid())
                 .addOnSuccessListener(this.onSuccessListener(DELETE_USER))
                 .addOnFailureListener(this.onFailureListener(DELETE_USER_DB));
     }
 
-    void updateUserPhoto(String urlPhoto) {
+    public void updateUserPhoto(String urlPhoto) {
         isLoading.setValue(true);
         urlPhotoSelected = urlPhoto;
         uploadPhotoInFirebase(urlPhoto);
