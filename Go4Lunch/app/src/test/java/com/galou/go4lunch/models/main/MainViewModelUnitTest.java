@@ -39,6 +39,11 @@ public class MainViewModelUnitTest {
     }
 
     @Test
+    public void getUser_returnCorrectUser(){
+        assertEquals(user.getUid(), viewModel.getCurrentUser().getUid());
+    }
+
+    @Test
     public void logOutRequest_showSnackBar(){
         viewModel.logoutUserFromApp();
         assertEquals((int) viewModel.getSnackBarMessage().getValue(), R.string.logged_out_success);

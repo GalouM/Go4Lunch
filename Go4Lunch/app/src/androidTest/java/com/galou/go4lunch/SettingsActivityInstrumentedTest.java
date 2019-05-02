@@ -62,7 +62,7 @@ public class SettingsActivityInstrumentedTest {
     @Test
     public void tooShortUserName_showError(){
         onView(withId(R.id.username_field)).perform(replaceText("GA"));
-        onView(withId(R.id.update_button)).perform(closeSoftKeyboard(), click());
+        onView(withId(R.id.update_button)).perform(closeSoftKeyboard(), scrollTo(), click());
         onView(withText(R.string.incorrect_username)).check(matches(isDisplayed()));
     }
 
