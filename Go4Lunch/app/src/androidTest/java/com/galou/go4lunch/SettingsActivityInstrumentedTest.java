@@ -25,6 +25,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
@@ -60,30 +61,30 @@ public class SettingsActivityInstrumentedTest {
 
     @Test
     public void tooShortUserName_showError(){
-        onView(withId(R.id.username_field)).perform(replaceText("GA"), closeSoftKeyboard());
-        onView(withId(R.id.update_button)).perform(click());
+        onView(withId(R.id.username_field)).perform(replaceText("GA"));
+        onView(withId(R.id.update_button)).perform(closeSoftKeyboard(), click());
         onView(withText(R.string.incorrect_username)).check(matches(isDisplayed()));
     }
 
     @Test
     public void missingAtEmail_showError(){
-        onView(withId(R.id.email_field)).perform(replaceText("email"), closeSoftKeyboard());
-        onView(withId(R.id.update_button)).perform(click());
+        onView(withId(R.id.email_field)).perform(replaceText("email"));
+        onView(withId(R.id.update_button)).perform(closeSoftKeyboard(), scrollTo(), click());
         onView(withText(R.string.incorrect_email)).check(matches(isDisplayed()));
     }
 
     @Test
     public void missingDomainExtEmail_showError(){
-        onView(withId(R.id.email_field)).perform(replaceText("email@email"), closeSoftKeyboard());
-        onView(withId(R.id.update_button)).perform(click());
+        onView(withId(R.id.email_field)).perform(replaceText("email@email"));
+        onView(withId(R.id.update_button)).perform(closeSoftKeyboard(), scrollTo(), click());
         onView(withText(R.string.incorrect_email)).check(matches(isDisplayed()));
     }
 
     @Test
     public void correctUserInfo_noErrorAndShowSnack(){
-        onView(withId(R.id.username_field)).perform(replaceText("User Name"), closeSoftKeyboard());
-        onView(withId(R.id.email_field)).perform(replaceText("email@email.com"), closeSoftKeyboard());
-        onView(withId(R.id.update_button)).perform(click());
+        onView(withId(R.id.username_field)).perform(replaceText("User Name"));
+        onView(withId(R.id.email_field)).perform(replaceText("email@email.com"));
+        onView(withId(R.id.update_button)).perform(closeSoftKeyboard(), scrollTo(), click());
         onView(withText(R.string.incorrect_username)).check(doesNotExist());
         onView(withText(R.string.incorrect_email)).check(doesNotExist());
         //waitForNetworkCall();

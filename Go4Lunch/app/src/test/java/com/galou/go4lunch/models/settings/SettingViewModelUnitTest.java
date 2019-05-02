@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 
+import com.galou.go4lunch.R;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.settings.SettingsViewModel;
 
@@ -19,6 +20,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import static com.galou.go4lunch.util.UserConverter.convertUserInJson;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by galou on 2019-05-01
@@ -45,5 +48,25 @@ public class SettingViewModelUnitTest {
         assertEquals(user.getUsername(), viewModel.username.getValue());
         assertEquals(user.getEmail(), viewModel.email.getValue());
         assertEquals(user.getUrlPicture(), viewModel.urlPicture.getValue());
+    }
+
+    @Test
+    public void disableNotification_disable(){
+        viewModel.notificationStateChanged(false);
+        assertFalse(viewModel.isNotificationEnabled.getValue());
+        assertEquals((int) viewModel.getSnackBarMessage().getValue(), R.string.notification_disabled);
+    }
+
+    @Test
+    public void enableNotification_enable(){
+        viewModel.notificationStateChanged(true);
+        assertTrue(viewModel.isNotificationEnabled.getValue());
+        assertEquals((int) viewModel.getSnackBarMessage().getValue(), R.string.notifications_enabled);
+    }
+
+    @Test
+    public void deleteUserRequest_openDialog(){
+        viewModel.deleteUserFromDBRequest();
+        //assertEquals(new Object(), viewModel.getOpenDialog().getValue());
     }
 }

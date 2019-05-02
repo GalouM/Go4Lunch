@@ -160,7 +160,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
         View view = findViewById(android.R.id.content);
         viewModel.getSnackBarMessage().observe(this, message -> {
             if(message != null){
-                this.decrementIdleResource();
+                //this.decrementIdleResource();
                 SnackBarUtil.showSnackBar(view, getString(message));
             }
         });
