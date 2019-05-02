@@ -46,14 +46,14 @@ public class MainActivityViewModel extends BaseViewModel {
     // START
     // --------------------
 
-    void configureUser(String jsonUser){
+    public void configureUser(String jsonUser){
         if(jsonUser != null){
             this.user = convertJsonInUser(jsonUser);
             configureInfoUser();
         }
     }
 
-    User getCurrentUser(){
+    public User getCurrentUser(){
         return user;
     }
 
@@ -61,7 +61,7 @@ public class MainActivityViewModel extends BaseViewModel {
     // GET USER ACTION
     // --------------------
 
-    void logoutUserFromApp(){
+    public void logoutUserFromApp(){
         this.configureEspressoIdlingResource();
         this.incrementIdleResource();
         logoutRequested.setValue(new Object());
@@ -69,7 +69,7 @@ public class MainActivityViewModel extends BaseViewModel {
 
     }
 
-    void openSettings(){
+    public void openSettings(){
         settingsRequested.setValue(convertUserInJson(user));
     }
 
