@@ -1,20 +1,14 @@
 package com.galou.go4lunch;
 
 import android.content.Context;
-import android.content.Intent;
-import android.view.Gravity;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
-import androidx.test.espresso.action.ViewActions;
-import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import androidx.test.rule.ActivityTestRule;
 
-import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.settings.SettingsActivity;
-import com.google.gson.Gson;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -28,12 +22,9 @@ import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static com.galou.go4lunch.authentication.AuthenticationActivity.USER_BUNDLE_KEY;
 
 /**
  * Created by galou on 2019-04-30
@@ -45,17 +36,11 @@ public class SettingsActivityInstrumentedTest {
     private IdlingResource idlingResource;
 
     @Rule
-    public final ActivityTestRule<SettingsActivity> settingsActivityTestRule = new ActivityTestRule<>(SettingsActivity.class, false, false);
+    public final ActivityTestRule<SettingsActivity> settingsActivityTestRule = new ActivityTestRule<>(SettingsActivity.class);
 
     @Before
     public void setup(){
         this.context = ApplicationProvider.getApplicationContext();
-        Intent intent = new Intent();
-        User user = new User("uuid", "UserTest", "user@test.com", null);
-        Gson gson = new Gson();
-        String userInJson = gson.toJson(user);
-        intent.putExtra(USER_BUNDLE_KEY, userInJson);
-        settingsActivityTestRule.launchActivity(intent);
 
     }
 

@@ -2,6 +2,8 @@ package com.galou.go4lunch.models;
 
 import androidx.annotation.Nullable;
 
+import java.util.List;
+
 /**
  * Created by galou on 2019-04-22
  */
@@ -12,6 +14,7 @@ public class User {
     private String email;
     @Nullable private String urlPicture;
     @Nullable private Restaurant restaurantPicked;
+    private List<String> likedRestaurantUuid;
 
     public User(){}
 
@@ -66,5 +69,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<String> getLikedRestaurantUuid() {
+        return likedRestaurantUuid;
+    }
+
+    public void setLikedRestaurantUuid(List<String> likedRestaurantUuid) {
+        this.likedRestaurantUuid = likedRestaurantUuid;
     }
 }

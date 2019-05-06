@@ -18,7 +18,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static com.galou.go4lunch.util.UserConverter.convertUserInJson;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -39,8 +38,7 @@ public class SettingViewModelUnitTest {
     @Before
     public void setup(){
         viewModel = new SettingsViewModel();
-        user = new User("uuid", "username", "email", "urlPhoto");
-        viewModel.configureUser(convertUserInJson(user));
+        viewModel.configureUser();
     }
 
     @Test

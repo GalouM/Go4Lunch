@@ -8,6 +8,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -21,6 +24,7 @@ public class UserUnitTest {
     private String uid;
     private String email;
     private String photoUrl;
+    private List<String> likedRestaurants;
 
     @Before
     public void setup(){
@@ -30,6 +34,10 @@ public class UserUnitTest {
         restaurant = new Restaurant();
         email = "name@email.com";
         user = new User(uid, name, email, photoUrl);
+        likedRestaurants = new ArrayList<>();
+        likedRestaurants.add("uid1");
+        likedRestaurants.add("uid2");
+        likedRestaurants.add("uid3");
     }
 
     @Test
@@ -51,12 +59,14 @@ public class UserUnitTest {
         user.setUid(newUid);
         user.setUrlPicture(newPhotoUrl);
         user.setEmail(newEmail);
+        user.setLikedRestaurantUuid(likedRestaurants);
 
         assertEquals(newUid, user.getUid());
         assertEquals(newName, user.getUsername());
         assertEquals(newEmail, user.getEmail());
         assertEquals(newPhotoUrl, user.getUrlPicture());
         assertEquals(restaurant, user.getRestaurantPicked());
+        assertEquals(likedRestaurants, user.getLikedRestaurantUuid());
     }
 
 }

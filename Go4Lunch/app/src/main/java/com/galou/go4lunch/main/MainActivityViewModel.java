@@ -1,5 +1,7 @@
 package com.galou.go4lunch.main;
 
+import android.util.Log;
+
 import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -7,14 +9,12 @@ import androidx.test.espresso.idling.CountingIdlingResource;
 
 import com.galou.go4lunch.BuildConfig;
 import com.galou.go4lunch.R;
-import com.galou.go4lunch.api.UserHelper;
 import com.galou.go4lunch.base.BaseViewModel;
+import com.galou.go4lunch.injection.UserRepository;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.util.RetryAction;
-import com.google.gson.Gson;
 
-import static com.galou.go4lunch.util.UserConverter.convertJsonInUser;
-import static com.galou.go4lunch.util.UserConverter.convertUserInJson;
+import static com.galou.go4lunch.util.RetryAction.FETCH_USER;
 
 /**
  * Created by galou on 2019-04-23
@@ -23,7 +23,7 @@ public class MainActivityViewModel extends BaseViewModel {
 
     //----- PRIVATE LIVE DATA -----
     private final MutableLiveData<Object> logoutRequested = new MutableLiveData<>();
-    private final MutableLiveData<String> settingsRequested = new MutableLiveData<>();
+    private final MutableLiveData<Object> settingsRequested = new MutableLiveData<>();
 
     //----- PUBLIC LIVE DATA -----
     public final MutableLiveData<String> username = new MutableLiveData<>();
@@ -40,21 +40,29 @@ public class MainActivityViewModel extends BaseViewModel {
     public LiveData<Object> getLogout() {
         return logoutRequested;
     }
-    public LiveData<String> getSettings() { return settingsRequested; }
+    public LiveData<Object> getSettings() { return settingsRequested; }
+
+    public MainActivityViewModel(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     // --------------------
     // START
     // --------------------
 
-    public void configureUser(String jsonUser){
-        if(jsonUser != null){
-            this.user = convertJsonInUser(jsonUser);
-            configureInfoUser();
+    public void configureUser(){
+        if(userRepository.getUser() == null) {
+            userRepository.getUserFromFirebase(getCurrentUserUid())
+                    .addOnFailureListener(this.onFailureListener(FETCH_USER))
+                    .addOnSuccessListener(documentSnapshot -> {
+                        user = documentSnapshot.toObject(User.class);
+                        this.configureInfoUser();
+                        userRepository.updateUserRepository(user);
+                    });
+        } else {
+            user = userRepository.getUser();
+            this.configureInfoUser();
         }
-    }
-
-    public User getCurrentUser(){
-        return user;
     }
 
     // --------------------
@@ -70,7 +78,7 @@ public class MainActivityViewModel extends BaseViewModel {
     }
 
     public void openSettings(){
-        settingsRequested.setValue(convertUserInJson(user));
+        settingsRequested.setValue(new Object());
     }
 
     // --------------------
@@ -85,6 +93,9 @@ public class MainActivityViewModel extends BaseViewModel {
 
     @Override
     public void retry(RetryAction retryAction) {
+        if (retryAction == FETCH_USER){
+            this.configureUser();
+        }
 
     }
 

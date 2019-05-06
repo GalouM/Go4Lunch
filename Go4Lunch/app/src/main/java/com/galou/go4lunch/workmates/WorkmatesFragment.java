@@ -21,6 +21,8 @@ import com.bumptech.glide.Glide;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.api.UserHelper;
 import com.galou.go4lunch.databinding.FragmentWorkmatesBinding;
+import com.galou.go4lunch.injection.Injection;
+import com.galou.go4lunch.injection.ViewModelFactory;
 import com.galou.go4lunch.main.MainActivity;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.util.SnackBarUtil;
@@ -54,8 +56,6 @@ public class WorkmatesFragment extends Fragment implements WorkmateContract {
         View view = inflater.inflate(R.layout.fragment_workmates, container, false);
         this.configureRecycleView(view);
         this.configureBindingAndViewModel(view);
-        MainActivity mainActivity = (MainActivity) getActivity();
-        viewModel.start(mainActivity.getUser());
         viewModel.fetchListUsersFromFirebase();
         return view;
     }
@@ -72,7 +72,8 @@ public class WorkmatesFragment extends Fragment implements WorkmateContract {
     }
 
     private WorkmatesViewModel obtainViewModel() {
-        return ViewModelProviders.of(this)
+        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory();
+        return ViewModelProviders.of(this, viewModelFactory)
                 .get(WorkmatesViewModel.class);
     }
 

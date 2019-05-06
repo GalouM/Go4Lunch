@@ -1,6 +1,5 @@
 package com.galou.go4lunch.authentication;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -8,33 +7,29 @@ import androidx.lifecycle.MutableLiveData;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.galou.go4lunch.R;
-import com.galou.go4lunch.api.UserHelper;
 import com.galou.go4lunch.base.BaseViewModel;
+import com.galou.go4lunch.injection.UserRepository;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.util.RetryAction;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.gson.Gson;
 
 import static android.app.Activity.RESULT_OK;
 import static com.galou.go4lunch.util.RetryAction.FETCH_USER;
-import static com.galou.go4lunch.util.UserConverter.convertUserInJson;
 
 /**
  * Created by galou on 2019-04-22
  */
 public class AuthenticationViewModel extends BaseViewModel {
 
-    private final MutableLiveData<String> openNewActivityEvent = new MutableLiveData<>();
+    private final MutableLiveData<Object> openNewActivityEvent = new MutableLiveData<>();
     private final MutableLiveData<Object> openSignInActivityEvent = new MutableLiveData<>();
 
     private User user;
 
     // LiveData getters
 
-    public LiveData<String> getOpenNewActivityEvent() {
+    public LiveData<Object> getOpenNewActivityEvent() {
         return openNewActivityEvent;
     }
 
@@ -42,6 +37,9 @@ public class AuthenticationViewModel extends BaseViewModel {
         return openSignInActivityEvent;
     }
 
+    public AuthenticationViewModel(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     void handleResponseAfterSignIn(int requestCode, int resultCode, IdpResponse response){
         if (requestCode == AuthenticationActivity.RC_SIGN_IN) {
@@ -70,14 +68,14 @@ public class AuthenticationViewModel extends BaseViewModel {
 
     private void fetchCurrentUserFromFirestore(){
         if (isCurrentUserLogged()) {
-            UserHelper.getUser(getCurrentUser().getUid())
+            userRepository.getUserFromFirebase(getCurrentUser().getUid())
                     .addOnFailureListener(this.onFailureListener(FETCH_USER))
                     .addOnSuccessListener(documentSnapshot -> {
                         user = documentSnapshot.toObject(User.class);
                         if (user == null){
                             createUserInFirestore();
                         } else {
-                            openNewActivityEvent.setValue(convertUserInJson(user));
+                            openNewActivityEvent.setValue(new Object());
                         }
                     });
 
@@ -93,7 +91,7 @@ public class AuthenticationViewModel extends BaseViewModel {
         String email = getCurrentUser().getEmail();
         String username = getCurrentUser().getDisplayName();
         String uid = getCurrentUser().getUid();
-        UserHelper.createUser(uid, username, email, urlPicture)
+        userRepository.createUser(uid, username, email, urlPicture)
                 .addOnFailureListener(this.onFailureListener(FETCH_USER))
                 .addOnSuccessListener(aVoid -> fetchCurrentUserFromFirestore());
 

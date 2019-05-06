@@ -9,6 +9,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.List;
+
 /**
  * Created by galou on 2019-04-23
  */
@@ -42,12 +44,16 @@ public class UserHelper {
                 "username", username, "email", email);
     }
 
-    public static Task<Void> updateRestaurant(Restaurant restaurant, String uid){
+    public static Task<Void> updateRestaurantPicked(Restaurant restaurant, String uid){
         return UserHelper.getUserCollection().document(uid).update("restaurant", restaurant);
     }
 
     public static Task<Void> updateUrlPicture(String urlPicture, String uid){
         return UserHelper.getUserCollection().document(uid).update("urlPicture", urlPicture);
+    }
+
+    public static Task<Void> updateLikedRestaurants(List<String> likedRestaurants, String uid){
+        return UserHelper.getUserCollection().document(uid).update("likedRestaurants", likedRestaurants);
     }
 
     //---- DELETE ----

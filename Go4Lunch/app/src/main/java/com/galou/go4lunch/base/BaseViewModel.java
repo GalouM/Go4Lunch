@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.galou.go4lunch.R;
+import com.galou.go4lunch.injection.UserRepository;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.util.RetryAction;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -30,6 +31,7 @@ public abstract class BaseViewModel extends ViewModel {
     }
 
     protected User user;
+    protected UserRepository userRepository;
     public abstract void retry(RetryAction retryAction);
 
     // --------------------
@@ -37,7 +39,7 @@ public abstract class BaseViewModel extends ViewModel {
     // --------------------
 
     protected String getCurrentUserUid(){
-        return user.getUid();
+        return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
     // --------------------
@@ -45,7 +47,6 @@ public abstract class BaseViewModel extends ViewModel {
     // --------------------
     public OnFailureListener onFailureListener(RetryAction retryAction){
         return e -> {
-            Log.e("tag", "failed");
             isLoading.setValue(false);
             snackBarWithAction.setValue(retryAction);
         };

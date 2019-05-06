@@ -94,10 +94,15 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.1.1'
 
+    // ROBOELECTRIC
+    testImplementation 'org.robolectric:robolectric:4.2'
+    testImplementation "org.robolectric:shadows-supportv4:3.6.1"
+
     //MOCKITO
     testImplementation 'org.mockito:mockito-all:1.10.19'
     testImplementation 'org.mockito:mockito-core:2.20.0'
-    androidTestImplementation 'org.mockito:mockito-android:2.7.15'
+    androidTestImplementation 'com.google.dexmaker:dexmaker:1.2'
+    androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.2'
 
     //GLIDE
     implementation 'com.github.bumptech.glide:glide:4.6.1'

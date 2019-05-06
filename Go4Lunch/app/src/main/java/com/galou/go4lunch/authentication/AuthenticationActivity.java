@@ -13,6 +13,9 @@ import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.databinding.ActivityAuthenticationBinding;
+import com.galou.go4lunch.injection.Injection;
+import com.galou.go4lunch.injection.UserRepository;
+import com.galou.go4lunch.injection.ViewModelFactory;
 import com.galou.go4lunch.main.MainActivity;
 import com.galou.go4lunch.util.SnackBarUtil;
 
@@ -25,7 +28,6 @@ public class AuthenticationActivity extends AppCompatActivity implements Authent
     private ActivityAuthenticationBinding binding;
 
     public static final int RC_SIGN_IN = 123;
-    public static final String USER_BUNDLE_KEY = "userFromFirebase";
 
     // --------------------
     // LIFE CYCLE STATE
@@ -64,7 +66,8 @@ public class AuthenticationActivity extends AppCompatActivity implements Authent
     }
 
     private AuthenticationViewModel obtainViewModel(){
-        return ViewModelProviders.of(this)
+        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory();
+        return ViewModelProviders.of(this, viewModelFactory)
                 .get(AuthenticationViewModel.class);
 
     }
@@ -90,7 +93,7 @@ public class AuthenticationActivity extends AppCompatActivity implements Authent
     }
 
     private void setupOpenMainActivity(){
-        viewModel.getOpenNewActivityEvent().observe(this, this::openMainActivity);
+        viewModel.getOpenNewActivityEvent().observe(this, main -> openMainActivity());
     }
 
     private void setupOpenSignInActivity(){
@@ -102,9 +105,8 @@ public class AuthenticationActivity extends AppCompatActivity implements Authent
     // --------------------
 
     @Override
-    public void openMainActivity(String user) {
+    public void openMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(USER_BUNDLE_KEY, user);
         startActivity(intent);
     }
 

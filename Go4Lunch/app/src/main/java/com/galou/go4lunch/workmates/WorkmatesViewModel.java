@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.galou.go4lunch.api.UserHelper;
 import com.galou.go4lunch.base.BaseViewModel;
+import com.galou.go4lunch.injection.UserRepository;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.util.RetryAction;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -25,16 +26,16 @@ public class WorkmatesViewModel extends BaseViewModel {
     //----- GETTER LIVE DATA -----
     public LiveData<List<User>> getUsers(){ return users; }
 
+    public WorkmatesViewModel(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     // --------------------
     // GET USER ACTION
     // --------------------
 
-    void start(User user){
-        this.user = user;
-    }
-
     void fetchListUsersFromFirebase() {
-        UserHelper.getAllUsersFromFirebase()
+        userRepository.getAllUsersFromFirebase()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<User> fetchedUser = new ArrayList<>();
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()){

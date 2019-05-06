@@ -5,5 +5,5 @@ package com.galou.go4lunch.main;
  */
 public interface MainActivityContract {
     void logoutUser();
-    void settings(String user);
+    void settings();
 }
