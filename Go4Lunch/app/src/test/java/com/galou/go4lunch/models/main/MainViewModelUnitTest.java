@@ -10,6 +10,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.main.MainActivityViewModel;
 import com.galou.go4lunch.models.User;
+import com.galou.go4lunch.repositories.UserRepository;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
@@ -35,15 +36,11 @@ import static org.mockito.Mockito.when;
  */
 public class MainViewModelUnitTest {
 
-    @Mock
     private MainActivityViewModel viewModel;
     private User user;
 
     @Mock
-    private FirebaseAuth firebaseAuth;
-    private CountDownLatch authSignal = null;
-    @Mock
-    private Application context;
+    private UserRepository userRepository;
 
     @Rule
     public InstantTaskExecutorRule instantExecutorRule = new InstantTaskExecutorRule();
@@ -51,11 +48,9 @@ public class MainViewModelUnitTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        when(context.getApplicationContext()).thenReturn(context);
-        when(context.getResources()).thenReturn(mock(Resources.class));
-        FirebaseApp.initializeApp(context);
-        when(firebaseAuth.getInstance().getCurrentUser().getUid()).thenReturn("uuid");
-        viewModel = new MainActivityViewModel();
+        user = new User("uid", "name", "email", "urlPhoto");
+        when(userRepository.getUser()).thenReturn(user);
+        viewModel = new MainActivityViewModel(userRepository);
         viewModel.configureUser();
     }
 

@@ -1,15 +1,13 @@
 package com.galou.go4lunch.settings;
 
 import android.net.Uri;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.galou.go4lunch.R;
-import com.galou.go4lunch.api.UserHelper;
 import com.galou.go4lunch.base.BaseViewModel;
-import com.galou.go4lunch.injection.UserRepository;
+import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.util.RetryAction;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -178,7 +176,7 @@ public class SettingsViewModel extends BaseViewModel {
         taskSnapshot.getMetadata().getReference().getDownloadUrl()
                 .addOnSuccessListener(uri -> {
                     newPhotoUrl = uri.toString();
-                    UserHelper.updateUrlPicture(newPhotoUrl, getCurrentUserUid())
+                    userRepository.updateUrlPicture(newPhotoUrl, getCurrentUserUid())
                             .addOnSuccessListener(onSuccessListener(UPDATE_PHOTO))
                             .addOnFailureListener(this.onFailureListener(UPDATE_PHOTO_DB));
                 }).addOnFailureListener(this.onFailureListener(UPDATE_PHOTO_DB));

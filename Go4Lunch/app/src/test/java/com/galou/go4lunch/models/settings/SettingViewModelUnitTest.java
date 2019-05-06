@@ -6,6 +6,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.models.User;
+import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.settings.SettingsViewModel;
 
 import org.junit.Before;
@@ -21,6 +22,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by galou on 2019-05-01
@@ -31,13 +33,19 @@ public class SettingViewModelUnitTest {
     private SettingsViewModel viewModel;
     private User user;
 
+    @Mock
+    private UserRepository userRepository;
+
     @Rule
     public InstantTaskExecutorRule instantExecutorRule = new InstantTaskExecutorRule();
 
 
     @Before
     public void setup(){
-        viewModel = new SettingsViewModel();
+        MockitoAnnotations.initMocks(this);
+        user = new User("uid", "name", "email", "urlPhoto");
+        when(userRepository.getUser()).thenReturn(user);
+        viewModel = new SettingsViewModel(userRepository);
         viewModel.configureUser();
     }
 

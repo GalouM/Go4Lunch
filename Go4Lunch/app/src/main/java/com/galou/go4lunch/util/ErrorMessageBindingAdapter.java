@@ -1,6 +1,5 @@
 package com.galou.go4lunch.util;
 
-import android.content.Context;
 import android.content.res.Resources;
 
 import androidx.databinding.BindingAdapter;

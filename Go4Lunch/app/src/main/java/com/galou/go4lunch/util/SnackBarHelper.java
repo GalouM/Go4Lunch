@@ -3,7 +3,6 @@ package com.galou.go4lunch.util;
 import android.content.Context;
 import android.view.ViewGroup;
 
-import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
 import com.galou.go4lunch.R;

@@ -1,11 +1,5 @@
 package com.galou.go4lunch.util;
 
-import android.util.Log;
-
-import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * Created by galou on 2019-04-30
  */

@@ -1,14 +1,12 @@
 package com.galou.go4lunch.injection;
 
-import android.app.Application;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.authentication.AuthenticationViewModel;
 import com.galou.go4lunch.main.MainActivityViewModel;
-import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.settings.SettingsViewModel;
 import com.galou.go4lunch.workmates.WorkmatesViewModel;
 

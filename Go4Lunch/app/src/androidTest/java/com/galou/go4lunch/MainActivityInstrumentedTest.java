@@ -18,6 +18,8 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import androidx.test.rule.ActivityTestRule;
 
 import com.galou.go4lunch.main.MainActivity;
+import com.galou.go4lunch.models.User;
+import com.galou.go4lunch.repositories.UserRepository;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.junit.Before;
@@ -25,6 +27,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -39,8 +42,10 @@ import static org.mockito.Mockito.when;
 @RunWith(AndroidJUnit4ClassRunner.class)
 public class MainActivityInstrumentedTest {
 
+    private User user;
+
     @Mock
-    private FirebaseAuth firebaseAuth;
+    private UserRepository userRepository;
 
     private Context context;
     private IdlingResource idlingResource;
@@ -50,8 +55,10 @@ public class MainActivityInstrumentedTest {
 
     @Before
     public void setup(){
+        MockitoAnnotations.initMocks(this);
+        user = new User("uid", "name", "email", "urlPhoto");
+        when(userRepository.getUser()).thenReturn(user);
         this.context = ApplicationProvider.getApplicationContext();
-        when(firebaseAuth.getCurrentUser().getUid()).thenReturn("ZHOsfXt9Wzc0FEMQ6rEYWLY5wbk1");
 
     }
 

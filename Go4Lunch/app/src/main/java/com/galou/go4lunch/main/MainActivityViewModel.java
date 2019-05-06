@@ -1,7 +1,5 @@
 package com.galou.go4lunch.main;
 
-import android.util.Log;
-
 import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -10,7 +8,7 @@ import androidx.test.espresso.idling.CountingIdlingResource;
 import com.galou.go4lunch.BuildConfig;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.base.BaseViewModel;
-import com.galou.go4lunch.injection.UserRepository;
+import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.util.RetryAction;
 

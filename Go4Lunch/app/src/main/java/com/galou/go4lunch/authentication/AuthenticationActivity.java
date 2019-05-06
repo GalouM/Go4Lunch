@@ -14,7 +14,6 @@ import com.firebase.ui.auth.IdpResponse;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.databinding.ActivityAuthenticationBinding;
 import com.galou.go4lunch.injection.Injection;
-import com.galou.go4lunch.injection.UserRepository;
 import com.galou.go4lunch.injection.ViewModelFactory;
 import com.galou.go4lunch.main.MainActivity;
 import com.galou.go4lunch.util.SnackBarUtil;

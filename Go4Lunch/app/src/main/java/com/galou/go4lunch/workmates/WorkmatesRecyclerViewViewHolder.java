@@ -1,7 +1,6 @@
 package com.galou.go4lunch.workmates;
 
 import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,8 +13,6 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.models.User;
-
-import java.util.List;
 
 /**
  * Created by galou on 2019-04-27

@@ -8,7 +8,7 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.base.BaseViewModel;
-import com.galou.go4lunch.injection.UserRepository;
+import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.util.RetryAction;
 import com.google.firebase.auth.FirebaseAuth;

@@ -1,4 +1,4 @@
-package com.galou.go4lunch.injection;
+package com.galou.go4lunch.repositories;
 
 import com.galou.go4lunch.models.Restaurant;
 import com.galou.go4lunch.models.User;

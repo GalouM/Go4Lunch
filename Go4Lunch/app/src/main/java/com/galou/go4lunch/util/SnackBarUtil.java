@@ -3,8 +3,6 @@ package com.galou.go4lunch.util;
 import android.content.res.Resources;
 import android.view.View;
 
-import androidx.annotation.Nullable;
-
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.base.BaseViewModel;
 import com.google.android.material.snackbar.Snackbar;

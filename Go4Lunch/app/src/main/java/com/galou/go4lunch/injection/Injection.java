@@ -1,5 +1,7 @@
 package com.galou.go4lunch.injection;
 
+import com.galou.go4lunch.repositories.UserRepository;
+
 /**
  * Created by galou on 2019-05-06
  */
