@@ -1,4 +1,4 @@
-package com.galou.go4lunch.settings;
+package com.galou.go4lunch.base;
 
 import android.view.View;
 

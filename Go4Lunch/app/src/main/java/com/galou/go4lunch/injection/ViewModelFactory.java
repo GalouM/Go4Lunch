@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.galou.go4lunch.map.MapViewViewModel;
 import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.authentication.AuthenticationViewModel;
 import com.galou.go4lunch.main.MainActivityViewModel;
@@ -35,6 +36,9 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         }
         if(modelClass.isAssignableFrom(WorkmatesViewModel.class)){
             return (T) new WorkmatesViewModel(userRepository);
+        }
+        if(modelClass.isAssignableFrom(MapViewViewModel.class)){
+            return (T) new MapViewViewModel(userRepository);
         }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }

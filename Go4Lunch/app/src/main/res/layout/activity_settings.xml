@@ -10,7 +10,7 @@
 
         <variable
             name="listener"
-            type="com.galou.go4lunch.settings.ButtonActionListener" />
+            type="com.galou.go4lunch.base.ButtonActionListener" />
 
     </data>
     <ScrollView

@@ -25,15 +25,18 @@ import com.firebase.ui.auth.AuthUI;
 import com.galou.go4lunch.BuildConfig;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.authentication.AuthenticationActivity;
+import com.galou.go4lunch.base.ButtonActionListener;
 import com.galou.go4lunch.databinding.ActivitySettingsBinding;
 import com.galou.go4lunch.injection.Injection;
 import com.galou.go4lunch.injection.ViewModelFactory;
 import com.galou.go4lunch.util.SnackBarUtil;
 
+import java.util.List;
+
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class SettingsActivity extends AppCompatActivity implements SettingsContract {
+public class SettingsActivity extends AppCompatActivity implements SettingsContract, EasyPermissions.PermissionCallbacks {
 
     private ActivitySettingsBinding binding;
     private SettingsViewModel viewModel;
@@ -241,6 +244,22 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
                 .setNegativeButton(R.string.cancel_button, null)
                 .show();
     }
+
+    // -----------------
+    // PERMISSIONS
+    // -----------------
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        chooseImageFromPhone();
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+
+    }
+
 
     // -----------------
     // FOR TESTING
