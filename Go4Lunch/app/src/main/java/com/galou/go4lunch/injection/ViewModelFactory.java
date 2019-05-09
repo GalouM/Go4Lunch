@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.galou.go4lunch.map.MapViewViewModel;
+import com.galou.go4lunch.repositories.RestaurantRepository;
 import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.authentication.AuthenticationViewModel;
 import com.galou.go4lunch.main.MainActivityViewModel;
@@ -17,9 +18,11 @@ import com.galou.go4lunch.workmates.WorkmatesViewModel;
 public class ViewModelFactory implements ViewModelProvider.Factory {
 
     private final UserRepository userRepository;
+    private final RestaurantRepository restaurantRepository;
 
-    public ViewModelFactory(UserRepository userRepository){
+    public ViewModelFactory(UserRepository userRepository, RestaurantRepository restaurantRepository){
         this.userRepository = userRepository;
+        this.restaurantRepository = restaurantRepository;
     }
 
     @NonNull
@@ -38,7 +41,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             return (T) new WorkmatesViewModel(userRepository);
         }
         if(modelClass.isAssignableFrom(MapViewViewModel.class)){
-            return (T) new MapViewViewModel(userRepository);
+            return (T) new MapViewViewModel(userRepository, restaurantRepository);
         }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }

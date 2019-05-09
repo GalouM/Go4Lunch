@@ -111,4 +111,14 @@ dependencies {
 
     //MAPS
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
+    implementation 'com.google.android.libraries.places:places:1.1.0'
+
+    // RxJAVA
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
+
+    // RETROFIT
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
 }

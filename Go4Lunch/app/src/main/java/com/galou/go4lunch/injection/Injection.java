@@ -1,5 +1,9 @@
 package com.galou.go4lunch.injection;
 
+import android.util.Log;
+
+import com.galou.go4lunch.api.GooglePlaceService;
+import com.galou.go4lunch.repositories.RestaurantRepository;
 import com.galou.go4lunch.repositories.UserRepository;
 
 /**
@@ -11,9 +15,15 @@ public class Injection {
         return UserRepository.getInstance();
     }
 
+    public static RestaurantRepository provideRestaurantRepository() {
+        GooglePlaceService googlePlaceService = GooglePlaceService.retrofit.create(GooglePlaceService.class);
+        return new RestaurantRepository(googlePlaceService);
+    }
+
     public static ViewModelFactory provideViewModelFactory(){
         UserRepository userRepository = provideUserRepository();
+        RestaurantRepository restaurantRepository = provideRestaurantRepository();
 
-        return new ViewModelFactory(userRepository);
+        return new ViewModelFactory(userRepository, restaurantRepository);
     }
 }

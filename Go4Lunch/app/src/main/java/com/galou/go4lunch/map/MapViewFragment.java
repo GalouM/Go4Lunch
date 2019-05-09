@@ -7,6 +7,7 @@ import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,19 +21,28 @@ import com.galou.go4lunch.base.ButtonActionListener;
 import com.galou.go4lunch.databinding.FragmentMapViewBinding;
 import com.galou.go4lunch.injection.Injection;
 import com.galou.go4lunch.injection.ViewModelFactory;
+import com.galou.go4lunch.models.Result;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.squareup.okhttp.Response;
 
 import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.galou.go4lunch.util.PositionUtil.convertLocationForApi;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,6 +76,9 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Eas
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map_view, container, false);
+        Places.initialize(getApplicationContext(), getString(R.string.google_api_key));
+        PlacesClient placesClient = Places.createClient(getActivity());
+
         this.configureBindingAndViewModel(view);
         this.createViewModelConnections();
         this.configureMapView(savedInstanceState);
@@ -129,6 +142,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Eas
         } else {
             this.centerCameraOnGPSLocation();
         }
+        viewModel.start(convertLocationForApi(getLocationUser()));
 
         googleMap.getUiSettings().setMyLocationButtonEnabled(false);
     }
@@ -141,6 +155,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Eas
         viewModel = obtainViewModel();
         binding.setViewmodel(viewModel);
         binding.setLifecycleOwner(getActivity());
+        setupRestaurantDisplay();
 
     }
 
@@ -154,6 +169,23 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Eas
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory();
         return ViewModelProviders.of(this, viewModelFactory)
                 .get(MapViewViewModel.class);
+    }
+
+    private void setupRestaurantDisplay(){
+       viewModel.getRestaurantsList().observe(this, this::createMarkerForRestaurants);
+    }
+
+    private void createMarkerForRestaurants(List<Result> restaurants){
+        for (Result restaurant : restaurants){
+            Double latitude = restaurant.getGeometry().getLocation().getLat();
+            Double longitude = restaurant.getGeometry().getLocation().getLng();
+            LatLng positionRestaurant = new LatLng(latitude, longitude);
+            googleMap.addMarker(new MarkerOptions()
+                    .position(positionRestaurant)
+                    .title(restaurant.getName()));
+                    //.icon(BitmapDescriptorFactory.fromResource(R.drawable.go4lunch_icon)));
+        }
+
     }
 
     //----- LISTENER BUTTON -----
