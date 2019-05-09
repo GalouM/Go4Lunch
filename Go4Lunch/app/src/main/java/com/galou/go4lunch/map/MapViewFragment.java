@@ -2,6 +2,7 @@ package com.galou.go4lunch.map;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
@@ -12,8 +13,13 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.galou.go4lunch.R;
+import com.galou.go4lunch.base.ButtonActionListener;
+import com.galou.go4lunch.databinding.FragmentMapViewBinding;
+import com.galou.go4lunch.injection.Injection;
+import com.galou.go4lunch.injection.ViewModelFactory;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,8 +41,10 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Eas
 
     private GoogleMap googleMap;
     private MapView mapView;
-    private FloatingActionButton floatButton;
     private CameraUpdate cameraInitialPosition;
+
+    private MapViewViewModel viewModel;
+    private FragmentMapViewBinding binding;
 
     // FOR GPS PERMISSION
     private static final String PERMS = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -58,11 +66,9 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Eas
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map_view, container, false);
-        this.configureMapView(savedInstanceState, view);
-
-        floatButton = view.findViewById(R.id.location_button);
-        floatButton.setOnClickListener(view1 -> centerCameraOnGPSLocation());
-
+        this.configureBindingAndViewModel(view);
+        this.createViewModelConnections();
+        this.configureMapView(savedInstanceState);
         return view;
     }
 
@@ -74,14 +80,6 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Eas
             outState.putParcelable(STATE_KEY_MAP_CAMERA, googleMap.getCameraPosition());
         }
     }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-    }
-
 
 
     @Override
@@ -108,6 +106,20 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Eas
         mapView.onLowMemory();
     }
 
+    // --------------------
+    // CONFIGURE UI
+    // --------------------
+
+    private void configureMapView(Bundle savedInstanceState) {
+        mapView = (MapView) binding.mapView;
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(this);
+        if(savedInstanceState != null) {
+            cameraInitialPosition = CameraUpdateFactory.newCameraPosition(
+                    (CameraPosition) (savedInstanceState.getParcelable(STATE_KEY_MAP_CAMERA)));
+        }
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
@@ -121,16 +133,44 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Eas
         googleMap.getUiSettings().setMyLocationButtonEnabled(false);
     }
 
-    private void configureMapView(Bundle savedInstanceState, View view) {
-        mapView = (MapView) view.findViewById(R.id.mapView);
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
-        if(savedInstanceState != null) {
-            cameraInitialPosition = CameraUpdateFactory.newCameraPosition(
-                    (CameraPosition) (savedInstanceState.getParcelable(STATE_KEY_MAP_CAMERA)));
-        }
+    // --------------------
+    // VIEW MODEL CONNECTIONS
+    // --------------------
+    private void configureBindingAndViewModel(View view) {
+        binding = FragmentMapViewBinding.bind(view);
+        viewModel = obtainViewModel();
+        binding.setViewmodel(viewModel);
+        binding.setLifecycleOwner(getActivity());
+
     }
 
+    private void createViewModelConnections() {
+        ButtonActionListener buttonActionListener = getButtonActionListener();
+        binding.setListener(buttonActionListener);
+
+    }
+
+    private MapViewViewModel obtainViewModel() {
+        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory();
+        return ViewModelProviders.of(this, viewModelFactory)
+                .get(MapViewViewModel.class);
+    }
+
+    //----- LISTENER BUTTON -----
+    private ButtonActionListener getButtonActionListener() {
+        return view -> {
+            int id = view.getId();
+            switch (id) {
+                case R.id.location_button:
+                    centerCameraOnGPSLocation();
+            }
+        };
+    }
+
+    // --------------------
+    // MAP ACTIONS
+    // --------------------
+    @SuppressLint("MissingPermission")
     @AfterPermissionGranted(RC_LOCATION_PERMS)
     private void displayLocationUser(){
         if(! EasyPermissions.hasPermissions(getActivity(), PERMS)){
@@ -155,8 +195,19 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Eas
 
     private LatLng getLocationUser(){
         LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        @SuppressLint("MissingPermission")
         Location currentLocation = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         return (new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
+    }
+
+    // --------------------
+    // PERMISSIONS
+    // --------------------
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
     @Override

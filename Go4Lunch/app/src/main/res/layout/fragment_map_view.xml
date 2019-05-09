@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="viewmodel"
+            type="com.galou.go4lunch.map.MapViewViewModel" />
+
+        <variable
+            name="listener"
+            type="com.galou.go4lunch.base.ButtonActionListener" />
+
+    </data>
+
+
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -19,6 +35,8 @@
         android:layout_gravity="bottom|right|end"
         android:src="@drawable/baseline_my_location_24"
         android:layout_margin="@dimen/small_margin"
-        app:fabSize="normal"/>
+        app:fabSize="normal"
+        android:onClick="@{(view) -> listener.onClick(view)}"/>
 
 </FrameLayout>
+</layout>
