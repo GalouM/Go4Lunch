@@ -15,7 +15,7 @@
         android:layout_margin="@dimen/small_margin">
 
         <TextView
-            android:id="@+id/title_resto"
+            android:id="@+id/name_resto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorTextOnWhite"
@@ -74,7 +74,7 @@
 
     <ImageView
         android:layout_margin="@dimen/small_margin"
-        android:id="@+id/recycler_view_image_user"
+        android:id="@+id/image_resto"
         android:layout_width="@dimen/user_image_recyclerview_workmates_size"
         android:layout_height="@dimen/user_image_recyclerview_workmates_size"
         android:background="@drawable/go4lunch_icon"

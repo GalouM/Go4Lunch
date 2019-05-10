@@ -1,4 +1,4 @@
-package com.galou.go4lunch.map;
+package com.galou.go4lunch.restaurantsList;
 
 
 import android.Manifest;
@@ -7,23 +7,17 @@ import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.galou.go4lunch.R;
-import com.galou.go4lunch.base.ButtonActionListener;
 import com.galou.go4lunch.databinding.FragmentMapViewBinding;
-import com.galou.go4lunch.injection.Injection;
-import com.galou.go4lunch.injection.ViewModelFactory;
+import com.galou.go4lunch.models.Restaurant;
 import com.galou.go4lunch.models.Result;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,8 +29,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.squareup.okhttp.Response;
 
 import java.util.List;
 
@@ -49,14 +41,12 @@ import static com.galou.go4lunch.util.PositionUtil.convertLocationForApi;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MapViewFragment extends Fragment implements OnMapReadyCallback, EasyPermissions.PermissionCallbacks, MapViewContract {
+public class MapViewFragment extends BaseRestaurantsListFragment implements OnMapReadyCallback, EasyPermissions.PermissionCallbacks {
 
     private GoogleMap googleMap;
     private MapView mapView;
     private CameraUpdate cameraInitialPosition;
-    private FusedLocationProviderClient fusedLocationClient;
 
-    private MapViewViewModel viewModel;
     private FragmentMapViewBinding binding;
 
     // FOR GPS PERMISSION
@@ -81,7 +71,6 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Eas
         View view = inflater.inflate(R.layout.fragment_map_view, container, false);
         Places.initialize(getApplicationContext(), getString(R.string.google_api_key));
         PlacesClient placesClient = Places.createClient(getActivity());
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         this.configureBindingAndViewModel(view);
         this.createViewModelConnections();
@@ -146,7 +135,8 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Eas
         } else {
             this.centerCameraOnGPSLocation();
         }
-        viewModel.start(convertLocationForApi(getLocationUser()));
+        viewModel.setupLocation(convertLocationForApi(getLocationUser()));
+        viewModel.requestListRestaurants();
     }
 
     // --------------------
@@ -159,21 +149,6 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Eas
         binding.setLifecycleOwner(getActivity());
 
 
-    }
-
-    private void createViewModelConnections() {
-        setupRestaurantDisplay();
-
-    }
-
-    private MapViewViewModel obtainViewModel() {
-        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory();
-        return ViewModelProviders.of(this, viewModelFactory)
-                .get(MapViewViewModel.class);
-    }
-
-    private void setupRestaurantDisplay(){
-       viewModel.getRestaurantsList().observe(this, this::createMarkerForRestaurants);
     }
 
     // --------------------
@@ -215,20 +190,29 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Eas
     // --------------------
 
     @Override
-    public void createMarkerForRestaurants(List<Result> restaurants){
+    public void displayRestaurants(List<Restaurant> restaurants){
         if(googleMap != null) {
-            for (Result restaurant : restaurants) {
-                Double latitude = restaurant.getGeometry().getLocation().getLat();
-                Double longitude = restaurant.getGeometry().getLocation().getLng();
+            for (Restaurant restaurant : restaurants) {
+                Double latitude = restaurant.getLatitude();
+                Double longitude = restaurant.getLongitude();
                 LatLng positionRestaurant = new LatLng(latitude, longitude);
-                googleMap.addMarker(new MarkerOptions()
-                        .position(positionRestaurant)
-                        .title(restaurant.getName())
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_normal)));
+                if(restaurant.getUsersEatingHere().size() > 0){
+                    googleMap.addMarker(new MarkerOptions()
+                            .position(positionRestaurant)
+                            .title(restaurant.getName())
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_selected)));
+                } else {
+                    googleMap.addMarker(new MarkerOptions()
+                            .position(positionRestaurant)
+                            .title(restaurant.getName())
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_normal)));
+                }
             }
         }
 
     }
+
+
 
     // --------------------
     // PERMISSIONS

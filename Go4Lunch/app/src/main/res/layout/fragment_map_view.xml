@@ -6,7 +6,7 @@
 
         <variable
             name="viewmodel"
-            type="com.galou.go4lunch.map.MapViewViewModel" />
+            type="com.galou.go4lunch.restaurantsList.RestaurantsListViewModel" />
 
     </data>
 
@@ -15,8 +15,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".map.MapViewFragment">
+    tools:context=".restaurantsList.MapViewFragment">
 
 
     <com.google.android.gms.maps.MapView

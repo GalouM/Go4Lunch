@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.galou.go4lunch.map.MapViewViewModel;
+import com.galou.go4lunch.restaurantsList.RestaurantsListViewModel;
 import com.galou.go4lunch.repositories.RestaurantRepository;
 import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.authentication.AuthenticationViewModel;
@@ -40,8 +40,8 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         if(modelClass.isAssignableFrom(WorkmatesViewModel.class)){
             return (T) new WorkmatesViewModel(userRepository);
         }
-        if(modelClass.isAssignableFrom(MapViewViewModel.class)){
-            return (T) new MapViewViewModel(userRepository, restaurantRepository);
+        if(modelClass.isAssignableFrom(RestaurantsListViewModel.class)){
+            return (T) new RestaurantsListViewModel(userRepository, restaurantRepository);
         }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }

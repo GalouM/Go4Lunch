@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.galou.go4lunch.api.GooglePlaceService;
 import com.galou.go4lunch.models.ApiResponse;
+import com.galou.go4lunch.models.Restaurant;
 import com.galou.go4lunch.models.Result;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class RestaurantRepository {
 
     private final GooglePlaceService googlePlaceService;
 
-    private List<Result> restaurants;
+    private List<Restaurant> restaurants;
 
     private static volatile RestaurantRepository INSTANCE;
 
@@ -43,11 +44,11 @@ public class RestaurantRepository {
                 .timeout(10, TimeUnit.SECONDS);
     }
 
-    public List<Result> getRestaurantsLoaded(){
+    public List<Restaurant> getRestaurantsLoaded(){
         return restaurants;
     }
 
-    public void updateRestaurants(List<Result> restaurants){
+    public void updateRestaurants(List<Restaurant> restaurants){
         this.restaurants = restaurants;
     }
 }
