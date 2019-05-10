@@ -38,8 +38,11 @@ public class MapViewViewModel extends BaseViewModel {
     }
 
     public void start(String location){
-        Log.e("location", location);
-        this.disposable = restaurantRepository.getRestaurantsNearBy(location, 1500).subscribeWith(getObserverRestaurants());
+        if(restaurantRepository.getRestaurantsLoaded() == null) {
+            this.disposable = restaurantRepository.getRestaurantsNearBy(location, 1500).subscribeWith(getObserverRestaurants());
+        } else {
+            restaurantsList.setValue(restaurantRepository.getRestaurantsLoaded());
+        }
     }
 
     @Override
@@ -51,8 +54,9 @@ public class MapViewViewModel extends BaseViewModel {
         return new DisposableObserver<ApiResponse>() {
             @Override
             public void onNext(ApiResponse response) {
-                Log.e("api call", String.valueOf(response.getStatus()));
-                restaurantsList.setValue(response.getResults());
+                List<Result> restaurants = response.getResults();
+                restaurantsList.setValue(restaurants);
+                restaurantRepository.updateRestaurants(restaurants);
             }
 
             @Override

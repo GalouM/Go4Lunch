@@ -17,7 +17,7 @@ public class Injection {
 
     public static RestaurantRepository provideRestaurantRepository() {
         GooglePlaceService googlePlaceService = GooglePlaceService.retrofit.create(GooglePlaceService.class);
-        return new RestaurantRepository(googlePlaceService);
+        return RestaurantRepository.getInstance(googlePlaceService);
     }
 
     public static ViewModelFactory provideViewModelFactory(){

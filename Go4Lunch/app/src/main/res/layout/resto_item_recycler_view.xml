@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginStart="@dimen/small_margin"
+    android:layout_marginTop="@dimen/small_margin">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_margin="@dimen/small_margin">
+
+        <TextView
+            android:id="@+id/title_resto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextOnWhite"
+            android:textSize="@dimen/text_recycler_vew_user_size"
+            android:text="Le Zinc"
+            android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/address_type_resto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextOnWhite"
+            android:textSize="@dimen/text_recycler_vew_user_size"
+            android:text="French - 6679 Grant Street"/>
+        <TextView
+            android:id="@+id/opening_hours_resto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextOnWhite"
+            android:textSize="@dimen/text_recycler_vew_user_size"
+            android:text="Open until 3:30pm"
+            android:textStyle="italic"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="@dimen/small_margin">
+
+        <TextView
+            android:id="@+id/distance_resto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextOnWhite"
+            android:textSize="@dimen/text_recycler_vew_user_size"
+            android:text="120m"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="20dip"
+                android:layout_height="20dip"
+                android:src="@drawable/baseline_person_outline_24"/>
+            <TextView
+                android:id="@+id/number_ppl_resto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(3)"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_margin="@dimen/small_margin"
+        android:id="@+id/recycler_view_image_user"
+        android:layout_width="@dimen/user_image_recyclerview_workmates_size"
+        android:layout_height="@dimen/user_image_recyclerview_workmates_size"
+        android:background="@drawable/go4lunch_icon"
+        android:scaleType="fitCenter" />
+</LinearLayout>

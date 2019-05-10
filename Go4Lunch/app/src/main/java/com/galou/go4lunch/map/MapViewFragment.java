@@ -22,6 +22,8 @@ import com.galou.go4lunch.databinding.FragmentMapViewBinding;
 import com.galou.go4lunch.injection.Injection;
 import com.galou.go4lunch.injection.ViewModelFactory;
 import com.galou.go4lunch.models.Result;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -47,11 +49,12 @@ import static com.galou.go4lunch.util.PositionUtil.convertLocationForApi;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MapViewFragment extends Fragment implements OnMapReadyCallback, EasyPermissions.PermissionCallbacks {
+public class MapViewFragment extends Fragment implements OnMapReadyCallback, EasyPermissions.PermissionCallbacks, MapViewContract {
 
     private GoogleMap googleMap;
     private MapView mapView;
     private CameraUpdate cameraInitialPosition;
+    private FusedLocationProviderClient fusedLocationClient;
 
     private MapViewViewModel viewModel;
     private FragmentMapViewBinding binding;
@@ -78,6 +81,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Eas
         View view = inflater.inflate(R.layout.fragment_map_view, container, false);
         Places.initialize(getApplicationContext(), getString(R.string.google_api_key));
         PlacesClient placesClient = Places.createClient(getActivity());
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         this.configureBindingAndViewModel(view);
         this.createViewModelConnections();
@@ -143,8 +147,6 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Eas
             this.centerCameraOnGPSLocation();
         }
         viewModel.start(convertLocationForApi(getLocationUser()));
-
-        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
     }
 
     // --------------------
@@ -155,13 +157,12 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Eas
         viewModel = obtainViewModel();
         binding.setViewmodel(viewModel);
         binding.setLifecycleOwner(getActivity());
-        setupRestaurantDisplay();
+
 
     }
 
     private void createViewModelConnections() {
-        ButtonActionListener buttonActionListener = getButtonActionListener();
-        binding.setListener(buttonActionListener);
+        setupRestaurantDisplay();
 
     }
 
@@ -173,30 +174,6 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Eas
 
     private void setupRestaurantDisplay(){
        viewModel.getRestaurantsList().observe(this, this::createMarkerForRestaurants);
-    }
-
-    private void createMarkerForRestaurants(List<Result> restaurants){
-        for (Result restaurant : restaurants){
-            Double latitude = restaurant.getGeometry().getLocation().getLat();
-            Double longitude = restaurant.getGeometry().getLocation().getLng();
-            LatLng positionRestaurant = new LatLng(latitude, longitude);
-            googleMap.addMarker(new MarkerOptions()
-                    .position(positionRestaurant)
-                    .title(restaurant.getName()));
-                    //.icon(BitmapDescriptorFactory.fromResource(R.drawable.go4lunch_icon)));
-        }
-
-    }
-
-    //----- LISTENER BUTTON -----
-    private ButtonActionListener getButtonActionListener() {
-        return view -> {
-            int id = view.getId();
-            switch (id) {
-                case R.id.location_button:
-                    centerCameraOnGPSLocation();
-            }
-        };
     }
 
     // --------------------
@@ -214,6 +191,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Eas
 
     }
 
+    @SuppressLint("MissingPermission")
     @AfterPermissionGranted(RC_LOCATION_PERMS)
     private void centerCameraOnGPSLocation(){
         if(! EasyPermissions.hasPermissions(getActivity(), PERMS)){
@@ -225,11 +203,31 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Eas
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(ZOOM_USER_LOCATION_VALUE));
     }
 
-    private LatLng getLocationUser(){
+    @SuppressLint("MissingPermission")
+    private LatLng getLocationUser() {
         LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        @SuppressLint("MissingPermission")
         Location currentLocation = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         return (new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
+    }
+
+    // --------------------
+    // ACTION FROM VIEWMODEL
+    // --------------------
+
+    @Override
+    public void createMarkerForRestaurants(List<Result> restaurants){
+        if(googleMap != null) {
+            for (Result restaurant : restaurants) {
+                Double latitude = restaurant.getGeometry().getLocation().getLat();
+                Double longitude = restaurant.getGeometry().getLocation().getLng();
+                LatLng positionRestaurant = new LatLng(latitude, longitude);
+                googleMap.addMarker(new MarkerOptions()
+                        .position(positionRestaurant)
+                        .title(restaurant.getName())
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_normal)));
+            }
+        }
+
     }
 
     // --------------------

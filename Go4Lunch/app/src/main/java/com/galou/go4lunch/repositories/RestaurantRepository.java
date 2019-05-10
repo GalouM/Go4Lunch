@@ -1,8 +1,12 @@
 package com.galou.go4lunch.repositories;
 
+import android.util.Log;
+
 import com.galou.go4lunch.api.GooglePlaceService;
 import com.galou.go4lunch.models.ApiResponse;
+import com.galou.go4lunch.models.Result;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -17,7 +21,18 @@ public class RestaurantRepository {
 
     private final GooglePlaceService googlePlaceService;
 
-    public RestaurantRepository(GooglePlaceService googlePlaceService){
+    private List<Result> restaurants;
+
+    private static volatile RestaurantRepository INSTANCE;
+
+    public static RestaurantRepository getInstance(GooglePlaceService googlePlaceService){
+        if(INSTANCE == null){
+            INSTANCE = new RestaurantRepository(googlePlaceService);
+        }
+        return INSTANCE;
+    }
+
+    private RestaurantRepository(GooglePlaceService googlePlaceService){
         this.googlePlaceService = googlePlaceService;
     }
 
@@ -26,5 +41,13 @@ public class RestaurantRepository {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .timeout(10, TimeUnit.SECONDS);
+    }
+
+    public List<Result> getRestaurantsLoaded(){
+        return restaurants;
+    }
+
+    public void updateRestaurants(List<Result> restaurants){
+        this.restaurants = restaurants;
     }
 }
