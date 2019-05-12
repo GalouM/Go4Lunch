@@ -1,9 +1,11 @@
 package com.galou.go4lunch.repositories;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.galou.go4lunch.api.GooglePlaceService;
 import com.galou.go4lunch.models.ApiResponse;
+import com.galou.go4lunch.models.DistanceApi;
 import com.galou.go4lunch.models.Restaurant;
 import com.galou.go4lunch.models.Result;
 
@@ -39,6 +41,20 @@ public class RestaurantRepository {
 
     public Observable<ApiResponse> getRestaurantsNearBy(String location, Integer radius){
         return googlePlaceService.getRestaurantsNearBy(location, radius)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .timeout(10, TimeUnit.SECONDS);
+    }
+
+    public Observable<DistanceApi> getDistanceToPoint(String location, String point){
+        return googlePlaceService.getDistancePoints(location, point)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .timeout(10, TimeUnit.SECONDS);
+    }
+
+    public Observable<String> getPhotoRestaurant(String photoReference){
+        return googlePlaceService.getPhotoFromPlace(photoReference)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .timeout(10, TimeUnit.SECONDS);

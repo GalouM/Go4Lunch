@@ -40,8 +40,16 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
     public void updateRestaurantInfo(Restaurant restaurant, RequestManager glide){
         name.setText(restaurant.getName());
+
         String address = restaurant.getAddress();
         typeAdress.setText(address);
+
+        String distanceToDisplay = "0m";
+        if(restaurant.getDistance() != null){
+            distanceToDisplay = String.format("%sm", restaurant.getDistance().toString());
+        }
+        distance.setText(distanceToDisplay);
+
         if(restaurant.getUrlPhoto() != null){
             glide.load(restaurant.getUrlPhoto()).into(imageView);
         }
