@@ -16,6 +16,7 @@ import com.galou.go4lunch.models.RowApiDistance;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.repositories.RestaurantRepository;
 import com.galou.go4lunch.repositories.UserRepository;
+import com.galou.go4lunch.util.RatingUtil;
 import com.galou.go4lunch.util.RetryAction;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -133,6 +134,7 @@ public class RestaurantsListViewModel extends BaseViewModel {
             String address = result.getVicinity();
             String openingHours = null;
             String closureHours = null;
+            int rating = RatingUtil.calculateRating(result.getRating());
             if(result.getOpeningHours() != null){
                 if(result.getOpeningHours().getPeriods() != null){
                     if(result.getOpeningHours().getPeriods().size() > 0){
@@ -149,7 +151,7 @@ public class RestaurantsListViewModel extends BaseViewModel {
             }
 
 
-            Restaurant restaurant = new Restaurant(uid, name, latitude, longitude, address, openingHours, closureHours, photo);
+            Restaurant restaurant = new Restaurant(uid, name, latitude, longitude, address, openingHours, closureHours, photo, rating);
             restaurants.add(restaurant);
             LatLng positionRestaurant = new LatLng(latitude, longitude);
             this.disposableDistance = restaurantRepository.getDistanceToPoint(location, convertLocationForApi(positionRestaurant)).subscribeWith(getObserverDistance(restaurant));

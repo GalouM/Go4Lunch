@@ -31,6 +31,9 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
     private TextView distance;
     private ImageView imageView;
     private Resources res;
+    private ImageView ratingStar1;
+    private ImageView ratingStar2;
+    private ImageView ratingStar3;
     
     private String formatTimeDisplay; 
 
@@ -44,6 +47,9 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
         distance = (TextView) itemView.findViewById(R.id.distance_resto);
         imageView = (ImageView) itemView.findViewById(R.id.image_resto);
         formatTimeDisplay = res.getString(R.string.format_time_display);
+        ratingStar1 = (ImageView) itemView.findViewById(R.id.rating_star1);
+        ratingStar2 = (ImageView) itemView.findViewById(R.id.rating_star2);
+        ratingStar3 = (ImageView) itemView.findViewById(R.id.rating_star3);
 
     }
 
@@ -93,6 +99,30 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
             case R.string.open_24h:
                 openingHours.setText(timeOpening);
                 TextViewCompat.setTextAppearance(openingHours, R.style.TimeRestaurantOpen);
+                break;
+        }
+
+        int rating = restaurant.getRating();
+        switch (rating){
+            case 0:
+                ratingStar1.setVisibility(View.GONE);
+                ratingStar2.setVisibility(View.GONE);
+                ratingStar3.setVisibility(View.GONE);
+                break;
+            case 1:
+                ratingStar1.setVisibility(View.VISIBLE);
+                ratingStar2.setVisibility(View.GONE);
+                ratingStar3.setVisibility(View.GONE);
+                break;
+            case 2:
+                ratingStar1.setVisibility(View.VISIBLE);
+                ratingStar2.setVisibility(View.VISIBLE);
+                ratingStar3.setVisibility(View.GONE);
+                break;
+            case 3:
+                ratingStar1.setVisibility(View.VISIBLE);
+                ratingStar2.setVisibility(View.VISIBLE);
+                ratingStar3.setVisibility(View.VISIBLE);
                 break;
         }
 
