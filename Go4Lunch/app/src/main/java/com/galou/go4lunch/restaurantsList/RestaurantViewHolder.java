@@ -11,6 +11,7 @@ import androidx.core.widget.TextViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.models.Restaurant;
 import com.galou.go4lunch.util.OpeningHoursUtil;
@@ -62,6 +63,8 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
             glide.load(restaurant.getUrlPhoto()).into(imageView);
         }
         numberPpl.setText(String.format("(%d)", restaurant.getUsersEatingHere().size()));
+
+        glide.load(restaurant.getUrlPhoto()).apply(RequestOptions.centerCropTransform()).into(imageView);
 
         int timeOpening = OpeningHoursUtil.getOpeningText(restaurant.getOpeningHours(), restaurant.getClosureHours());
         switch (timeOpening){

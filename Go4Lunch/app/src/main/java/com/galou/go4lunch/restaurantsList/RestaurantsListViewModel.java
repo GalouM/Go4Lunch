@@ -110,28 +110,7 @@ public class RestaurantsListViewModel extends BaseViewModel {
 
             @Override
             public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        };
-    }
-
-    private DisposableObserver<String> getObserverPhoto(Restaurant restaurant){
-        return new DisposableObserver<String>() {
-            @Override
-            public void onNext(String urlPhoto) {
-                Log.e("here", "here");
-                //restaurant.setUrlPhoto(urlPhoto);
-                Log.e("urlphoto", urlPhoto.toString());
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.e("error", e.toString());
+                Log.e("error distance", e.toString());
 
             }
 
@@ -150,19 +129,28 @@ public class RestaurantsListViewModel extends BaseViewModel {
             String name = result.getName();
             Double latitude = result.getGeometry().getLocation().getLat();
             Double longitude = result.getGeometry().getLocation().getLng();
-            String type = null;
+            String photo = restaurantRepository.getPhotoRestaurant(result.getPhotos().get(0).getPhotoReference());
             String address = result.getVicinity();
-            String openingHours = ((result.getOpeningHours().getPeriods() != null)
-                    ? result.getOpeningHours().getPeriods().get(0).getOpen().getTime() : null);
-            String closureHours = ((result.getOpeningHours().getPeriods() != null)
-                    ? result.getOpeningHours().getPeriods().get(0).getClose().getTime() : null);
-            Restaurant restaurant = new Restaurant(uid, name, latitude, longitude, type, address, openingHours, closureHours);
-            restaurants.add(restaurant);
-            if(result.getPhotos().size() > 0) {
-                String photoReference = result.getPhotos().get(0).getPhotoReference();
-                Log.e("ref", photoReference);
-                this.disposablePhoto = restaurantRepository.getPhotoRestaurant(photoReference).subscribeWith(getObserverPhoto(restaurant));
+            String openingHours = null;
+            String closureHours = null;
+            if(result.getOpeningHours() != null){
+                if(result.getOpeningHours().getPeriods() != null){
+                    if(result.getOpeningHours().getPeriods().size() > 0){
+                        if(result.getOpeningHours().getPeriods().get(0) != null) {
+                            if (result.getOpeningHours().getPeriods().get(0).getOpen() != null)
+                                openingHours = result.getOpeningHours().getPeriods().get(0).getOpen().getTime();
+                        }
+                            if(result.getOpeningHours().getPeriods().get(0).getClose() != null) {
+                                closureHours = result.getOpeningHours().getPeriods().get(0).getClose().getTime();
+                            }
+
+                    }
+                }
             }
+
+
+            Restaurant restaurant = new Restaurant(uid, name, latitude, longitude, address, openingHours, closureHours, photo);
+            restaurants.add(restaurant);
             LatLng positionRestaurant = new LatLng(latitude, longitude);
             this.disposableDistance = restaurantRepository.getDistanceToPoint(location, convertLocationForApi(positionRestaurant)).subscribeWith(getObserverDistance(restaurant));
 

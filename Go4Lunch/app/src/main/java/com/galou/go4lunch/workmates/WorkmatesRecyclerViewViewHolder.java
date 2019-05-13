@@ -35,7 +35,6 @@ public class WorkmatesRecyclerViewViewHolder extends RecyclerView.ViewHolder {
         if(user.getRestaurantPicked() != null){
             textToDisplay = String.format(res.getString(R.string.display_text_user_list),
                     user.getUsername(),
-                    user.getRestaurantPicked().getType(),
                     user.getRestaurantPicked().getName());
 
         } else {

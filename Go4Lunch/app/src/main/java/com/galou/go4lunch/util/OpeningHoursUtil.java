@@ -20,6 +20,9 @@ public abstract class OpeningHoursUtil {
     private static String FORMAT_HOURS = "HHmm";
 
     public static int getOpeningText(String openingHours, String closureHours){
+        if(openingHours == null || closureHours == null){
+            return R.string.no_time;
+        }
         int opening = Integer.parseInt(openingHours);
         int closure = Integer.parseInt(closureHours);
         Date todayDate = Calendar.getInstance().getTime();

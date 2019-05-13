@@ -14,7 +14,6 @@ public class Restaurant {
     private String name;
     private Double latitude;
     private Double longitude;
-    private String type;
     private String address;
     private String openingHours;
     private String closureHours;
@@ -24,15 +23,15 @@ public class Restaurant {
 
     public Restaurant() { }
 
-    public Restaurant(String uid, String name, Double latitude, Double longitude, @Nullable String type, @Nullable String address, @Nullable String openingHours, @Nullable String closureHours) {
+    public Restaurant(String uid, String name, Double latitude, Double longitude, @Nullable String address, @Nullable String openingHours, @Nullable String closureHours, @Nullable String urlPhoto) {
         this.uid = uid;
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.type = type;
         this.address = address;
         this.openingHours = openingHours;
         this.closureHours = closureHours;
+        this.urlPhoto = urlPhoto;
         usersEatingHere = new ArrayList<>();
     }
 
@@ -50,14 +49,6 @@ public class Restaurant {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public Double getLatitude() {

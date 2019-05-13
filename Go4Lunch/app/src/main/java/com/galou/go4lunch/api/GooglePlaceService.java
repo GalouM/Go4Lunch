@@ -30,9 +30,6 @@ public interface GooglePlaceService {
     Observable<DistanceApiResponse> getDistancePoints(@Query("origins") String origins,
                                                       @Query("destinations") String destinations);
 
-    @GET("photo?maxwidth=400&key=" + API_KEY)
-    Observable<String> getPhotoFromPlace(@Query("photoreference") String photoReference);
-
 
 
     public static final Retrofit retrofit = new Retrofit.Builder()

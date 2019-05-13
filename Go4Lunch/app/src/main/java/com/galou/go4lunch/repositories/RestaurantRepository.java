@@ -67,11 +67,8 @@ public class RestaurantRepository {
                 .timeout(10, TimeUnit.SECONDS);
     }
 
-    public Observable<String> getPhotoRestaurant(String photoReference){
-        return googlePlaceService.getPhotoFromPlace(photoReference)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .timeout(10, TimeUnit.SECONDS);
+    public String getPhotoRestaurant(String photoReference){
+        return String.format("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=%s&key=AIzaSyAsyZraxhl3hj1_bjYCPLVHbMgd6s62mxc", photoReference);
     }
 
     public List<Restaurant> getRestaurantsLoaded(){
