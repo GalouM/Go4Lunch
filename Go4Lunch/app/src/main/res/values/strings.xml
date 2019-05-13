@@ -66,6 +66,9 @@
     <string name="opening_soon">Opening soon</string>
     <string name="closed">Closed</string>
     <string name="no_time">No Time available</string>
+    <string name="open_24h">Open 24h</string>
+    <string name="format_date_display">hh.mma</string>
+    <string name="format_time_display">hh.mma</string>
 
 
     <!-- NEW -->

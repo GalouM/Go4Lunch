@@ -48,6 +48,24 @@
         <item name="android:textStyle">italic</item>
     </style>
 
+    <!-- TEXT TIME CLOSES -->
+    <style name="TimeRestaurantClosed" parent="Go4LunchText">
+        <item name="android:textColor">@color/colorTextRed</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- TEXT TIME CLOSING -->
+    <style name="TimeRestaurantClosingSoon" parent="Go4LunchText">
+        <item name="android:textColor">@color/colorTextRed</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <!-- TEXT TIME CLOSING -->
+    <style name="TimeRestaurantOpen" parent="Go4LunchText">
+        <item name="android:textColor">@color/colorTextOnWhite</item>
+        <item name="android:textStyle">italic</item>
+    </style>
+
     <!-- STYLE SIGN-IN ACTIVITY -->
     <style name="LoginTheme" parent="AppTheme">
         <item name="colorPrimary">@color/colorPrimary</item>
