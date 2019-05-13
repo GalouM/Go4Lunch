@@ -1,9 +1,8 @@
 package com.galou.go4lunch.api;
 
-import android.graphics.Bitmap;
-
-import com.galou.go4lunch.models.ApiResponse;
-import com.galou.go4lunch.models.DistanceApi;
+import com.galou.go4lunch.models.ApiDetailResponse;
+import com.galou.go4lunch.models.ApiNearByResponse;
+import com.galou.go4lunch.models.DistanceApiResponse;
 
 import io.reactivex.Observable;
 import retrofit2.Retrofit;
@@ -21,15 +20,19 @@ public interface GooglePlaceService {
     final static String API_KEY = "AIzaSyAsyZraxhl3hj1_bjYCPLVHbMgd6s62mxc";
 
     @GET("place/nearbysearch/json?type=restaurant&key=" + API_KEY)
-    Observable<ApiResponse> getRestaurantsNearBy(@Query("location") String location,
-                                                 @Query("radius") Integer radius);
+    Observable<ApiNearByResponse> getRestaurantsNearBy(@Query("location") String location,
+                                                       @Query("radius") Integer radius);
+
+    @GET("place/details/json?fields=vicinity,name,place_id,id,geometry,opening_hours,international_phone_number,website,rating,utc_offset,photo&key=" + API_KEY)
+    Observable<ApiDetailResponse> getRestaurantDetail(@Query("placeid") String placeId);
 
     @GET("distancematrix/json?&key=" + API_KEY)
-    Observable<DistanceApi> getDistancePoints(@Query("origins") String origins,
-                                              @Query("destinations") String destinations);
+    Observable<DistanceApiResponse> getDistancePoints(@Query("origins") String origins,
+                                                      @Query("destinations") String destinations);
 
     @GET("photo?maxwidth=400&key=" + API_KEY)
     Observable<String> getPhotoFromPlace(@Query("photoreference") String photoReference);
+
 
 
     public static final Retrofit retrofit = new Retrofit.Builder()

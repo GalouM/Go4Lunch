@@ -7,7 +7,6 @@ import com.galou.go4lunch.R;
 import com.galou.go4lunch.injection.Injection;
 import com.galou.go4lunch.injection.ViewModelFactory;
 import com.galou.go4lunch.models.Restaurant;
-import com.galou.go4lunch.models.Result;
 import com.galou.go4lunch.util.SnackBarUtil;
 
 import java.util.List;

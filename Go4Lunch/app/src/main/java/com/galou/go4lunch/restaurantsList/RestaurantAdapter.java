@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.RequestManager;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.models.Restaurant;
-import com.galou.go4lunch.models.Result;
 
 import java.util.List;
 

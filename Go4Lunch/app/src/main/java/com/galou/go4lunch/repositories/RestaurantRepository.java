@@ -1,20 +1,18 @@
 package com.galou.go4lunch.repositories;
 
-import android.graphics.Bitmap;
-import android.util.Log;
-
 import com.galou.go4lunch.api.GooglePlaceService;
-import com.galou.go4lunch.models.ApiResponse;
-import com.galou.go4lunch.models.DistanceApi;
+import com.galou.go4lunch.models.ApiDetailResponse;
+import com.galou.go4lunch.models.ApiNearByResponse;
+import com.galou.go4lunch.models.DistanceApiResponse;
 import com.galou.go4lunch.models.Restaurant;
-import com.galou.go4lunch.models.Result;
+import com.galou.go4lunch.models.ResultApiPlace;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -39,14 +37,30 @@ public class RestaurantRepository {
         this.googlePlaceService = googlePlaceService;
     }
 
-    public Observable<ApiResponse> getRestaurantsNearBy(String location, Integer radius){
+    public Observable<ApiNearByResponse> streamFetchRestaurantsNearBy(String location, Integer radius){
         return googlePlaceService.getRestaurantsNearBy(location, radius)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .timeout(10, TimeUnit.SECONDS);
     }
 
-    public Observable<DistanceApi> getDistanceToPoint(String location, String point){
+    public Observable<ApiDetailResponse> streamFetchRestaurantDetails(String placeId){
+        return googlePlaceService.getRestaurantDetail(placeId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .timeout(10, TimeUnit.SECONDS);
+    }
+
+    public Observable<List<ApiDetailResponse>> streamFetchListRestaurantDetails(String location, Integer radius){
+        return streamFetchRestaurantsNearBy(location, radius)
+                .map(ApiNearByResponse::getResults)
+                .concatMap((Function<List<ResultApiPlace>, Observable<List<ApiDetailResponse>>>) results -> Observable.fromIterable(results)
+                        .concatMap((Function<ResultApiPlace, Observable<ApiDetailResponse>>) result -> streamFetchRestaurantDetails(result.getPlaceId()))
+                        .toList()
+                        .toObservable());
+    }
+
+    public Observable<DistanceApiResponse> getDistanceToPoint(String location, String point){
         return googlePlaceService.getDistancePoints(location, point)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

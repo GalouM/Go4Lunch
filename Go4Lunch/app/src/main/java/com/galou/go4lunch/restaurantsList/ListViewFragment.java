@@ -2,24 +2,18 @@ package com.galou.go4lunch.restaurantsList;
 
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.databinding.FragmentListViewBinding;
-import com.galou.go4lunch.injection.Injection;
-import com.galou.go4lunch.injection.ViewModelFactory;
 import com.galou.go4lunch.models.Restaurant;
-import com.galou.go4lunch.models.Result;
-import com.galou.go4lunch.util.SnackBarUtil;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -3,23 +3,22 @@ package com.galou.go4lunch.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Element {
+public class ApiDetailResponse {
 
-    @SerializedName("distance")
+    @SerializedName("result")
     @Expose
-    private Distance distance;
+    private ResultApiPlace result;
     @SerializedName("status")
     @Expose
     private String status;
 
-    public Distance getDistance() {
-        return distance;
+    public ResultApiPlace getResult() {
+        return result;
     }
 
-    public void setDistance(Distance distance) {
-        this.distance = distance;
+    public void setResult(ResultApiPlace result) {
+        this.result = result;
     }
-
 
     public String getStatus() {
         return status;

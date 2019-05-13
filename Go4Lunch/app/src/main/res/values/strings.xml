@@ -61,6 +61,11 @@
     <string name="retry_button">Retry</string>
     <string name="title_activity_test">Map</string>
     <string name="no_location_message">Turn on your GPS and select a location on the map</string>
+    <string name="closing_soon">Closing soon</string>
+    <string name="open_until">Open until %s</string>
+    <string name="opening_soon">Opening soon</string>
+    <string name="closed">Closed</string>
+    <string name="no_time">No Time available</string>
 
 
     <!-- NEW -->

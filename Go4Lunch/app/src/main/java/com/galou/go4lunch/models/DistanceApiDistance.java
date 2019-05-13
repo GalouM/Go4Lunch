@@ -3,22 +3,10 @@ package com.galou.go4lunch.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Distance {
-
-    @SerializedName("text")
-    @Expose
-    private String text;
+public class DistanceApiDistance {
     @SerializedName("value")
     @Expose
     private Integer value;
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
 
     public Integer getValue() {
         return value;

@@ -1,6 +1,5 @@
 package com.galou.go4lunch.restaurantsList;
 
-import android.graphics.Bitmap;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -8,26 +7,20 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.base.BaseViewModel;
-import com.galou.go4lunch.models.ApiResponse;
-import com.galou.go4lunch.models.DistanceApi;
-import com.galou.go4lunch.models.Element;
+import com.galou.go4lunch.models.ApiDetailResponse;
+import com.galou.go4lunch.models.DistanceApiResponse;
+import com.galou.go4lunch.models.ElementApiDistance;
 import com.galou.go4lunch.models.Restaurant;
-import com.galou.go4lunch.models.Result;
-import com.galou.go4lunch.models.Row;
+import com.galou.go4lunch.models.ResultApiPlace;
+import com.galou.go4lunch.models.RowApiDistance;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.repositories.RestaurantRepository;
 import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.util.RetryAction;
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.libraries.places.api.model.PhotoMetadata;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.FetchPhotoRequest;
-import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import io.reactivex.disposables.Disposable;
@@ -70,7 +63,7 @@ public class RestaurantsListViewModel extends BaseViewModel {
     public void requestListRestaurants(){
         if(restaurantRepository.getRestaurantsLoaded() == null) {
             if(location != null) {
-                this.disposableRestaurant = restaurantRepository.getRestaurantsNearBy(location, RADIUS_SEARCH).subscribeWith(getObserverRestaurants());
+                this.disposableRestaurant = restaurantRepository.streamFetchListRestaurantDetails(location, RADIUS_SEARCH).subscribeWith(getObserverRestaurants());
             } else {
                 snackBarText.setValue(R.string.no_location_message);
             }
@@ -80,16 +73,16 @@ public class RestaurantsListViewModel extends BaseViewModel {
 
     }
 
-    private DisposableObserver<ApiResponse> getObserverRestaurants(){
-        return new DisposableObserver<ApiResponse>() {
+    private DisposableObserver<List<ApiDetailResponse>> getObserverRestaurants(){
+        return new DisposableObserver<List<ApiDetailResponse>>() {
             @Override
-            public void onNext(ApiResponse response) {
-                List<Result> restaurants = response.getResults();
-                createRestaurantList(restaurants);
+            public void onNext(List<ApiDetailResponse> response) {
+                createRestaurantList(response);
             }
 
             @Override
             public void onError(Throwable e) {
+                Log.e("error", e.toString());
                 snackBarWithAction.setValue(GET_RESTAURANTS);
 
             }
@@ -101,13 +94,13 @@ public class RestaurantsListViewModel extends BaseViewModel {
         };
     }
 
-    private DisposableObserver<DistanceApi> getObserverDistance(Restaurant restaurant){
-        return new DisposableObserver<DistanceApi>() {
+    private DisposableObserver<DistanceApiResponse> getObserverDistance(Restaurant restaurant){
+        return new DisposableObserver<DistanceApiResponse>() {
             @Override
-            public void onNext(DistanceApi distanceApi) {
-                List<Row> row = distanceApi.getRows();
+            public void onNext(DistanceApiResponse distanceApi) {
+                List<RowApiDistance> row = distanceApi.getRows();
                 if(row.size() > 0){
-                    List<Element> elements = row.get(0).getElements();
+                    List<ElementApiDistance> elements = row.get(0).getElements();
                     if(elements.size() > 0){
                         Integer distance = elements.get(0).getDistance().getValue();
                         restaurant.setDistance(distance);
@@ -149,19 +142,22 @@ public class RestaurantsListViewModel extends BaseViewModel {
         };
     }
 
-    private void createRestaurantList(List<Result> results){
+    private void createRestaurantList(List<ApiDetailResponse> results){
         restaurants = new ArrayList<>();
-        for (Result result : results){
+        for (ApiDetailResponse detailResult : results){
+            ResultApiPlace result = detailResult.getResult();
             String uid = result.getId();
             String name = result.getName();
             Double latitude = result.getGeometry().getLocation().getLat();
             Double longitude = result.getGeometry().getLocation().getLng();
             String type = null;
             String address = result.getVicinity();
-            String openingHours = null;
-            Restaurant restaurant = new Restaurant(uid, name, latitude, longitude, type, address, openingHours);
+            String openingHours = ((result.getOpeningHours().getPeriods() != null)
+                    ? result.getOpeningHours().getPeriods().get(0).getOpen().getTime() : null);
+            String closureHours = ((result.getOpeningHours().getPeriods() != null)
+                    ? result.getOpeningHours().getPeriods().get(0).getClose().getTime() : null);
+            Restaurant restaurant = new Restaurant(uid, name, latitude, longitude, type, address, openingHours, closureHours);
             restaurants.add(restaurant);
-            Log.e("photo", String.valueOf(result.getPhotos().size()));
             if(result.getPhotos().size() > 0) {
                 String photoReference = result.getPhotos().get(0).getPhotoReference();
                 Log.e("ref", photoReference);
@@ -174,7 +170,7 @@ public class RestaurantsListViewModel extends BaseViewModel {
         this.fetchListUser();
     }
 
- 
+
 
     private void fetchListUser(){
         users = new ArrayList<>();

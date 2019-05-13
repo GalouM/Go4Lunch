@@ -1,10 +1,11 @@
 package com.galou.go4lunch.models;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class DistanceApi {
+import java.util.List;
+
+public class DistanceApiResponse {
 
     @SerializedName("destination_addresses")
     @Expose
@@ -14,7 +15,7 @@ public class DistanceApi {
     private List<String> originAddresses = null;
     @SerializedName("rows")
     @Expose
-    private List<Row> rows = null;
+    private List<RowApiDistance> rows = null;
     @SerializedName("status")
     @Expose
     private String status;
@@ -35,11 +36,11 @@ public class DistanceApi {
         this.originAddresses = originAddresses;
     }
 
-    public List<Row> getRows() {
+    public List<RowApiDistance> getRows() {
         return rows;
     }
 
-    public void setRows(List<Row> rows) {
+    public void setRows(List<RowApiDistance> rows) {
         this.rows = rows;
     }
 

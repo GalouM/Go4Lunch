@@ -1,10 +1,11 @@
 package com.galou.go4lunch.models;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Photo {
+import java.util.List;
+
+public class PhotoApiPlace {
 
     @SerializedName("height")
     @Expose

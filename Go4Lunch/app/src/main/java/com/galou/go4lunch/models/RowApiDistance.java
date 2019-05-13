@@ -1,20 +1,21 @@
 package com.galou.go4lunch.models;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Row {
+import java.util.List;
+
+public class RowApiDistance {
 
     @SerializedName("elements")
     @Expose
-    private List<Element> elements = null;
+    private List<ElementApiDistance> elements = null;
 
-    public List<Element> getElements() {
+    public List<ElementApiDistance> getElements() {
         return elements;
     }
 
-    public void setElements(List<Element> elements) {
+    public void setElements(List<ElementApiDistance> elements) {
         this.elements = elements;
     }
 

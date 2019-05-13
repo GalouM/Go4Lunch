@@ -2,8 +2,6 @@ package com.galou.go4lunch.models;
 
 import androidx.annotation.Nullable;
 
-import com.google.android.libraries.places.api.model.Place;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,13 +17,14 @@ public class Restaurant {
     private String type;
     private String address;
     private String openingHours;
+    private String closureHours;
     private Integer distance;
     private String urlPhoto;
     private List<User> usersEatingHere;
 
     public Restaurant() { }
 
-    public Restaurant(String uid, String name, Double latitude, Double longitude, @Nullable String type, @Nullable String address, @Nullable String openingHours) {
+    public Restaurant(String uid, String name, Double latitude, Double longitude, @Nullable String type, @Nullable String address, @Nullable String openingHours, @Nullable String closureHours) {
         this.uid = uid;
         this.name = name;
         this.latitude = latitude;
@@ -33,6 +32,7 @@ public class Restaurant {
         this.type = type;
         this.address = address;
         this.openingHours = openingHours;
+        this.closureHours = closureHours;
         usersEatingHere = new ArrayList<>();
     }
 
@@ -114,5 +114,13 @@ public class Restaurant {
 
     public List<User> getUsersEatingHere(){
         return usersEatingHere;
+    }
+
+    public String getClosureHours() {
+        return closureHours;
+    }
+
+    public void setClosureHours(String closureHours) {
+        this.closureHours = closureHours;
     }
 }

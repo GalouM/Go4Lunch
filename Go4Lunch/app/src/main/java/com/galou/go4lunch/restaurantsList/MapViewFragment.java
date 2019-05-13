@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.databinding.FragmentMapViewBinding;
 import com.galou.go4lunch.models.Restaurant;
-import com.galou.go4lunch.models.Result;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
