@@ -38,7 +38,7 @@ public class ResultApiPlace {
     private String phoneNumber;
     @SerializedName("opening_hours")
     @Expose
-    private OpeningHours openingHours;
+    private OpeningHoursApiPlace openingHours;
     @SerializedName("photos")
     @Expose
     private List<PhotoApiPlace> photos;
@@ -110,11 +110,11 @@ public class ResultApiPlace {
     }
 
 
-    public OpeningHours getOpeningHours() {
+    public OpeningHoursApiPlace getOpeningHours() {
         return openingHours;
     }
 
-    public void setOpeningHours(OpeningHours openingHours) {
+    public void setOpeningHours(OpeningHoursApiPlace openingHours) {
         this.openingHours = openingHours;
     }
 

@@ -15,8 +15,7 @@ public class Restaurant {
     private Double latitude;
     private Double longitude;
     private String address;
-    private String openingHours;
-    private String closureHours;
+    private int openingHours;
     private Integer distance;
     private String urlPhoto;
     private int rating;
@@ -24,14 +23,13 @@ public class Restaurant {
 
     public Restaurant() { }
 
-    public Restaurant(String uid, String name, Double latitude, Double longitude, @Nullable String address, @Nullable String openingHours, @Nullable String closureHours, @Nullable String urlPhoto, @Nullable int rating) {
+    public Restaurant(String uid, String name, Double latitude, Double longitude, @Nullable String address, @Nullable int openingHours, @Nullable String urlPhoto, @Nullable int rating) {
         this.uid = uid;
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
         this.address = address;
         this.openingHours = openingHours;
-        this.closureHours = closureHours;
         this.urlPhoto = urlPhoto;
         this.rating = rating;
         usersEatingHere = new ArrayList<>();
@@ -77,11 +75,11 @@ public class Restaurant {
         this.address = address;
     }
 
-    public String getOpeningHours() {
+    public int getOpeningHours() {
         return openingHours;
     }
 
-    public void setOpeningHours(String openingHours) {
+    public void setOpeningHours(int openingHours) {
         this.openingHours = openingHours;
     }
 
@@ -107,14 +105,6 @@ public class Restaurant {
 
     public List<User> getUsersEatingHere(){
         return usersEatingHere;
-    }
-
-    public String getClosureHours() {
-        return closureHours;
-    }
-
-    public void setClosureHours(String closureHours) {
-        this.closureHours = closureHours;
     }
 
     public int getRating() {

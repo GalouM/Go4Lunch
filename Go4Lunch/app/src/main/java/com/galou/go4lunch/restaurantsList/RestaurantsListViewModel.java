@@ -16,6 +16,7 @@ import com.galou.go4lunch.models.RowApiDistance;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.repositories.RestaurantRepository;
 import com.galou.go4lunch.repositories.UserRepository;
+import com.galou.go4lunch.util.OpeningHoursUtil;
 import com.galou.go4lunch.util.RatingUtil;
 import com.galou.go4lunch.util.RetryAction;
 import com.google.android.gms.maps.model.LatLng;
@@ -129,26 +130,9 @@ public class RestaurantsListViewModel extends BaseViewModel {
             Double longitude = result.getGeometry().getLocation().getLng();
             String photo = restaurantRepository.getPhotoRestaurant(result.getPhotos().get(0).getPhotoReference());
             String address = result.getVicinity();
-            String openingHours = null;
-            String closureHours = null;
+            int openingHours = OpeningHoursUtil.getOpeningTime(result.getOpeningHours());
             int rating = RatingUtil.calculateRating(result.getRating());
-            if(result.getOpeningHours() != null){
-                if(result.getOpeningHours().getPeriods() != null){
-                    if(result.getOpeningHours().getPeriods().size() > 0){
-                        if(result.getOpeningHours().getPeriods().get(0) != null) {
-                            if (result.getOpeningHours().getPeriods().get(0).getOpen() != null)
-                                openingHours = result.getOpeningHours().getPeriods().get(0).getOpen().getTime();
-                        }
-                            if(result.getOpeningHours().getPeriods().get(0).getClose() != null) {
-                                closureHours = result.getOpeningHours().getPeriods().get(0).getClose().getTime();
-                            }
-
-                    }
-                }
-            }
-
-
-            Restaurant restaurant = new Restaurant(uid, name, latitude, longitude, address, openingHours, closureHours, photo, rating);
+            Restaurant restaurant = new Restaurant(uid, name, latitude, longitude, address, openingHours, photo, rating);
             restaurants.add(restaurant);
             LatLng positionRestaurant = new LatLng(latitude, longitude);
             this.disposableDistance = restaurantRepository.getDistanceToPoint(location, convertLocationForApi(positionRestaurant)).subscribeWith(getObserverDistance(restaurant));

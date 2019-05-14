@@ -3,6 +3,8 @@ package com.galou.go4lunch.util;
 import android.util.Log;
 
 import com.galou.go4lunch.R;
+import com.galou.go4lunch.models.OpeningHoursApiPlace;
+import com.google.android.libraries.places.api.internal.impl.net.pablo.PlaceResult;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -19,45 +21,43 @@ public abstract class OpeningHoursUtil {
 
     private static String FORMAT_HOURS = "HHmm";
 
-    public static int getOpeningText(String openingHours, String closureHours){
-        if(openingHours == null || closureHours == null){
-            return R.string.no_time;
-        }
-        int opening = Integer.parseInt(openingHours);
-        int closure = Integer.parseInt(closureHours);
-        Date todayDate = Calendar.getInstance().getTime();
-        DateFormat dateFormat = new SimpleDateFormat(FORMAT_HOURS);
-        String todayDateString = dateFormat.format(todayDate);
-        int todayInt = Integer.parseInt(todayDateString);
-        
-        if(opening == closure){
-            return R.string.open_24h;
-        }
 
-        if (todayInt >= opening && todayInt <= closure) {
-            int timeBeforeClosure = closure - todayInt;
-            if(timeBeforeClosure <= 100){
-                return R.string.closing_soon;
-            } else {
-                return R.string.open_until;
-            }
-        }
-        if (todayInt < opening){
-            int timeBeforeOpening = opening - todayInt;
-            if(timeBeforeOpening <= 100){
-                return R.string.opening_soon;
-            }
-        }
-
-        return R.string.closed;
-    }
-
-    public static Date convertStringInDate(String hour){
+    public static Date convertStringInDate(int hour){
+        String hourInString = String.valueOf(hour);
         DateFormat dateFormat = new SimpleDateFormat(FORMAT_HOURS);
         try {
-            return dateFormat.parse(hour);
+            return dateFormat.parse(hourInString);
         } catch (ParseException e) {
             return null;
         }
     }
+
+    public static int getOpeningTime(OpeningHoursApiPlace openingHours){
+        if(openingHours == null || openingHours.getPeriods() == null) return R.string.no_time;
+        if(openingHours.getOpenNow() != null && !openingHours.getOpenNow()){
+            return R.string.closed;
+        }
+        int dayOfTheWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)-1;
+        if(openingHours.getPeriods().size() >= dayOfTheWeek){
+            PlaceResult.OpeningHours.Period periodOfTheDay = openingHours.getPeriods().get(dayOfTheWeek);
+            if(periodOfTheDay.getClose() == null) return R.string.open_24_7;
+            String closureString = periodOfTheDay.getClose().getTime();
+            int closure = Integer.parseInt(closureString);
+            Date todayDate = Calendar.getInstance().getTime();
+            DateFormat dateFormat = new SimpleDateFormat(FORMAT_HOURS);
+            String todayDateString = dateFormat.format(todayDate);
+            int timeNow = Integer.parseInt(todayDateString);
+            int timeBeforeClosure = closure - timeNow;
+            if(timeBeforeClosure <= 100){
+                return R.string.closing_soon;
+            } else {
+                return closure;
+            }
+
+
+        }
+        return R.string.no_time;
+
+    }
+
 }

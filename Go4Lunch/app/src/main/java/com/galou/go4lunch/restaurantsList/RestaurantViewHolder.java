@@ -68,25 +68,16 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
         if(restaurant.getUrlPhoto() != null){
             glide.load(restaurant.getUrlPhoto()).into(imageView);
         }
+
         numberPpl.setText(String.format("(%d)", restaurant.getUsersEatingHere().size()));
 
         glide.load(restaurant.getUrlPhoto()).apply(RequestOptions.centerCropTransform()).into(imageView);
 
-        int timeOpening = OpeningHoursUtil.getOpeningText(restaurant.getOpeningHours(), restaurant.getClosureHours());
+        int timeOpening = restaurant.getOpeningHours();
         switch (timeOpening){
             case R.string.closed:
                 openingHours.setText(timeOpening);
                 TextViewCompat.setTextAppearance(openingHours, R.style.TimeRestaurantClosed);
-                break;
-            case R.string.open_until:
-                DateFormat dateFormat = new SimpleDateFormat(formatTimeDisplay);
-                String timeToDisplay = dateFormat.format(OpeningHoursUtil.convertStringInDate(restaurant.getClosureHours()));
-                openingHours.setText(String.format(res.getString(timeOpening), timeToDisplay));
-                TextViewCompat.setTextAppearance(openingHours, R.style.TimeRestaurantOpen);
-                break;
-            case R.string.opening_soon:
-                openingHours.setText(timeOpening);
-                TextViewCompat.setTextAppearance(openingHours, R.style.TimeRestaurantClosingSoon);
                 break;
             case R.string.closing_soon:
                 openingHours.setText(timeOpening);
@@ -96,10 +87,18 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
                 openingHours.setText(timeOpening);
                 TextViewCompat.setTextAppearance(openingHours, R.style.TimeRestaurantOpen);
                 break;
-            case R.string.open_24h:
+            case R.string.open_24_7:
                 openingHours.setText(timeOpening);
                 TextViewCompat.setTextAppearance(openingHours, R.style.TimeRestaurantOpen);
                 break;
+            default:
+                DateFormat dateFormat = new SimpleDateFormat(formatTimeDisplay);
+                String timeToDisplay = dateFormat.format(OpeningHoursUtil.convertStringInDate(timeOpening));
+                openingHours.setText(String.format(res.getString(R.string.open_until), timeToDisplay));
+                TextViewCompat.setTextAppearance(openingHours, R.style.TimeRestaurantOpen);
+                break;
+
+
         }
 
         int rating = restaurant.getRating();
