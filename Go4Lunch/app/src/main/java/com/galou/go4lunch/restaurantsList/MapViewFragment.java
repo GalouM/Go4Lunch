@@ -7,6 +7,7 @@ import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -128,6 +129,17 @@ public class MapViewFragment extends BaseRestaurantsListFragment implements OnMa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
+        this.setupMap();
+
+    }
+
+    @AfterPermissionGranted(RC_LOCATION_PERMS)
+    private void setupMap(){
+        if(! EasyPermissions.hasPermissions(getActivity(), PERMS)){
+            EasyPermissions.requestPermissions(
+                    this, getString(R.string.need_permission_message), RC_LOCATION_PERMS, PERMS);
+            return;
+        }
         this.displayLocationUser();
         if(cameraInitialPosition != null){
             this.googleMap.moveCamera(cameraInitialPosition);
@@ -136,6 +148,7 @@ public class MapViewFragment extends BaseRestaurantsListFragment implements OnMa
         }
         viewModel.setupLocation(convertLocationForApi(getLocationUser()));
         viewModel.requestListRestaurants();
+
     }
 
     // --------------------
@@ -154,25 +167,13 @@ public class MapViewFragment extends BaseRestaurantsListFragment implements OnMa
     // MAP ACTIONS
     // --------------------
     @SuppressLint("MissingPermission")
-    @AfterPermissionGranted(RC_LOCATION_PERMS)
     private void displayLocationUser(){
-        if(! EasyPermissions.hasPermissions(getActivity(), PERMS)){
-            EasyPermissions.requestPermissions(
-                    this, getString(R.string.need_permission_message), RC_LOCATION_PERMS, PERMS);
-            return;
-        }
         googleMap.setMyLocationEnabled(true);
 
     }
 
     @SuppressLint("MissingPermission")
-    @AfterPermissionGranted(RC_LOCATION_PERMS)
     private void centerCameraOnGPSLocation(){
-        if(! EasyPermissions.hasPermissions(getActivity(), PERMS)){
-            EasyPermissions.requestPermissions(
-                    this, getString(R.string.need_permission_message), RC_LOCATION_PERMS, PERMS);
-            return;
-        }
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(getLocationUser()));
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(ZOOM_USER_LOCATION_VALUE));
     }
@@ -223,13 +224,16 @@ public class MapViewFragment extends BaseRestaurantsListFragment implements OnMa
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
+
+
     @Override
     public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
         if (requestCode == RC_LOCATION_PERMS){
-            centerCameraOnGPSLocation();
+            setupMap();
         }
 
     }
+
 
     @Override
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {

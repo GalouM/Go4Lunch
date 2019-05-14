@@ -45,7 +45,6 @@ public class RestaurantsListViewModel extends BaseViewModel {
     private String location;
     private List<Restaurant> restaurants;
     private List<User> users;
-    private final int RADIUS_SEARCH = 1500;
 
     public LiveData<List<Restaurant>> getRestaurantsList(){
         return restaurantsList;
@@ -62,9 +61,9 @@ public class RestaurantsListViewModel extends BaseViewModel {
     }
 
     public void requestListRestaurants(){
-        if(restaurantRepository.getRestaurantsLoaded() == null) {
+        if(restaurantRepository.getRestaurantsLoaded() == null || restaurantRepository.getRestaurantsLoaded().size() == 0) {
             if(location != null) {
-                this.disposableRestaurant = restaurantRepository.streamFetchListRestaurantDetails(location, RADIUS_SEARCH).subscribeWith(getObserverRestaurants());
+                this.disposableRestaurant = restaurantRepository.streamFetchListRestaurantDetails(location).subscribeWith(getObserverRestaurants());
             } else {
                 snackBarText.setValue(R.string.no_location_message);
             }
@@ -83,7 +82,6 @@ public class RestaurantsListViewModel extends BaseViewModel {
 
             @Override
             public void onError(Throwable e) {
-                Log.e("error", e.toString());
                 snackBarWithAction.setValue(GET_RESTAURANTS);
 
             }
@@ -111,7 +109,6 @@ public class RestaurantsListViewModel extends BaseViewModel {
 
             @Override
             public void onError(Throwable e) {
-                Log.e("error distance", e.toString());
 
             }
 

@@ -37,8 +37,8 @@ public class RestaurantRepository {
         this.googlePlaceService = googlePlaceService;
     }
 
-    public Observable<ApiNearByResponse> streamFetchRestaurantsNearBy(String location, Integer radius){
-        return googlePlaceService.getRestaurantsNearBy(location, radius)
+    public Observable<ApiNearByResponse> streamFetchRestaurantsNearBy(String location){
+        return googlePlaceService.getRestaurantsNearBy(location)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .timeout(10, TimeUnit.SECONDS);
@@ -51,8 +51,8 @@ public class RestaurantRepository {
                 .timeout(10, TimeUnit.SECONDS);
     }
 
-    public Observable<List<ApiDetailResponse>> streamFetchListRestaurantDetails(String location, Integer radius){
-        return streamFetchRestaurantsNearBy(location, radius)
+    public Observable<List<ApiDetailResponse>> streamFetchListRestaurantDetails(String location){
+        return streamFetchRestaurantsNearBy(location)
                 .map(ApiNearByResponse::getResults)
                 .concatMap((Function<List<ResultApiPlace>, Observable<List<ApiDetailResponse>>>) results -> Observable.fromIterable(results)
                         .concatMap((Function<ResultApiPlace, Observable<ApiDetailResponse>>) result -> streamFetchRestaurantDetails(result.getPlaceId()))

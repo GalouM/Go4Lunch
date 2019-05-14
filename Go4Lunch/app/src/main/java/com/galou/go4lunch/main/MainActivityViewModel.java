@@ -1,5 +1,6 @@
 package com.galou.go4lunch.main;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -11,6 +12,8 @@ import com.galou.go4lunch.base.BaseViewModel;
 import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.util.RetryAction;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import static com.galou.go4lunch.util.RetryAction.FETCH_USER;
 
@@ -22,6 +25,7 @@ public class MainActivityViewModel extends BaseViewModel {
     //----- PRIVATE LIVE DATA -----
     private final MutableLiveData<Object> logoutRequested = new MutableLiveData<>();
     private final MutableLiveData<Object> settingsRequested = new MutableLiveData<>();
+    private final MutableLiveData<Object> openSignInActivityEvent = new MutableLiveData<>();
 
     //----- PUBLIC LIVE DATA -----
     public final MutableLiveData<String> username = new MutableLiveData<>();
@@ -116,6 +120,5 @@ public class MainActivityViewModel extends BaseViewModel {
     void decrementIdleResource(){
         if (BuildConfig.DEBUG) this.espressoTestIdlingResource.decrement();
     }
-
 
 }

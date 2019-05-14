@@ -19,9 +19,8 @@ public interface GooglePlaceService {
     final static String BASE_URL = "https://maps.googleapis.com/maps/api/";
     final static String API_KEY = "AIzaSyAsyZraxhl3hj1_bjYCPLVHbMgd6s62mxc";
 
-    @GET("place/nearbysearch/json?type=restaurant&key=" + API_KEY)
-    Observable<ApiNearByResponse> getRestaurantsNearBy(@Query("location") String location,
-                                                       @Query("radius") Integer radius);
+    @GET("place/nearbysearch/json?type=restaurant&radius=1500&key=" + API_KEY)
+    Observable<ApiNearByResponse> getRestaurantsNearBy(@Query("location") String location);
 
     @GET("place/details/json?fields=vicinity,name,place_id,id,geometry,opening_hours,international_phone_number,website,rating,utc_offset,photo&key=" + API_KEY)
     Observable<ApiDetailResponse> getRestaurantDetail(@Query("placeid") String placeId);
