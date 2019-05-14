@@ -23,6 +23,7 @@ public class RestaurantRepository {
     private final GooglePlaceService googlePlaceService;
 
     private List<Restaurant> restaurants;
+    private String location;
 
     private static volatile RestaurantRepository INSTANCE;
 
@@ -51,8 +52,8 @@ public class RestaurantRepository {
                 .timeout(10, TimeUnit.SECONDS);
     }
 
-    public Observable<List<ApiDetailResponse>> streamFetchListRestaurantDetails(String location){
-        return streamFetchRestaurantsNearBy(location)
+    public Observable<List<ApiDetailResponse>> streamFetchListRestaurantDetails(){
+        return streamFetchRestaurantsNearBy(this.location)
                 .map(ApiNearByResponse::getResults)
                 .concatMap((Function<List<ResultApiPlace>, Observable<List<ApiDetailResponse>>>) results -> Observable.fromIterable(results)
                         .concatMap((Function<ResultApiPlace, Observable<ApiDetailResponse>>) result -> streamFetchRestaurantDetails(result.getPlaceId()))
@@ -60,8 +61,8 @@ public class RestaurantRepository {
                         .toObservable());
     }
 
-    public Observable<DistanceApiResponse> getDistanceToPoint(String location, String point){
-        return googlePlaceService.getDistancePoints(location, point)
+    public Observable<DistanceApiResponse> getDistanceToPoint(String point){
+        return googlePlaceService.getDistancePoints(this.location, point)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .timeout(10, TimeUnit.SECONDS);
@@ -77,5 +78,13 @@ public class RestaurantRepository {
 
     public void updateRestaurants(List<Restaurant> restaurants){
         this.restaurants = restaurants;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

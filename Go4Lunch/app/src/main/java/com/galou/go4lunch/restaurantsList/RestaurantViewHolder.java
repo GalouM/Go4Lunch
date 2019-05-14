@@ -114,29 +114,29 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
                 ratingStar3.setImageDrawable(res.getDrawable(R.drawable.baseline_star_border_24));
                 break;
             case 2:
-                ratingStar1.setImageDrawable(res.getDrawable(R.drawable.baseline_star_rate_black_24));
+                ratingStar1.setImageDrawable(res.getDrawable(R.drawable.baseline_star_24));
                 ratingStar2.setImageDrawable(res.getDrawable(R.drawable.baseline_star_border_24));
                 ratingStar3.setImageDrawable(res.getDrawable(R.drawable.baseline_star_border_24));
                 break;
             case 3:
-                ratingStar1.setImageDrawable(res.getDrawable(R.drawable.baseline_star_rate_black_24));
+                ratingStar1.setImageDrawable(res.getDrawable(R.drawable.baseline_star_24));
                 ratingStar2.setImageDrawable(res.getDrawable(R.drawable.baseline_star_half_24));
                 ratingStar3.setImageDrawable(res.getDrawable(R.drawable.baseline_star_border_24));
                 break;
             case 4:
-                ratingStar1.setImageDrawable(res.getDrawable(R.drawable.baseline_star_rate_black_24));
-                ratingStar2.setImageDrawable(res.getDrawable(R.drawable.baseline_star_rate_black_24));
+                ratingStar1.setImageDrawable(res.getDrawable(R.drawable.baseline_star_24));
+                ratingStar2.setImageDrawable(res.getDrawable(R.drawable.baseline_star_24));
                 ratingStar3.setImageDrawable(res.getDrawable(R.drawable.baseline_star_border_24));
                 break;
             case 5:
-                ratingStar1.setImageDrawable(res.getDrawable(R.drawable.baseline_star_rate_black_24));
-                ratingStar2.setImageDrawable(res.getDrawable(R.drawable.baseline_star_rate_black_24));
+                ratingStar1.setImageDrawable(res.getDrawable(R.drawable.baseline_star_24));
+                ratingStar2.setImageDrawable(res.getDrawable(R.drawable.baseline_star_24));
                 ratingStar3.setImageDrawable(res.getDrawable(R.drawable.baseline_star_half_24));
                 break;
             case 6:
-                ratingStar1.setImageDrawable(res.getDrawable(R.drawable.baseline_star_rate_black_24));
-                ratingStar2.setImageDrawable(res.getDrawable(R.drawable.baseline_star_rate_black_24));
-                ratingStar3.setImageDrawable(res.getDrawable(R.drawable.baseline_star_rate_black_24));
+                ratingStar1.setImageDrawable(res.getDrawable(R.drawable.baseline_star_24));
+                ratingStar2.setImageDrawable(res.getDrawable(R.drawable.baseline_star_24));
+                ratingStar3.setImageDrawable(res.getDrawable(R.drawable.baseline_star_24));
                 break;
         }
 

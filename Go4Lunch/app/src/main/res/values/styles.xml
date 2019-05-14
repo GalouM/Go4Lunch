@@ -57,7 +57,7 @@
     <!-- TEXT TIME CLOSING -->
     <style name="TimeRestaurantClosingSoon" parent="Go4LunchText">
         <item name="android:textColor">@color/colorTextRed</item>
-        <item name="android:textStyle">normal</item>
+        <item name="android:textStyle">italic</item>
     </style>
 
     <!-- TEXT TIME OPEN -->

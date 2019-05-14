@@ -2,8 +2,8 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="90dip"
-    android:layout_marginTop="2dip">
+    android:layout_height="@dimen/heigh_card_view"
+    android:layout_marginTop="@dimen/margin_between_cardview">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,23 +23,25 @@
             android:layout_height="wrap_content"
             android:textColor="@color/colorTextOnWhite"
             android:textSize="@dimen/text_recycler_vew_user_size"
-            android:text="Le Zinc"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:layout_marginBottom="@dimen/margin_text_restaurant_list"
+            android:maxLines="2"
+            android:ellipsize="end"/>
         <TextView
             android:id="@+id/address_type_resto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorTextUnactive"
             android:textSize="@dimen/text_size_address"
-            android:text="French - 6679 Grant Street"/>
+            android:singleLine="true"
+            android:ellipsize="end"/>
         <TextView
             android:id="@+id/opening_hours_resto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorTextUnactive"
             android:textSize="@dimen/text_size_address"
-            android:textStyle="italic"
-            android:text="Open until 3.30pm"/>
+            android:textStyle="italic"/>
     </LinearLayout>
 
     <LinearLayout
@@ -53,8 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorTextUnactive"
-            android:textSize="@dimen/text_recycler_vew_user_size"
-            android:text="120m"/>
+            android:textSize="@dimen/text_recycler_vew_user_size"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -68,8 +69,7 @@
             <TextView
                 android:id="@+id/number_ppl_resto"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="(3)"/>
+                android:layout_height="wrap_content"/>
 
 
         </LinearLayout>

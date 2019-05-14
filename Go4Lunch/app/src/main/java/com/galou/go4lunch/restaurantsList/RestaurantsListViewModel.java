@@ -43,7 +43,6 @@ public class RestaurantsListViewModel extends BaseViewModel {
     private Disposable disposableRestaurant;
     private Disposable disposableDistance;
     private Disposable disposablePhoto;
-    private String location;
     private List<Restaurant> restaurants;
     private List<User> users;
 
@@ -57,19 +56,17 @@ public class RestaurantsListViewModel extends BaseViewModel {
     }
 
     public void setupLocation(String location){
-        this.location = location;
+        restaurantRepository.setLocation(location);
 
     }
 
     public void requestListRestaurants(){
+        isLoading.setValue(true);
         if(restaurantRepository.getRestaurantsLoaded() == null || restaurantRepository.getRestaurantsLoaded().size() == 0) {
-            if(location != null) {
-                this.disposableRestaurant = restaurantRepository.streamFetchListRestaurantDetails(location).subscribeWith(getObserverRestaurants());
-            } else {
-                snackBarText.setValue(R.string.no_location_message);
-            }
+            this.fetchListRestaurant();
         } else {
             restaurantsList.setValue(restaurantRepository.getRestaurantsLoaded());
+            isLoading.setValue(false);
         }
 
     }
@@ -84,6 +81,7 @@ public class RestaurantsListViewModel extends BaseViewModel {
             @Override
             public void onError(Throwable e) {
                 snackBarWithAction.setValue(GET_RESTAURANTS);
+                isLoading.setValue(false);
 
             }
 
@@ -135,7 +133,7 @@ public class RestaurantsListViewModel extends BaseViewModel {
             Restaurant restaurant = new Restaurant(uid, name, latitude, longitude, address, openingHours, photo, rating);
             restaurants.add(restaurant);
             LatLng positionRestaurant = new LatLng(latitude, longitude);
-            this.disposableDistance = restaurantRepository.getDistanceToPoint(location, convertLocationForApi(positionRestaurant)).subscribeWith(getObserverDistance(restaurant));
+            this.disposableDistance = restaurantRepository.getDistanceToPoint(convertLocationForApi(positionRestaurant)).subscribeWith(getObserverDistance(restaurant));
 
         }
         this.fetchListUser();
@@ -170,6 +168,21 @@ public class RestaurantsListViewModel extends BaseViewModel {
         }
         restaurantsList.setValue(restaurants);
         restaurantRepository.updateRestaurants(restaurants);
+        isLoading.setValue(false);
+    }
+
+    public void onRefreshRestaurantListList(){
+        isLoading.setValue(true);
+        this.fetchListRestaurant();
+    }
+
+    private void fetchListRestaurant(){
+        if(restaurantRepository.getLocation() != null) {
+            this.disposableRestaurant = restaurantRepository.streamFetchListRestaurantDetails().subscribeWith(getObserverRestaurants());
+        } else {
+            snackBarText.setValue(R.string.no_location_message);
+            isLoading.setValue(false);
+        }
     }
 
 
