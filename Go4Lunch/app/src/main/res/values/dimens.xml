@@ -21,5 +21,6 @@
 
     <!-- image size -->
     <dimen name="user_image_recyclerview_workmates_size">60dip</dimen>
+    <dimen name="text_size_address">10sp</dimen>
 
 </resources>

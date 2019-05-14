@@ -69,6 +69,8 @@ dependencies {
 
     //DESIGN
     implementation 'com.google.android.material:material:1.1.0-alpha05'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
 
     //FIREBASE
     implementation 'com.google.firebase:firebase-auth:16.2.1'

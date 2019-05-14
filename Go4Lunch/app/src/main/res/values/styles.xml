@@ -60,9 +60,9 @@
         <item name="android:textStyle">normal</item>
     </style>
 
-    <!-- TEXT TIME CLOSING -->
+    <!-- TEXT TIME OPEN -->
     <style name="TimeRestaurantOpen" parent="Go4LunchText">
-        <item name="android:textColor">@color/colorTextOnWhite</item>
+        <item name="android:textColor">@color/colorTextUnactive</item>
         <item name="android:textStyle">italic</item>
     </style>
 
