@@ -14,6 +14,8 @@ import com.bumptech.glide.Glide;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.databinding.FragmentListViewBinding;
 import com.galou.go4lunch.models.Restaurant;
+import com.galou.go4lunch.restoDetails.RestoDetailDialogFragment;
+import com.galou.go4lunch.util.ItemClickSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +74,19 @@ public class ListViewFragment extends BaseRestaurantsListFragment {
     public void displayRestaurants(List<Restaurant> restaurants){
         this.restaurants = restaurants;
         adapter.update(this.restaurants);
+        configureOnClickRecyclerView();
 
+    }
+
+    private void configureOnClickRecyclerView(){
+        ItemClickSupport.addTo(recyclerView, R.layout.resto_item_recycler_view)
+                .setOnItemClickListener((recyclerView, position, v)
+                        -> showDetailRestaurant(position));
+
+    }
+
+    private void showDetailRestaurant(int positionRestaurant){
+        RestoDetailDialogFragment.newInstance(positionRestaurant).show(getActivity().getSupportFragmentManager(), "MODAL");
     }
 
 }

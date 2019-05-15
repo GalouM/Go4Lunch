@@ -31,15 +31,12 @@ public class WorkmatesFragment extends Fragment implements WorkmateContract {
     private RecyclerView recyclerView;
     private List<User> users;
     private WorkmatesRecyclerViewAdapter adapter;
-    private FrameLayout frameLayout;
 
     private WorkmatesViewModel viewModel;
     private FragmentWorkmatesBinding binding;
 
 
-    public WorkmatesFragment() {
-        // Required empty public constructor
-    }
+    public WorkmatesFragment() {}
 
 
     @Override

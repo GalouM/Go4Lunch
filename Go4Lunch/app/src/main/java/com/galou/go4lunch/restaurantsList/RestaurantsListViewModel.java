@@ -50,6 +50,8 @@ public class RestaurantsListViewModel extends BaseViewModel {
         return restaurantsList;
     }
 
+
+
     public RestaurantsListViewModel(UserRepository userRepository, RestaurantRepository restaurantRepository) {
         this.userRepository = userRepository;
         this.restaurantRepository = restaurantRepository;
@@ -130,7 +132,9 @@ public class RestaurantsListViewModel extends BaseViewModel {
             String address = result.getVicinity();
             int openingHours = OpeningHoursUtil.getOpeningTime(result.getOpeningHours());
             int rating = RatingUtil.calculateRating(result.getRating());
-            Restaurant restaurant = new Restaurant(uid, name, latitude, longitude, address, openingHours, photo, rating);
+            String webSite = result.getWebsite();
+            String phoneNumber = result.getPhoneNumber();
+            Restaurant restaurant = new Restaurant(uid, name, latitude, longitude, address, openingHours, photo, rating, phoneNumber, webSite);
             restaurants.add(restaurant);
             LatLng positionRestaurant = new LatLng(latitude, longitude);
             this.disposableDistance = restaurantRepository.getDistanceToPoint(convertLocationForApi(positionRestaurant)).subscribeWith(getObserverDistance(restaurant));

@@ -9,6 +9,7 @@ import com.galou.go4lunch.repositories.RestaurantRepository;
 import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.authentication.AuthenticationViewModel;
 import com.galou.go4lunch.main.MainActivityViewModel;
+import com.galou.go4lunch.restoDetails.RestaurantDetailViewModel;
 import com.galou.go4lunch.settings.SettingsViewModel;
 import com.galou.go4lunch.workmates.WorkmatesViewModel;
 
@@ -42,6 +43,9 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         }
         if(modelClass.isAssignableFrom(RestaurantsListViewModel.class)){
             return (T) new RestaurantsListViewModel(userRepository, restaurantRepository);
+        }
+        if(modelClass.isAssignableFrom(RestaurantDetailViewModel.class)){
+            return (T) new RestaurantDetailViewModel(userRepository, restaurantRepository);
         }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }
