@@ -52,59 +52,66 @@
         app:columnCount="3"
         app:rowCount="2">
 
-        <ImageView
+        <ImageButton
             app:layout_column="0"
             app:layout_row="0"
             android:layout_width="30dip"
             android:layout_height="30dip"
             android:src="@drawable/baseline_phone_24"
             app:layout_columnWeight="1"
-            android:tint="@color/colorPrimary"/>
+            android:tint="@color/colorPrimary"
+            android:background="@null"
+            android:visibility="@{viewmodel.phoneAvailable ? View.VISIBLE : View.INVISIBLE}"/>
         <TextView
             app:layout_column="0"
             app:layout_row="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="PHONE"
+            android:text="@string/phone_button_text"
             android:textColor="@color/colorPrimary"
             app:layout_columnWeight="1"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:visibility="@{viewmodel.phoneAvailable ? View.VISIBLE : View.INVISIBLE}"/>
 
-        <ImageView
+        <ImageButton
             app:layout_column="1"
             app:layout_row="0"
             android:layout_width="30dip"
             android:layout_height="30dip"
             android:src="@drawable/baseline_star_24"
             app:layout_columnWeight="1"
-            android:tint="@color/colorPrimary"/>
+            android:tint="@{viewmodel.isRestaurantLiked ? @color/colorAccent : @color/colorPrimary}"
+            android:background="@null"/>
         <TextView
             app:layout_column="1"
             app:layout_row="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="LIKE"
-            android:textColor="@color/colorPrimary"
+            android:text="@{viewmodel.isRestaurantLiked ? @string/liked_text_button : @string/like_button_text}"
+            android:textColor="@{viewmodel.isRestaurantLiked ? @color/colorAccent : @color/colorPrimary}"
             app:layout_columnWeight="1"
-            android:gravity="center"/>
+            android:gravity="center" />
 
-        <ImageView
+        <ImageButton
             app:layout_column="2"
             app:layout_row="0"
             android:layout_width="30dip"
             android:layout_height="30dip"
             android:src="@drawable/baseline_public_24"
             app:layout_columnWeight="1"
-            android:tint="@color/colorPrimary"/>
+            android:tint="@color/colorPrimary"
+            android:background="@null"
+            android:visibility="@{viewmodel.websiteAvailable ? View.VISIBLE : View.INVISIBLE}"/>
         <TextView
             app:layout_column="2"
             app:layout_row="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="WEBSITE"
+            android:text="@string/website_button_text"
             android:textColor="@color/colorPrimary"
             app:layout_columnWeight="1"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:visibility="@{viewmodel.websiteAvailable ? View.VISIBLE : View.INVISIBLE}"/>
 
     </androidx.gridlayout.widget.GridLayout>
 

@@ -70,6 +70,10 @@
     <string name="format_date_display">hh.mma</string>
     <string name="format_time_display">hh.mma</string>
     <string name="open_24_7">Open 24/7</string>
+    <string name="like_button_text">LIKE</string>
+    <string name="phone_button_text">PHONE</string>
+    <string name="website_button_text">WEBSITE</string>
+    <string name="liked_text_button">LIKED</string>
 
 
     <!-- NEW -->

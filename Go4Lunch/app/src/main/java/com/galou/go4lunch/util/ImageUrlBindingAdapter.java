@@ -12,10 +12,17 @@ import com.bumptech.glide.request.RequestOptions;
  */
 public class ImageUrlBindingAdapter {
 
+    @BindingAdapter("bind:imageUrlCircle")
+    public static void loadImageCircle(ImageView view, String url){
+        if(url != null) {
+            Glide.with(view.getContext()).load(url).apply(RequestOptions.circleCropTransform()).into(view);
+        }
+    }
+
     @BindingAdapter("bind:imageUrl")
     public static void loadImage(ImageView view, String url){
         if(url != null) {
-            Glide.with(view.getContext()).load(url).apply(RequestOptions.circleCropTransform()).into(view);
+            Glide.with(view.getContext()).load(url).apply(RequestOptions.centerCropTransform()).into(view);
         }
     }
 

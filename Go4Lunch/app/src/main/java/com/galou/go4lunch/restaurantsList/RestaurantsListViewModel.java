@@ -37,6 +37,7 @@ import static com.galou.go4lunch.util.RetryAction.GET_RESTAURANTS;
 public class RestaurantsListViewModel extends BaseViewModel {
 
     private MutableLiveData<List<Restaurant>> restaurantsList = new MutableLiveData<>();
+    private MutableLiveData<Object> openDetailRestaurant = new MutableLiveData<>();
 
 
     private RestaurantRepository restaurantRepository;
@@ -50,7 +51,9 @@ public class RestaurantsListViewModel extends BaseViewModel {
         return restaurantsList;
     }
 
-
+    public LiveData<Object> getOpenDetailRestaurant() {
+        return openDetailRestaurant;
+    }
 
     public RestaurantsListViewModel(UserRepository userRepository, RestaurantRepository restaurantRepository) {
         this.userRepository = userRepository;
@@ -71,6 +74,11 @@ public class RestaurantsListViewModel extends BaseViewModel {
             isLoading.setValue(false);
         }
 
+    }
+
+    public void updateRestaurantSelected(int position){
+        restaurantRepository.setRestaurantSelected(position);
+        openDetailRestaurant.setValue(new Object());
     }
 
     private DisposableObserver<List<ApiDetailResponse>> getObserverRestaurants(){

@@ -23,6 +23,7 @@ public class RestaurantRepository {
     private final GooglePlaceService googlePlaceService;
 
     private List<Restaurant> restaurants;
+    private Restaurant restaurantSelected;
     private String location;
 
     private static volatile RestaurantRepository INSTANCE;
@@ -87,4 +88,13 @@ public class RestaurantRepository {
     public void setLocation(String location) {
         this.location = location;
     }
+
+    public void setRestaurantSelected(int position){
+        this.restaurantSelected = restaurants.get(position);
+    }
+
+    public Restaurant getRestaurantSelected(){
+        return restaurantSelected;
+    }
+
 }

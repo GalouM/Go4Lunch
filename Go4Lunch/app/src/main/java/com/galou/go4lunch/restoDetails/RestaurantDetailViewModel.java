@@ -17,10 +17,14 @@ import java.util.List;
 public class RestaurantDetailViewModel extends BaseViewModel {
 
     private RestaurantRepository restaurantRepository;
+    private Restaurant restaurant;
 
     public MutableLiveData<String> nameRestaurant = new MutableLiveData<>();
     public MutableLiveData<String> addressRestaurant = new MutableLiveData<>();
     public MutableLiveData<String> urlPhoto = new MutableLiveData<>();
+    public MutableLiveData<Boolean> websiteAvailable = new MutableLiveData<>();
+    public MutableLiveData<Boolean> phoneAvailable = new MutableLiveData<>();
+    public MutableLiveData<Boolean> isRestaurantLiked = new MutableLiveData<>();
 
     private MutableLiveData<Integer> rating = new MutableLiveData<>();
     private MutableLiveData<List<User>> users = new MutableLiveData<>();
@@ -32,13 +36,36 @@ public class RestaurantDetailViewModel extends BaseViewModel {
         this.restaurantRepository = restaurantRepository;
     }
 
-    public void fetchInfoRestaurant(int position){
-        Restaurant restaurant = restaurantRepository.getRestaurantsLoaded().get(position);
+    public void fetchInfoRestaurant(){
+        this.restaurant = restaurantRepository.getRestaurantSelected();
         nameRestaurant.setValue(restaurant.getName());
         addressRestaurant.setValue(restaurant.getAddress());
         urlPhoto.setValue(restaurant.getUrlPhoto());
         rating.setValue(restaurant.getRating());
         users.setValue(restaurant.getUsersEatingHere());
+        websiteAvailable.setValue(restaurant.getWebSite() != null);
+        phoneAvailable.setValue(restaurant.getPhoneNumber() != null);
+        isRestaurantLiked.setValue(checkIfRestaurantIsLiked());
+    }
+
+    public void fetchPhoneNumber(){
+        phoneNumber.setValue(restaurant.getPhoneNumber());
+    }
+
+    public void fetchWebsite(){
+        webSite.setValue(restaurant.getWebSite());
+    }
+
+    private Boolean checkIfRestaurantIsLiked(){
+        List<String> restaurantLiked = userRepository.getUser().getLikedRestaurantUuid();
+        if(restaurantLiked != null && restaurantLiked.size() > 0) {
+            for (String uid : restaurantLiked) {
+                if (uid.equals(restaurant.getUid())) return true;
+            }
+        }
+
+        return false;
+
     }
 
     @Override

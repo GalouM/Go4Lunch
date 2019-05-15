@@ -2,6 +2,7 @@ package com.galou.go4lunch.models;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +24,7 @@ public class User {
         this.username = username;
         this.email = email;
         this.urlPicture = urlPicture;
+        likedRestaurantUuid = new ArrayList<>();
     }
 
     //-----------

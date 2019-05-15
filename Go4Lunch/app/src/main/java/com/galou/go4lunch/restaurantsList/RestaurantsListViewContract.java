@@ -9,4 +9,5 @@ import java.util.List;
  */
 public interface RestaurantsListViewContract {
     void displayRestaurants(List<Restaurant> restaurants);
+    void displayRestaurantDetail();
 }

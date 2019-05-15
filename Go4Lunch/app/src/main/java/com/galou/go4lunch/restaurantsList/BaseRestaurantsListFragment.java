@@ -7,6 +7,7 @@ import com.galou.go4lunch.R;
 import com.galou.go4lunch.injection.Injection;
 import com.galou.go4lunch.injection.ViewModelFactory;
 import com.galou.go4lunch.models.Restaurant;
+import com.galou.go4lunch.restoDetails.RestoDetailDialogFragment;
 import com.galou.go4lunch.util.SnackBarUtil;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public abstract class BaseRestaurantsListFragment extends Fragment implements Re
         this.setupRestaurantDisplay();
         this.setupSnackBarWithAction();
         this.setupSnackBar();
+        this.setupOpenDetailRestaurant();
 
     }
 
@@ -53,5 +55,15 @@ public abstract class BaseRestaurantsListFragment extends Fragment implements Re
             }
         });
 
+    }
+
+    protected void setupOpenDetailRestaurant(){
+        viewModel.getOpenDetailRestaurant().observe(this, open -> displayRestaurantDetail());
+    }
+
+    @Override
+    public void displayRestaurantDetail(){
+        RestoDetailDialogFragment restoDetailDialogFragment = new RestoDetailDialogFragment();
+        restoDetailDialogFragment.show(getActivity().getSupportFragmentManager(), "MODAL");
     }
 }

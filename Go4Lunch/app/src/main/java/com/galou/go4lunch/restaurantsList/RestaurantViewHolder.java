@@ -34,8 +34,8 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
     private ImageView ratingStar1;
     private ImageView ratingStar2;
     private ImageView ratingStar3;
-    
-    private String formatTimeDisplay; 
+
+    private String formatTimeDisplay;
 
     public RestaurantViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -73,6 +73,15 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
         glide.load(restaurant.getUrlPhoto()).apply(RequestOptions.centerCropTransform()).into(imageView);
 
+        this.displayOpeningHours(restaurant);
+        this.displayRating(restaurant);
+
+
+
+
+    }
+
+    private void displayOpeningHours(Restaurant restaurant){
         int timeOpening = restaurant.getOpeningHours();
         switch (timeOpening){
             case R.string.closed:
@@ -101,6 +110,9 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
         }
 
+    }
+
+    private void displayRating(Restaurant restaurant){
         int rating = restaurant.getRating();
         switch (rating){
             case 0:
@@ -139,7 +151,6 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
                 ratingStar3.setImageDrawable(res.getDrawable(R.drawable.baseline_star_24));
                 break;
         }
-
 
     }
 }

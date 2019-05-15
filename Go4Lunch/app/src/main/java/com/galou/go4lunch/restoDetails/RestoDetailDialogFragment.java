@@ -26,19 +26,8 @@ import com.galou.go4lunch.R;
  * </pre>
  */
 public class RestoDetailDialogFragment extends BottomSheetDialogFragment {
-
-    private static final String RESTAURANT_ID = "restaurantId";
     private RestaurantDetailViewModel viewModel;
     private FragmentItemListDialogBinding binding;
-
-    // TODO: Customize parameters
-    public static RestoDetailDialogFragment newInstance(int positionRestaurant) {
-        final RestoDetailDialogFragment fragment = new RestoDetailDialogFragment();
-        final Bundle args = new Bundle();
-        args.putInt(RESTAURANT_ID, positionRestaurant);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Nullable
     @Override
@@ -51,8 +40,7 @@ public class RestoDetailDialogFragment extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         configureBindingAndViewModel(view);
-        int restaurantPosition = getArguments().getInt(RESTAURANT_ID);
-        viewModel.fetchInfoRestaurant(restaurantPosition);
+        viewModel.fetchInfoRestaurant();
 
     }
 
