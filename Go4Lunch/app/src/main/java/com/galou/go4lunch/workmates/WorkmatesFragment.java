@@ -111,7 +111,7 @@ public class WorkmatesFragment extends Fragment implements WorkmateContract {
     private void configureOnClickRecyclerView(){
         ItemClickSupport.addTo(recyclerView, R.layout.resto_item_recycler_view)
                 .setOnItemClickListener((recyclerView, position, v)
-                        -> viewModel.updateRestaurantSelected(adapter.getUser(position)));
+                        -> viewModel.updateRestaurantToDisplay(adapter.getUser(position)));
 
     }
 
