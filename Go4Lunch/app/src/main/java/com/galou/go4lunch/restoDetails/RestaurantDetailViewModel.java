@@ -31,6 +31,7 @@ public class RestaurantDetailViewModel extends BaseViewModel {
 
     private RestaurantRepository restaurantRepository;
     private Restaurant restaurant;
+    private Disposable disposable;
 
     public MutableLiveData<String> nameRestaurant = new MutableLiveData<>();
     public MutableLiveData<String> addressRestaurant = new MutableLiveData<>();
@@ -64,7 +65,25 @@ public class RestaurantDetailViewModel extends BaseViewModel {
     }
 
     public void fetchInfoRestaurant(){
-        this.restaurant = restaurantRepository.getRestaurantSelected();
+        isLoading.setValue(true);
+        String uidSelection = restaurantRepository.getRestaurantSelected();
+        bool isRestaurantStored = false;
+        for(Restaurant restaurant : restaurantRepository.getRestaurantsLoaded()){
+            if(restaurant.getUid().equals(uidSelection)){
+                this.restaurant = restaurant;
+                isRestaurantStored = true;
+                break;
+            }
+        } 
+        if(isRestaurantStored){
+            configureInfoRestaurant();
+
+        } else{
+            fetchDetailFromApi(uidSelection);
+        }
+    }
+
+    private void configureInfoRestaurant(){
         nameRestaurant.setValue(restaurant.getName());
         addressRestaurant.setValue(restaurant.getAddress());
         urlPhoto.setValue(restaurant.getUrlPhoto());
@@ -78,6 +97,51 @@ public class RestaurantDetailViewModel extends BaseViewModel {
         } else {
             isRestaurantPicked.setValue(false);
         }
+        isLoading.setValue(false);
+
+    }
+
+    private void fetchDetailFromApi(String uidSelection){
+        this.disposable = restaurantRepository.streamFetchRestaurantDetails(uidSelection).subscribeWith(getObserverRestaurantDetail());
+    }
+
+    private createRestaurant(ApiDetailResponse response){
+        ResultApiPlace result = detailResult.getResult();
+        String uid = result.getId();
+        String name = result.getName();
+        Double latitude = result.getGeometry().getLocation().getLat();
+        Double longitude = result.getGeometry().getLocation().getLng();
+        String photo = restaurantRepository.getPhotoRestaurant(result.getPhotos().get(0).getPhotoReference());
+        String address = result.getVicinity();
+        int openingHours = OpeningHoursUtil.getOpeningTime(result.getOpeningHours());
+        int rating = RatingUtil.calculateRating(result.getRating());
+        String webSite = result.getWebsite();
+        String phoneNumber = result.getPhoneNumber();
+        Restaurant restaurant = new Restaurant(uid, name, latitude, longitude, address, openingHours, photo, rating, phoneNumber, webSite);
+        this.restaurant = restaurant;
+        configureInfoRestaurant();
+
+    }
+
+    private DisposableObserver<ApiDetailResponse> getObserverRestaurantDetail(){
+        return new DisposableObserver<ApiDetailResponse>() {
+            @Override
+            public void onNext(ApiDetailResponse response) {
+                createRestaurant(response);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                snackBarWithAction.setValue(GET_RESTAURANT_DETAIL);
+                isLoading.setValue(false);
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
     }
 
     public void fetchPhoneNumber(){
