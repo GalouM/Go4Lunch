@@ -39,6 +39,9 @@ public class WorkmatesFragment extends Fragment implements WorkmateContract {
 
     public WorkmatesFragment() {}
 
+    // --------------------
+    // LIFE CYCLE STATE
+    // --------------------
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,6 +52,10 @@ public class WorkmatesFragment extends Fragment implements WorkmateContract {
         viewModel.fetchListUsersFromFirebase();
         return view;
     }
+    
+    // --------------------
+    // VIEW MODEL CONNECTIONS
+    // --------------------
 
     private void configureBindingAndViewModel(View view) {
         binding = FragmentWorkmatesBinding.bind(view);
@@ -89,6 +96,9 @@ public class WorkmatesFragment extends Fragment implements WorkmateContract {
 
     }
 
+    // --------------------
+    // CONFIGURE UI
+    // --------------------
 
     private void configureRecycleView(View view){
         users = new ArrayList<>();
@@ -105,6 +115,9 @@ public class WorkmatesFragment extends Fragment implements WorkmateContract {
 
     }
 
+    // --------------------
+    // ACTIONS FROM VIEW MODEL
+    // --------------------
 
     @Override
     public void showUsers(List<User> users){
