@@ -195,7 +195,6 @@ public class MapViewFragment extends BaseRestaurantsListFragment implements OnMa
     @Override
     public void displayRestaurants(List<Restaurant> restaurants){
         if(googleMap != null) {
-            int positionIndex = 0;
             for (Restaurant restaurant : restaurants) {
                 Double latitude = restaurant.getLatitude();
                 Double longitude = restaurant.getLongitude();
@@ -205,7 +204,7 @@ public class MapViewFragment extends BaseRestaurantsListFragment implements OnMa
                             .position(positionRestaurant)
                             .title(restaurant.getName())
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_selected)));
-                    marker.setTag(positionIndex);
+                    marker.setTag(restaurant.getUid());
                 } else {
                     Marker marker = googleMap.addMarker(new MarkerOptions()
                             .position(positionRestaurant)
@@ -213,7 +212,6 @@ public class MapViewFragment extends BaseRestaurantsListFragment implements OnMa
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_normal)));
                     marker.setTag(positionIndex);
                 }
-                positionIndex += 1;
             }
             googleMap.setOnMarkerClickListener(this);
         }
@@ -222,7 +220,7 @@ public class MapViewFragment extends BaseRestaurantsListFragment implements OnMa
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        viewModel.updateRestaurantSelected(Integer.parseInt(marker.getTag().toString()));
+        viewModel.updateRestaurantSelected(marker.getTag().toString());
         return false;
     }
 
