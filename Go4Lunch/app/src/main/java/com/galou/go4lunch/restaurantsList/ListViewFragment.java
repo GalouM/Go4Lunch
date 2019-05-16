@@ -81,7 +81,7 @@ public class ListViewFragment extends BaseRestaurantsListFragment {
     private void configureOnClickRecyclerView(){
         ItemClickSupport.addTo(recyclerView, R.layout.resto_item_recycler_view)
                 .setOnItemClickListener((recyclerView, position, v)
-                        -> viewModel.updateRestaurantSelected(position));
+                        -> viewModel.updateRestaurantSelected(adapter.getRestaurant(position)));
 
     }
 
