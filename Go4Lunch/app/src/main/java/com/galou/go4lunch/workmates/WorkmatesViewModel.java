@@ -16,6 +16,8 @@ import java.util.List;
  * Created by galou on 2019-04-27
  */
 public class WorkmatesViewModel extends BaseViewModel {
+    
+    private RestaurantRepository restaurantRepository;
 
     //----- PRIVATE LIVE DATA -----
     private MutableLiveData<List<User>> users = new MutableLiveData<>();
@@ -23,8 +25,9 @@ public class WorkmatesViewModel extends BaseViewModel {
     //----- GETTER LIVE DATA -----
     public LiveData<List<User>> getUsers(){ return users; }
 
-    public WorkmatesViewModel(UserRepository userRepository) {
+    public WorkmatesViewModel(UserRepository userRepository, RestaurantRepository restaurantRepository) {
         this.userRepository = userRepository;
+        this.restaurantRepository = restaurantRepository;
         this.user = userRepository.getUser()
     }
 
@@ -66,5 +69,6 @@ public class WorkmatesViewModel extends BaseViewModel {
 
     public void updateRestaurantToDisplay(User userSelected) {
         String uidRestaurant = userSelected.getRestaurant();
+        restaurantRepository.setRestaurantSelected(uidRestaurant);
     }
 }
