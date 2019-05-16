@@ -36,10 +36,6 @@ import static com.galou.go4lunch.util.RetryAction.GET_RESTAURANTS;
  */
 public class RestaurantsListViewModel extends BaseViewModel {
 
-    private MutableLiveData<List<Restaurant>> restaurantsList = new MutableLiveData<>();
-    private MutableLiveData<Object> openDetailRestaurant = new MutableLiveData<>();
-
-
     private RestaurantRepository restaurantRepository;
     private Disposable disposableRestaurant;
     private Disposable disposableDistance;
@@ -47,6 +43,11 @@ public class RestaurantsListViewModel extends BaseViewModel {
     private List<Restaurant> restaurants;
     private List<User> users;
 
+    //----- PRIVATE LIVE DATA -----
+    private MutableLiveData<List<Restaurant>> restaurantsList = new MutableLiveData<>();
+    private MutableLiveData<Object> openDetailRestaurant = new MutableLiveData<>();
+
+    //----- GETTER LIVE DATA -----
     public LiveData<List<Restaurant>> getRestaurantsList(){
         return restaurantsList;
     }
@@ -60,10 +61,18 @@ public class RestaurantsListViewModel extends BaseViewModel {
         this.restaurantRepository = restaurantRepository;
     }
 
+    // --------------------
+    // START
+    // --------------------
+
     public void setupLocation(String location){
         restaurantRepository.setLocation(location);
 
     }
+
+    // --------------------
+    // GET USER ACTION
+    // --------------------
 
     public void requestListRestaurants(){
         isLoading.setValue(true);
@@ -76,11 +85,26 @@ public class RestaurantsListViewModel extends BaseViewModel {
 
     }
 
-    public void updateRestaurantSelected(int position){
-        restaurantRepository.setRestaurantSelected(position);
+    public void updateRestaurantSelected(String restaurantUid){
+        restaurantRepository.setRestaurantSelected(restaurantUid);
         openDetailRestaurant.setValue(new Object());
     }
 
+    public void onRefreshRestaurantListList(){
+        isLoading.setValue(true);
+        this.fetchListRestaurant();
+    }
+
+    @Override
+    public void retry(RetryAction retryAction) {
+        if (retryAction == GET_RESTAURANTS) {
+            this.requestListRestaurants();
+        }
+    }
+
+    // --------------------
+    // OBSERVER API
+    // --------------------
     private DisposableObserver<List<ApiDetailResponse>> getObserverRestaurants(){
         return new DisposableObserver<List<ApiDetailResponse>>() {
             @Override
@@ -128,6 +152,9 @@ public class RestaurantsListViewModel extends BaseViewModel {
         };
     }
 
+    // --------------------
+    // SETUP RESTAURANT LIST
+    // --------------------
     private void createRestaurantList(List<ApiDetailResponse> results){
         restaurants = new ArrayList<>();
         for (ApiDetailResponse detailResult : results){
@@ -150,8 +177,6 @@ public class RestaurantsListViewModel extends BaseViewModel {
         }
         this.fetchListUser();
     }
-
-
 
     private void fetchListUser(){
         users = new ArrayList<>();
@@ -185,25 +210,12 @@ public class RestaurantsListViewModel extends BaseViewModel {
 
     }
 
-    public void onRefreshRestaurantListList(){
-        isLoading.setValue(true);
-        this.fetchListRestaurant();
-    }
-
     private void fetchListRestaurant(){
         if(restaurantRepository.getLocation() != null) {
             this.disposableRestaurant = restaurantRepository.streamFetchListRestaurantDetails().subscribeWith(getObserverRestaurants());
         } else {
             snackBarText.setValue(R.string.no_location_message);
             isLoading.setValue(false);
-        }
-    }
-
-
-    @Override
-    public void retry(RetryAction retryAction) {
-        if (retryAction == GET_RESTAURANTS) {
-            this.requestListRestaurants();
         }
     }
 
