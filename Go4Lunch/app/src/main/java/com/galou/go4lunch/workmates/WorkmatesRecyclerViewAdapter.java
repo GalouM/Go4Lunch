@@ -52,4 +52,8 @@ public class WorkmatesRecyclerViewAdapter extends RecyclerView.Adapter<Workmates
         this.users = users;
         notifyDataSetChanged();
     }
+
+    User getUser(int position){
+        return users.get(position);
+    }
 }

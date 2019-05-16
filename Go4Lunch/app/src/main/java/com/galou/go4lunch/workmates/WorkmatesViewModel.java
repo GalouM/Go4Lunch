@@ -62,4 +62,8 @@ public class WorkmatesViewModel extends BaseViewModel {
 
 
     }
+
+    public void updateRestaurantSelected(User user) {
+        String uidRestaurant = user.getRestaurant();
+    }
 }

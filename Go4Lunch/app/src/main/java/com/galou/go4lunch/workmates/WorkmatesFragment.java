@@ -18,6 +18,7 @@ import com.galou.go4lunch.databinding.FragmentWorkmatesBinding;
 import com.galou.go4lunch.injection.Injection;
 import com.galou.go4lunch.injection.ViewModelFactory;
 import com.galou.go4lunch.models.User;
+import com.galou.go4lunch.util.ItemClickSupport;
 import com.galou.go4lunch.util.SnackBarUtil;
 
 import java.util.ArrayList;
@@ -97,11 +98,19 @@ public class WorkmatesFragment extends Fragment implements WorkmateContract {
         recyclerView.setAdapter(adapter);
     }
 
+    private void configureOnClickRecyclerView(){
+        ItemClickSupport.addTo(recyclerView, R.layout.resto_item_recycler_view)
+                .setOnItemClickListener((recyclerView, position, v)
+                        -> viewModel.updateRestaurantSelected(adapter.getUser(position)));
+
+    }
+
 
     @Override
     public void showUsers(List<User> users){
         this.users = users;
         adapter.update(this.users);
+        this.configureOnClickRecyclerView();
 
     }
 }
