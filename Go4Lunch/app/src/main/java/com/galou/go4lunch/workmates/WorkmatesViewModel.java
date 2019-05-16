@@ -25,6 +25,7 @@ public class WorkmatesViewModel extends BaseViewModel {
 
     public WorkmatesViewModel(UserRepository userRepository) {
         this.userRepository = userRepository;
+        this.user = userRepository.getUser()
     }
 
     // --------------------
@@ -34,14 +35,14 @@ public class WorkmatesViewModel extends BaseViewModel {
     void fetchListUsersFromFirebase() {
         userRepository.getAllUsersFromFirebase()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<User> fetchedUser = new ArrayList<>();
+                    List<User> fetchedUsers = new ArrayList<>();
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()){
-                        User user = documentSnapshot.toObject(User.class);
-                        if(!user.getUid().equals(getCurrentUserUid())) {
-                            fetchedUser.add(user);
+                        User userFetched = documentSnapshot.toObject(User.class);
+                        if(!userFetched.getUid().equals(user.getUid())) {
+                            fetchedUsers.add(userFetched);
                         }
                     }
-                    users.setValue(fetchedUser);
+                    users.setValue(fetchedUsers);
                     isLoading.setValue(false);
                 })
                 .addOnFailureListener(this.onFailureListener(RetryAction.FETCH_ALL_USERS));
@@ -63,7 +64,7 @@ public class WorkmatesViewModel extends BaseViewModel {
 
     }
 
-    public void updateRestaurantSelected(User user) {
-        String uidRestaurant = user.getRestaurant();
+    public void updateRestaurantToDisplay(User userSelected) {
+        String uidRestaurant = userSelected.getRestaurant();
     }
 }
