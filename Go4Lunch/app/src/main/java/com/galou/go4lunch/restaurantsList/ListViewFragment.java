@@ -34,6 +34,9 @@ public class ListViewFragment extends BaseRestaurantsListFragment {
 
     public ListViewFragment() {}
 
+    // --------------------
+    // LIFE CYCLE SATE
+    // --------------------
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,6 +48,10 @@ public class ListViewFragment extends BaseRestaurantsListFragment {
         viewModel.requestListRestaurants();
         return view;
     }
+    
+    // --------------------
+    // CONFIGURE UI
+    // --------------------
 
     private void configureRecycleView(View view){
         restaurants = new ArrayList<>();
