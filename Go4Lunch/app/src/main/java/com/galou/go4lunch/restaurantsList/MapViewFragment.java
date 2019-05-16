@@ -163,7 +163,12 @@ public class MapViewFragment extends BaseRestaurantsListFragment implements OnMa
         binding.setViewmodel(viewModel);
         binding.setLifecycleOwner(getActivity());
 
+    }
 
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        viewModel.updateRestaurantSelected(marker.getTag().toString());
+        return false;
     }
 
     // --------------------
@@ -216,12 +221,6 @@ public class MapViewFragment extends BaseRestaurantsListFragment implements OnMa
             googleMap.setOnMarkerClickListener(this);
         }
 
-    }
-
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        viewModel.updateRestaurantSelected(marker.getTag().toString());
-        return false;
     }
 
     // --------------------
