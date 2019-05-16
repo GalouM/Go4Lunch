@@ -55,18 +55,18 @@ public class UserUnitTest {
         String newPhotoUrl = "http://newphoto";
         String newEmail = "new@email.com";
         user.setUsername(newName);
-        user.setRestaurantPicked(restaurant);
+        user.setRestaurant(restaurant);
         user.setUid(newUid);
         user.setUrlPicture(newPhotoUrl);
         user.setEmail(newEmail);
-        user.setLikedRestaurantUuid(likedRestaurants);
+        user.setLikedRestaurants(likedRestaurants);
 
         assertEquals(newUid, user.getUid());
         assertEquals(newName, user.getUsername());
         assertEquals(newEmail, user.getEmail());
         assertEquals(newPhotoUrl, user.getUrlPicture());
-        assertEquals(restaurant, user.getRestaurantPicked());
-        assertEquals(likedRestaurants, user.getLikedRestaurantUuid());
+        assertEquals(restaurant, user.getRestaurant());
+        assertEquals(likedRestaurants, user.getLikedRestaurants());
     }
 
 }

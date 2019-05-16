@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.base.BaseViewModel;
+import com.galou.go4lunch.util.SuccessOrign;
 import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.util.RetryAction;
@@ -17,9 +18,9 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.UUID;
 
-import static com.galou.go4lunch.settings.SuccessOrign.DELETE_USER;
-import static com.galou.go4lunch.settings.SuccessOrign.UPDATE_PHOTO;
-import static com.galou.go4lunch.settings.SuccessOrign.UPDATE_USER;
+import static com.galou.go4lunch.util.SuccessOrign.DELETE_USER;
+import static com.galou.go4lunch.util.SuccessOrign.UPDATE_PHOTO;
+import static com.galou.go4lunch.util.SuccessOrign.UPDATE_USER;
 import static com.galou.go4lunch.util.RetryAction.DELETE_USER_DB;
 import static com.galou.go4lunch.util.RetryAction.FETCH_USER;
 import static com.galou.go4lunch.util.RetryAction.UPDATE_INFO_USER_DB;

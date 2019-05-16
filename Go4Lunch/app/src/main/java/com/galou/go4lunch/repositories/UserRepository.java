@@ -1,6 +1,5 @@
 package com.galou.go4lunch.repositories;
 
-import com.galou.go4lunch.models.Restaurant;
 import com.galou.go4lunch.models.User;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -65,7 +64,8 @@ public class UserRepository {
                 "username", username, "email", email);
     }
 
-    public Task<Void> updateRestaurantPicked(Restaurant restaurant, String uid){
+    public Task<Void> updateRestaurantPicked(String restaurant, String uid){
+        user.setRestaurant(restaurant);
         return userCollection.document(uid).update("restaurant", restaurant);
     }
 
@@ -74,9 +74,21 @@ public class UserRepository {
         return userCollection.document(uid).update("urlPicture", urlPicture);
     }
 
-    public Task<Void> updateLikedRestaurants(List<String> likedRestaurants, String uid){
-        return userCollection.document(uid).update("likedRestaurants", likedRestaurants);
+    public Task<Void> addLikedRestaurant(String likedRestaurant, String uid){
+        user.addLikedRestaurant(likedRestaurant);
+        return updateLikedRestaurants(uid);
     }
+
+    public Task<Void> removeLikedRestaurant(String likedRestaurant, String uid){
+        user.removeLikedRestaurant(likedRestaurant);
+        return updateLikedRestaurants(uid);
+    }
+
+    private Task<Void> updateLikedRestaurants(String uid){
+        List<String> likedRestaurantsList = user.getLikedRestaurants();
+        return userCollection.document(uid).update("likedRestaurants", likedRestaurantsList);
+    }
+
 
     //---- DELETE ----
     public Task<Void> deleteUser(String uid){

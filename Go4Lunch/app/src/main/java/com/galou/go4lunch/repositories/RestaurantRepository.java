@@ -6,6 +6,7 @@ import com.galou.go4lunch.models.ApiNearByResponse;
 import com.galou.go4lunch.models.DistanceApiResponse;
 import com.galou.go4lunch.models.Restaurant;
 import com.galou.go4lunch.models.ResultApiPlace;
+import com.galou.go4lunch.models.User;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -96,5 +97,10 @@ public class RestaurantRepository {
     public Restaurant getRestaurantSelected(){
         return restaurantSelected;
     }
+
+    public void setUserEatingRestaurant(int position, User user){
+        restaurants.get(position).addUser(user);
+    }
+
 
 }

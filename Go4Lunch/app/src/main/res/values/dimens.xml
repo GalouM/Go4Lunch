@@ -27,7 +27,7 @@
     <dimen name="user_image_recyclerview_workmates_size">60dip</dimen>
 
     <dimen name="heigh_card_view">90dip</dimen>
-    <dimen name="margin_text_restaurant_list">7dp</dimen>
+    <dimen name="margin_text_restaurant_list">3dp</dimen>
     <dimen name="list_item_spacing">16dp</dimen>
     <dimen name="list_item_spacing_half">8dp</dimen>
 

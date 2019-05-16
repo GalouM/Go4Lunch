@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.galou.go4lunch.R;
@@ -26,6 +27,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
@@ -41,7 +43,8 @@ import static com.galou.go4lunch.util.PositionUtil.convertLocationForApi;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MapViewFragment extends BaseRestaurantsListFragment implements OnMapReadyCallback, EasyPermissions.PermissionCallbacks {
+public class MapViewFragment extends BaseRestaurantsListFragment implements OnMapReadyCallback,
+        EasyPermissions.PermissionCallbacks, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap googleMap;
     private MapView mapView;
@@ -192,27 +195,36 @@ public class MapViewFragment extends BaseRestaurantsListFragment implements OnMa
     @Override
     public void displayRestaurants(List<Restaurant> restaurants){
         if(googleMap != null) {
+            int positionIndex = 0;
             for (Restaurant restaurant : restaurants) {
                 Double latitude = restaurant.getLatitude();
                 Double longitude = restaurant.getLongitude();
                 LatLng positionRestaurant = new LatLng(latitude, longitude);
                 if(restaurant.getUsersEatingHere().size() > 0){
-                    googleMap.addMarker(new MarkerOptions()
+                    Marker marker = googleMap.addMarker(new MarkerOptions()
                             .position(positionRestaurant)
                             .title(restaurant.getName())
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_selected)));
+                    marker.setTag(positionIndex);
                 } else {
-                    googleMap.addMarker(new MarkerOptions()
+                    Marker marker = googleMap.addMarker(new MarkerOptions()
                             .position(positionRestaurant)
                             .title(restaurant.getName())
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_normal)));
+                    marker.setTag(positionIndex);
                 }
+                positionIndex += 1;
             }
+            googleMap.setOnMarkerClickListener(this);
         }
 
     }
 
-
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        viewModel.updateRestaurantSelected(Integer.parseInt(marker.getTag().toString()));
+        return false;
+    }
 
     // --------------------
     // PERMISSIONS

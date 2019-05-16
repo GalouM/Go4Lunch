@@ -167,9 +167,9 @@ public class RestaurantsListViewModel extends BaseViewModel {
     }
 
     private void checkUserRestaurant(){
-        for(User user : users){
-            if(user.getRestaurantPicked() != null) {
-                String restaurantPicked = user.getRestaurantPicked().getUid();
+        for (User user : users) {
+            if (user.getRestaurant() != null) {
+                String restaurantPicked = user.getRestaurant();
                 for (Restaurant restaurant : restaurants) {
                     String restaurantUid = restaurant.getUid();
                     if (restaurantUid.equals(restaurantPicked)) {
@@ -181,6 +181,8 @@ public class RestaurantsListViewModel extends BaseViewModel {
         restaurantsList.setValue(restaurants);
         restaurantRepository.updateRestaurants(restaurants);
         isLoading.setValue(false);
+
+
     }
 
     public void onRefreshRestaurantListList(){
@@ -196,7 +198,6 @@ public class RestaurantsListViewModel extends BaseViewModel {
             isLoading.setValue(false);
         }
     }
-
 
 
     @Override

@@ -1,4 +1,4 @@
-package com.galou.go4lunch.workmates;
+package com.galou.go4lunch.restoDetails;
 
 import android.content.res.Resources;
 import android.view.View;
@@ -15,15 +15,15 @@ import com.galou.go4lunch.R;
 import com.galou.go4lunch.models.User;
 
 /**
- * Created by galou on 2019-04-27
+ * Created by galou on 2019-05-15
  */
-public class WorkmatesRecyclerViewViewHolder extends RecyclerView.ViewHolder {
+public class RestaurantDetailRVViewHolder extends RecyclerView.ViewHolder {
 
     private TextView textView;
     private ImageView imageView;
     private Resources res;
 
-    WorkmatesRecyclerViewViewHolder(@NonNull View itemView) {
+    RestaurantDetailRVViewHolder(@NonNull View itemView) {
         super(itemView);
         res = itemView.getResources();
         textView = (TextView) itemView.findViewById(R.id.recycler_view_text);
@@ -31,17 +31,8 @@ public class WorkmatesRecyclerViewViewHolder extends RecyclerView.ViewHolder {
     }
 
     void updateWithUser(User user, RequestManager glide){
-        String textToDisplay;
-        if(user.getRestaurant() != null){
-            textToDisplay = String.format(res.getString(R.string.display_text_user_list),
-                    user.getUsername(),
-                    user.getRestaurant());
 
-        } else {
-            textToDisplay = String.format(res.getString(R.string.display_text_user_list_not_decided), user.getUsername());
-            TextViewCompat.setTextAppearance(textView, R.style.UserNotDecidedText);
-        }
-        textView.setText(textToDisplay);
+        textView.setText(String.format(res.getString(R.string.is_joining), user.getUsername()));
 
         if(user.getUrlPicture() != null){
             glide.load(user.getUrlPicture()).apply(RequestOptions.circleCropTransform()).into(imageView);
@@ -50,5 +41,4 @@ public class WorkmatesRecyclerViewViewHolder extends RecyclerView.ViewHolder {
 
 
     }
-
 }

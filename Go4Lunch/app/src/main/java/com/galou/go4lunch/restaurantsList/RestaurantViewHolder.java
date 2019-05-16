@@ -15,6 +15,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.models.Restaurant;
 import com.galou.go4lunch.util.OpeningHoursUtil;
+import com.galou.go4lunch.util.RatingUtil;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -114,43 +115,9 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
     private void displayRating(Restaurant restaurant){
         int rating = restaurant.getRating();
-        switch (rating){
-            case 0:
-                ratingStar1.setImageDrawable(res.getDrawable(R.drawable.baseline_star_border_24));
-                ratingStar2.setImageDrawable(res.getDrawable(R.drawable.baseline_star_border_24));
-                ratingStar3.setImageDrawable(res.getDrawable(R.drawable.baseline_star_border_24));
-                break;
-            case 1:
-                ratingStar1.setImageDrawable(res.getDrawable(R.drawable.baseline_star_half_24));
-                ratingStar2.setImageDrawable(res.getDrawable(R.drawable.baseline_star_border_24));
-                ratingStar3.setImageDrawable(res.getDrawable(R.drawable.baseline_star_border_24));
-                break;
-            case 2:
-                ratingStar1.setImageDrawable(res.getDrawable(R.drawable.baseline_star_24));
-                ratingStar2.setImageDrawable(res.getDrawable(R.drawable.baseline_star_border_24));
-                ratingStar3.setImageDrawable(res.getDrawable(R.drawable.baseline_star_border_24));
-                break;
-            case 3:
-                ratingStar1.setImageDrawable(res.getDrawable(R.drawable.baseline_star_24));
-                ratingStar2.setImageDrawable(res.getDrawable(R.drawable.baseline_star_half_24));
-                ratingStar3.setImageDrawable(res.getDrawable(R.drawable.baseline_star_border_24));
-                break;
-            case 4:
-                ratingStar1.setImageDrawable(res.getDrawable(R.drawable.baseline_star_24));
-                ratingStar2.setImageDrawable(res.getDrawable(R.drawable.baseline_star_24));
-                ratingStar3.setImageDrawable(res.getDrawable(R.drawable.baseline_star_border_24));
-                break;
-            case 5:
-                ratingStar1.setImageDrawable(res.getDrawable(R.drawable.baseline_star_24));
-                ratingStar2.setImageDrawable(res.getDrawable(R.drawable.baseline_star_24));
-                ratingStar3.setImageDrawable(res.getDrawable(R.drawable.baseline_star_half_24));
-                break;
-            case 6:
-                ratingStar1.setImageDrawable(res.getDrawable(R.drawable.baseline_star_24));
-                ratingStar2.setImageDrawable(res.getDrawable(R.drawable.baseline_star_24));
-                ratingStar3.setImageDrawable(res.getDrawable(R.drawable.baseline_star_24));
-                break;
-        }
+        ratingStar1.setImageDrawable(res.getDrawable(RatingUtil.displayFirstStar(rating)));
+        ratingStar2.setImageDrawable(res.getDrawable(RatingUtil.displaySecondStar(rating)));
+        ratingStar3.setImageDrawable(res.getDrawable(RatingUtil.displayThirdStar(rating)));
 
     }
 }

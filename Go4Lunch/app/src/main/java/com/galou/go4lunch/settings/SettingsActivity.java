@@ -51,9 +51,6 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
     public static final String KEY_PREF_NOTIFICATION_ENABLE = "notificationEnabled";
     public static final String KEY_PREF = "prefNotification";
 
-    public static final String KEY_BUNDLE_USER = "modifiedUser";
-    private Intent intent;
-
     // FOR TESTING
     @VisibleForTesting
     protected CountingIdlingResource espressoTestIdlingResource;

@@ -1,5 +1,7 @@
 package com.galou.go4lunch.authentication;
 
+import android.util.Log;
+
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -13,6 +15,9 @@ import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.util.RetryAction;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 import static com.galou.go4lunch.util.RetryAction.FETCH_USER;
@@ -75,6 +80,7 @@ public class AuthenticationViewModel extends BaseViewModel {
                         if (user == null){
                             createUserInFirestore();
                         } else {
+                            userRepository.updateUserRepository(user);
                             openNewActivityEvent.setValue(new Object());
                         }
                     });

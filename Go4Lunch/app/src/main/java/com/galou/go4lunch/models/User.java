@@ -14,8 +14,8 @@ public class User {
     private String username;
     private String email;
     @Nullable private String urlPicture;
-    @Nullable private Restaurant restaurantPicked;
-    private List<String> likedRestaurantUuid;
+    @Nullable private String restaurant;
+    private List<String> likedRestaurants;
 
     public User(){}
 
@@ -24,7 +24,6 @@ public class User {
         this.username = username;
         this.email = email;
         this.urlPicture = urlPicture;
-        likedRestaurantUuid = new ArrayList<>();
     }
 
     //-----------
@@ -57,12 +56,12 @@ public class User {
     }
 
     @Nullable
-    public Restaurant getRestaurantPicked() {
-        return restaurantPicked;
+    public String getRestaurant() {
+        return restaurant;
     }
 
-    public void setRestaurantPicked(@Nullable Restaurant restaurantPicked) {
-        this.restaurantPicked = restaurantPicked;
+    public void setRestaurant(@Nullable String restaurant) {
+        this.restaurant = restaurant;
     }
 
     public String getEmail() {
@@ -73,11 +72,36 @@ public class User {
         this.email = email;
     }
 
-    public List<String> getLikedRestaurantUuid() {
-        return likedRestaurantUuid;
+    public List<String> getLikedRestaurants() {
+        return likedRestaurants;
     }
 
-    public void setLikedRestaurantUuid(List<String> likedRestaurantUuid) {
-        this.likedRestaurantUuid = likedRestaurantUuid;
+    public void addLikedRestaurant(String restaurantUid){
+        if(likedRestaurants == null) {
+            this.likedRestaurants = new ArrayList<>();
+        }
+        this.likedRestaurants.add(restaurantUid);
+    }
+
+    public void removeLikedRestaurant(String restaurantUid){
+        if(likedRestaurants != null) {
+            int position = 0;
+            for (String uid : likedRestaurants) {
+                if (uid.equals(restaurantUid)) likedRestaurants.remove(position);
+                position += 1;
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "uid='" + uid + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", urlPicture='" + urlPicture + '\'' +
+                ", restaurant='" + restaurant + '\'' +
+                ", likedRestaurants=" + likedRestaurants +
+                '}';
     }
 }
