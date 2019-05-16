@@ -9,6 +9,7 @@ import androidx.test.espresso.idling.CountingIdlingResource;
 import com.galou.go4lunch.BuildConfig;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.base.BaseViewModel;
+import com.galou.go4lunch.repositories.RestaurantRepository;
 import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.util.RetryAction;
@@ -26,6 +27,7 @@ public class MainActivityViewModel extends BaseViewModel {
     private final MutableLiveData<Object> logoutRequested = new MutableLiveData<>();
     private final MutableLiveData<Object> settingsRequested = new MutableLiveData<>();
     private final MutableLiveData<Object> openSignInActivityEvent = new MutableLiveData<>();
+    private final MutableLiveData<Object> openDetailRestaurant = new MutableLiveData<>();
 
     //----- PUBLIC LIVE DATA -----
     public final MutableLiveData<String> username = new MutableLiveData<>();
@@ -36,35 +38,29 @@ public class MainActivityViewModel extends BaseViewModel {
     @VisibleForTesting
     protected CountingIdlingResource espressoTestIdlingResource;
 
-    private User user;
+    private RestaurantRepository restaurantRepository;
 
     //----- GETTER LIVE DATA -----
     public LiveData<Object> getLogout() {
         return logoutRequested;
     }
     public LiveData<Object> getSettings() { return settingsRequested; }
+    public LiveData<Object> getOpenDetailRestaurant() { return openDetailRestaurant; }
 
-    public MainActivityViewModel(UserRepository userRepository) {
+    public MainActivityViewModel(UserRepository userRepository, RestaurantRepository restaurantRepository) {
         this.userRepository = userRepository;
+        this.restaurantRepository = restaurantRepository;
+        this.user = userRepository.getUser();
     }
 
     // --------------------
     // START
     // --------------------
 
-    public void configureUser(){
-        if(userRepository.getUser() == null) {
-            userRepository.getUserFromFirebase(getCurrentUserUid())
-                    .addOnFailureListener(this.onFailureListener(FETCH_USER))
-                    .addOnSuccessListener(documentSnapshot -> {
-                        user = documentSnapshot.toObject(User.class);
-                        this.configureInfoUser();
-                        userRepository.updateUserRepository(user);
-                    });
-        } else {
-            user = userRepository.getUser();
-            this.configureInfoUser();
-        }
+    public void configureInfoUser(){
+        username.setValue(user.getUsername());
+        email.setValue(user.getEmail());
+        urlPicture.setValue(user.getUrlPicture());
     }
 
     // --------------------
@@ -83,21 +79,18 @@ public class MainActivityViewModel extends BaseViewModel {
         settingsRequested.setValue(new Object());
     }
 
-    // --------------------
-    // UPDATE BINDING INFOS
-    // --------------------
-
-    private void configureInfoUser(){
-        username.setValue(user.getUsername());
-        email.setValue(user.getEmail());
-        urlPicture.setValue(user.getUrlPicture());
+    public void updateRestaurantToDisplay() {
+        String uidRestaurant = user.getRestaurant();
+        if(uidRestaurant != null) {
+            restaurantRepository.setRestaurantSelected(uidRestaurant);
+            openDetailRestaurant.setValue(new Object());
+        } else {
+            snackBarText.setValue(R.string.no_restaurant_picked_message);
+        }
     }
 
     @Override
     public void retry(RetryAction retryAction) {
-        if (retryAction == FETCH_USER){
-            this.configureUser();
-        }
 
     }
 

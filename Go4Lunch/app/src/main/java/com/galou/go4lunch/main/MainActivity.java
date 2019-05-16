@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +33,7 @@ import com.galou.go4lunch.injection.Injection;
 import com.galou.go4lunch.injection.ViewModelFactory;
 import com.galou.go4lunch.restaurantsList.ListViewFragment;
 import com.galou.go4lunch.restaurantsList.MapViewFragment;
+import com.galou.go4lunch.restoDetails.RestoDetailDialogFragment;
 import com.galou.go4lunch.settings.SettingsActivity;
 import com.galou.go4lunch.util.RetryAction;
 import com.galou.go4lunch.util.SnackBarUtil;
@@ -65,7 +67,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume() {
         super.onResume();
-        viewModel.configureUser();
+        viewModel.configureInfoUser();
+        for (int i = 0; i < navigationView.getMenu().size(); i++) {
+            navigationView.getMenu().getItem(i).setChecked(false);
+        }
     }
 
     // --------------------
@@ -89,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setupSnackBar();
         setupLogoutRequest();
         setupSettingsRequest();
+        setupOpenDetailRestaurant();
     }
 
     private void setupSnackBar(){
@@ -107,6 +113,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void setupSettingsRequest(){
         viewModel.getSettings().observe(this, setting -> settings());
+    }
+
+    private void setupOpenDetailRestaurant(){
+        viewModel.getOpenDetailRestaurant().observe(this, open -> displayRestaurantDetail());
     }
 
     // --------------------
@@ -195,12 +205,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
+        item.setChecked(false);
         switch (id){
             case R.id.main_activity_drawer_settings:
                 viewModel.openSettings();
                 break;
             case R.id.main_activity_drawer_logout:
                 viewModel.logoutUserFromApp();
+                break;
+            case R.id.main_activity_drawer_lunch:
+                viewModel.updateRestaurantToDisplay();
                 break;
         }
         this.drawerLayout.closeDrawer(GravityCompat.START);
@@ -269,6 +283,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
 
+    }
+
+    @Override
+    public void displayRestaurantDetail(){
+        RestoDetailDialogFragment restoDetailDialogFragment = new RestoDetailDialogFragment();
+        restoDetailDialogFragment.show(getSupportFragmentManager(), "MODAL");
     }
 
     // --------------------

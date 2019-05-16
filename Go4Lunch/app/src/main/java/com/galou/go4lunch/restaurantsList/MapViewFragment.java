@@ -215,7 +215,7 @@ public class MapViewFragment extends BaseRestaurantsListFragment implements OnMa
                             .position(positionRestaurant)
                             .title(restaurant.getName())
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_normal)));
-                    marker.setTag(positionIndex);
+                    marker.setTag(restaurant.getUid());
                 }
             }
             googleMap.setOnMarkerClickListener(this);

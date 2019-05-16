@@ -9,4 +9,5 @@ import java.util.List;
  */
 public interface WorkmateContract {
     void showUsers(List<User> users);
+    void displayRestaurantDetail();
 }

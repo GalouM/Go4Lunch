@@ -53,7 +53,8 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         notifyDataSetChanged();
     }
     
-    Restaurant getRestaurant(int position){
+    Restaurant getRestaurant(int position) {
         return this.restaurants.get(position);
+    }
 
 }

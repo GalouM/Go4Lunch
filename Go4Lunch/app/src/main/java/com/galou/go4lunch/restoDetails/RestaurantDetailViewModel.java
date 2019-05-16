@@ -7,16 +7,24 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.base.BaseViewModel;
+import com.galou.go4lunch.models.ApiDetailResponse;
 import com.galou.go4lunch.models.Restaurant;
+import com.galou.go4lunch.models.ResultApiPlace;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.repositories.RestaurantRepository;
 import com.galou.go4lunch.repositories.UserRepository;
+import com.galou.go4lunch.util.OpeningHoursUtil;
+import com.galou.go4lunch.util.RatingUtil;
 import com.galou.go4lunch.util.SuccessOrign;
 import com.galou.go4lunch.util.RetryAction;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.List;
 
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
+
+import static com.galou.go4lunch.util.RetryAction.GET_RESTAURANT_DETAIL;
 import static com.galou.go4lunch.util.RetryAction.UPDATE_LIKED_RESTAURANT;
 import static com.galou.go4lunch.util.SuccessOrign.REMOVE_RESTAURANT_LIKED;
 import static com.galou.go4lunch.util.SuccessOrign.REMOVE_RESTAURANT_PICKED;
@@ -67,7 +75,7 @@ public class RestaurantDetailViewModel extends BaseViewModel {
     public void fetchInfoRestaurant(){
         isLoading.setValue(true);
         String uidSelection = restaurantRepository.getRestaurantSelected();
-        bool isRestaurantStored = false;
+        boolean isRestaurantStored = false;
         for(Restaurant restaurant : restaurantRepository.getRestaurantsLoaded()){
             if(restaurant.getUid().equals(uidSelection)){
                 this.restaurant = restaurant;
@@ -105,8 +113,8 @@ public class RestaurantDetailViewModel extends BaseViewModel {
         this.disposable = restaurantRepository.streamFetchRestaurantDetails(uidSelection).subscribeWith(getObserverRestaurantDetail());
     }
 
-    private createRestaurant(ApiDetailResponse response){
-        ResultApiPlace result = detailResult.getResult();
+    private void createRestaurant(ApiDetailResponse response){
+        ResultApiPlace result = response.getResult();
         String uid = result.getId();
         String name = result.getName();
         Double latitude = result.getGeometry().getLocation().getLat();
@@ -228,6 +236,9 @@ public class RestaurantDetailViewModel extends BaseViewModel {
                 break;
             case UPDATE_LIKED_RESTAURANT:
                 updateRestaurantLiked();
+                break;
+            case GET_RESTAURANT_DETAIL:
+                fetchInfoRestaurant();
                 break;
         }
 

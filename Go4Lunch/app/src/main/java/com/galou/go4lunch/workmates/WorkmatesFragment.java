@@ -18,6 +18,7 @@ import com.galou.go4lunch.databinding.FragmentWorkmatesBinding;
 import com.galou.go4lunch.injection.Injection;
 import com.galou.go4lunch.injection.ViewModelFactory;
 import com.galou.go4lunch.models.User;
+import com.galou.go4lunch.restoDetails.RestoDetailDialogFragment;
 import com.galou.go4lunch.util.ItemClickSupport;
 import com.galou.go4lunch.util.SnackBarUtil;
 
@@ -65,6 +66,7 @@ public class WorkmatesFragment extends Fragment implements WorkmateContract {
         setupListUsers();
         setupSnackBar();
         setupSnackBarWithAction();
+        setupOpenDetailRestaurant();
 
     }
 
@@ -96,6 +98,10 @@ public class WorkmatesFragment extends Fragment implements WorkmateContract {
 
     }
 
+    private void setupOpenDetailRestaurant(){
+        viewModel.getOpenDetailRestaurant().observe(this, open -> displayRestaurantDetail());
+    }
+
     // --------------------
     // CONFIGURE UI
     // --------------------
@@ -106,6 +112,7 @@ public class WorkmatesFragment extends Fragment implements WorkmateContract {
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
+        configureOnClickRecyclerView();
     }
 
     private void configureOnClickRecyclerView(){
@@ -125,5 +132,11 @@ public class WorkmatesFragment extends Fragment implements WorkmateContract {
         adapter.update(this.users);
         this.configureOnClickRecyclerView();
 
+    }
+
+    @Override
+    public void displayRestaurantDetail(){
+        RestoDetailDialogFragment restoDetailDialogFragment = new RestoDetailDialogFragment();
+        restoDetailDialogFragment.show(getActivity().getSupportFragmentManager(), "MODAL");
     }
 }
