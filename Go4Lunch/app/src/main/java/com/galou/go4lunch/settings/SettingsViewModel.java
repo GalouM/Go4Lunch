@@ -1,5 +1,7 @@
 package com.galou.go4lunch.settings;
 
+import android.app.Application;
+import android.content.Context;
 import android.net.Uri;
 
 import androidx.lifecycle.LiveData;
@@ -7,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.base.BaseViewModel;
+import com.galou.go4lunch.repositories.SaveDataRepository;
 import com.galou.go4lunch.util.SuccessOrign;
 import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.models.User;
@@ -46,7 +49,6 @@ public class SettingsViewModel extends BaseViewModel {
     //----- PRIVATE LIVE DATA -----
     private final MutableLiveData<Object> deleteUser = new MutableLiveData<>();
     private final MutableLiveData<Object> openDialog = new MutableLiveData<>();
-    private final MutableLiveData<String> userId = new MutableLiveData<>();
 
     //----- GETTER -----
     public LiveData<Object> getDeleteUser(){
@@ -55,16 +57,17 @@ public class SettingsViewModel extends BaseViewModel {
     public LiveData<Object> getOpenDialog() {
         return openDialog;
     }
-    public LiveData<String> getUserId() { return userId;}
 
     private String newUsername;
     private String newEmail;
     private String newPhotoUrl;
     private String urlPhotoSelected;
+    private SaveDataRepository saveDataRepository;
 
-    public SettingsViewModel(UserRepository userRepository) {
+    public SettingsViewModel(UserRepository userRepository, SaveDataRepository saveDataRepository) {
         this.userRepository = userRepository;
         user = userRepository.getUser();
+        this.saveDataRepository = saveDataRepository;
     }
 
     // --------------------
@@ -77,6 +80,12 @@ public class SettingsViewModel extends BaseViewModel {
 
     }
 
+    public void configureSaveDataRepo(Context context){
+        if(saveDataRepository.getPreferences() == null){
+            saveDataRepository.configureContext(context);
+        }
+    }
+
     // --------------------
     // UPDATE BINDING INFO
     // --------------------
@@ -86,8 +95,9 @@ public class SettingsViewModel extends BaseViewModel {
             username.setValue(user.getUsername());
             email.setValue(user.getEmail());
             urlPicture.setValue(user.getUrlPicture());
-            userId.setValue(user.getUid());
             isLoading.setValue(false);
+            isNotificationEnabled.setValue(saveDataRepository.getNotificationSettings());
+            saveDataRepository.saveUserId(user.getUid());
         }
     }
 
@@ -146,11 +156,13 @@ public class SettingsViewModel extends BaseViewModel {
 
     private void disableNotification(){
         snackBarText.setValue(R.string.notification_disabled);
+        saveDataRepository.saveNotificationSettings(false);
 
     }
 
     private void enableNotification(){
         snackBarText.setValue(R.string.notifications_enabled);
+        saveDataRepository.saveNotificationSettings(true);
 
     }
 

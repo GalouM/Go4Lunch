@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.galou.go4lunch.repositories.SaveDataRepository;
 import com.galou.go4lunch.restaurantsList.RestaurantsListViewModel;
 import com.galou.go4lunch.repositories.RestaurantRepository;
 import com.galou.go4lunch.repositories.UserRepository;
@@ -20,10 +21,12 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
 
     private final UserRepository userRepository;
     private final RestaurantRepository restaurantRepository;
+    private final SaveDataRepository saveDataRepository;
 
-    public ViewModelFactory(UserRepository userRepository, RestaurantRepository restaurantRepository){
+    public ViewModelFactory(UserRepository userRepository, RestaurantRepository restaurantRepository, SaveDataRepository saveDataRepository){
         this.userRepository = userRepository;
         this.restaurantRepository = restaurantRepository;
+        this.saveDataRepository = saveDataRepository;
     }
 
     @NonNull
@@ -36,7 +39,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             return (T) new MainActivityViewModel(userRepository, restaurantRepository);
         }
         if(modelClass.isAssignableFrom(SettingsViewModel.class)){
-            return (T) new SettingsViewModel(userRepository);
+            return (T) new SettingsViewModel(userRepository, saveDataRepository);
         }
         if(modelClass.isAssignableFrom(WorkmatesViewModel.class)){
             return (T) new WorkmatesViewModel(userRepository, restaurantRepository);
@@ -45,7 +48,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             return (T) new RestaurantsListViewModel(userRepository, restaurantRepository);
         }
         if(modelClass.isAssignableFrom(RestaurantDetailViewModel.class)){
-            return (T) new RestaurantDetailViewModel(userRepository, restaurantRepository);
+            return (T) new RestaurantDetailViewModel(userRepository, restaurantRepository, saveDataRepository);
         }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }

@@ -1,5 +1,7 @@
 package com.galou.go4lunch.restoDetails;
 
+import android.content.Context;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -10,6 +12,7 @@ import com.galou.go4lunch.models.Restaurant;
 import com.galou.go4lunch.models.ResultApiPlace;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.repositories.RestaurantRepository;
+import com.galou.go4lunch.repositories.SaveDataRepository;
 import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.util.OpeningHoursUtil;
 import com.galou.go4lunch.util.RatingUtil;
@@ -36,6 +39,7 @@ import static com.galou.go4lunch.util.RetryAction.UPDATE_PICKED_RESTAURANT;
 public class RestaurantDetailViewModel extends BaseViewModel {
 
     private RestaurantRepository restaurantRepository;
+    private SaveDataRepository saveDataRepository;
     private Restaurant restaurant;
     private Disposable disposable;
 
@@ -51,7 +55,6 @@ public class RestaurantDetailViewModel extends BaseViewModel {
     private MutableLiveData<List<User>> users = new MutableLiveData<>();
     private MutableLiveData<String> phoneNumber = new MutableLiveData<>();
     private MutableLiveData<String> webSite = new MutableLiveData<>();
-    private MutableLiveData<String> restaurantId = new MutableLiveData<>();
 
     public LiveData<List<User>> getUsers() {
         return users;
@@ -65,14 +68,17 @@ public class RestaurantDetailViewModel extends BaseViewModel {
         return webSite;
     }
 
-    public LiveData<String> getRestaurantId() {
-        return restaurantId;
-    }
-
-    public RestaurantDetailViewModel(UserRepository userRepository, RestaurantRepository restaurantRepository) {
+    public RestaurantDetailViewModel(UserRepository userRepository, RestaurantRepository restaurantRepository, SaveDataRepository saveDataRepository) {
         this.userRepository = userRepository;
         this.restaurantRepository = restaurantRepository;
+        this.saveDataRepository = saveDataRepository;
         user = userRepository.getUser();
+    }
+
+    public void configureSaveDataRepo(Context context){
+        if(saveDataRepository.getPreferences() == null){
+            saveDataRepository.configureContext(context);
+        }
     }
 
     public void fetchInfoRestaurant(){
@@ -203,11 +209,14 @@ public class RestaurantDetailViewModel extends BaseViewModel {
             userRepository.updateRestaurantPicked(null, null, user.getUid())
                     .addOnSuccessListener(onSuccessListener(REMOVE_RESTAURANT_PICKED))
                     .addOnFailureListener(this.onFailureListener(UPDATE_PICKED_RESTAURANT));
+            saveDataRepository.saveRestaurantId(null);
+            saveDataRepository.saveRestaurantName(null);
         } else {
             userRepository.updateRestaurantPicked(restaurant.getUid(), restaurant.getName(), user.getUid())
                     .addOnSuccessListener(onSuccessListener(UPDATE_RESTAURANT_PICKED))
                     .addOnFailureListener(this.onFailureListener(UPDATE_PICKED_RESTAURANT));
-            restaurantId.setValue(restaurant.getUid());
+            saveDataRepository.saveRestaurantId(restaurant.getUid());
+            saveDataRepository.saveRestaurantName(restaurant.getName());
         }
 
     }

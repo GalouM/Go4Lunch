@@ -73,6 +73,7 @@ public class RestoDetailDialogFragment extends BottomSheetDialogFragment impleme
         setupOpenPhoneIntent();
         setupOpenWebsite();
         setupUsers();
+        viewModel.configureSaveDataRepo(getContext());
 
     }
 
@@ -92,10 +93,6 @@ public class RestoDetailDialogFragment extends BottomSheetDialogFragment impleme
 
     private void setupUsers(){
         viewModel.getUsers().observe(this, this::showUsers);
-    }
-
-    private void setupRestaurantId() {
-        viewModel.getRestaurantId().observe(this, this::saveRestaurantPicked);
     }
 
     @Override
