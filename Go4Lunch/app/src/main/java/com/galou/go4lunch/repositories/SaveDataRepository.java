@@ -39,9 +39,9 @@ public class SaveDataRepository {
     }
 
     //-----SAVE------
-    public void saveNotificationSettings(boolean state){
+    public void saveNotificationSettings(boolean state, String userId){
         editor = preferences.edit();
-        editor.putBoolean(KEY_PREF_NOTIFICATION_ENABLE, state);
+        editor.putBoolean(userId, state);
         editor.apply();
     }
 
@@ -64,8 +64,8 @@ public class SaveDataRepository {
     }
 
     //-----GET------
-    public Boolean getNotificationSettings(){
-        return preferences.getBoolean(KEY_PREF_NOTIFICATION_ENABLE, true);
+    public Boolean getNotificationSettings(String userId){
+        return preferences.getBoolean(userId, true);
     }
 
     public String getUserId(){

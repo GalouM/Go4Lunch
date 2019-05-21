@@ -51,11 +51,11 @@ public class AuthenticationViewModel extends BaseViewModel {
             if (resultCode == RESULT_OK) { // SUCCESS
                 this.fetchCurrentUserFromFirestore();
             } else { // ERRORS
-                if (response == null) {
+                if (response == null && response.getError() != null) {
                     snackBarText.setValue(R.string.error_authentication_canceled);
-                } else if (response.getErrorCode() == ErrorCodes.NO_NETWORK) {
+                } else if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
                     snackBarWithAction.setValue(FETCH_USER);
-                } else if (response.getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
+                } else if (response.getError().getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
                     snackBarWithAction.setValue(FETCH_USER);
                 }
             }

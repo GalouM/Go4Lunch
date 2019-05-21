@@ -51,7 +51,8 @@ public class NotificationService extends FirebaseMessagingService {
         userRepository = UserRepository.getInstance();
         saveDataRepository = SaveDataRepository.getInstance();
         saveDataRepository.configureContext(getApplicationContext());
-        if(saveDataRepository.getNotificationSettings()
+        String userId = saveDataRepository.getUserId();
+        if(saveDataRepository.getNotificationSettings(userId)
                 && saveDataRepository.getRestaurantName() != null
                 && saveDataRepository.getUserId() != null){
             this.fetchInfoRestaurant();

@@ -115,10 +115,10 @@ public class AuthenticationActivity extends AppCompatActivity implements Authent
                 .createSignInIntentBuilder()
                 .setTheme(R.style.LoginTheme)
                 .setAvailableProviders(
-                        Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                                new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
-                                new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build(),
-                                new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build())
+                        Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build(),
+                                new AuthUI.IdpConfig.FacebookBuilder().build(),
+                                new AuthUI.IdpConfig.TwitterBuilder().build(),
+                                new AuthUI.IdpConfig.GoogleBuilder().build())
                 )
                 .setIsSmartLockEnabled(false, true)
                 .setLogo(R.drawable.go4lunch_icon)

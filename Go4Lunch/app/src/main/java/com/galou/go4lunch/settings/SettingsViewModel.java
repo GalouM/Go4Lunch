@@ -3,6 +3,7 @@ package com.galou.go4lunch.settings;
 import android.app.Application;
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -96,7 +97,7 @@ public class SettingsViewModel extends BaseViewModel {
             email.setValue(user.getEmail());
             urlPicture.setValue(user.getUrlPicture());
             isLoading.setValue(false);
-            isNotificationEnabled.setValue(saveDataRepository.getNotificationSettings());
+            isNotificationEnabled.setValue(saveDataRepository.getNotificationSettings(user.getUid()));
             saveDataRepository.saveUserId(user.getUid());
         }
     }
@@ -156,13 +157,13 @@ public class SettingsViewModel extends BaseViewModel {
 
     private void disableNotification(){
         snackBarText.setValue(R.string.notification_disabled);
-        saveDataRepository.saveNotificationSettings(false);
+        saveDataRepository.saveNotificationSettings(false, user.getUid());
 
     }
 
     private void enableNotification(){
         snackBarText.setValue(R.string.notifications_enabled);
-        saveDataRepository.saveNotificationSettings(true);
+        saveDataRepository.saveNotificationSettings(true, user.getUid());
 
     }
 
@@ -171,6 +172,7 @@ public class SettingsViewModel extends BaseViewModel {
     // --------------------
 
     private void uploadPhotoInFirebase(final String urlPhoto) {
+        Log.e("upload", " start");
         String uuid = UUID.randomUUID().toString();
         StorageReference imageRef = FirebaseStorage.getInstance().getReference(uuid);
         imageRef.putFile(Uri.parse(urlPhoto))
@@ -180,6 +182,7 @@ public class SettingsViewModel extends BaseViewModel {
     }
 
     private void getUrlPhotoFromFirebase(UploadTask.TaskSnapshot taskSnapshot){
+        Log.e("upload", "done");
         taskSnapshot.getMetadata().getReference().getDownloadUrl()
                 .addOnSuccessListener(uri -> {
                     newPhotoUrl = uri.toString();

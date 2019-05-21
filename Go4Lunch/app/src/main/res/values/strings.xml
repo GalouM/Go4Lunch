@@ -3,8 +3,12 @@
 
     ...
     <!-- FACEBOOK PURPOSE -->
-    <string name="facebook_app_id" translatable="false">291998568387613</string>
-    <string name="fb_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb291998568387613</string>
+    <string name="facebook_application_id" translatable="false">291998568387613</string>
+    <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb291998568387613</string>
+
+    <!-- TWITTER PURPOSE -->
+    <string name="twitter_consumer_key" translatable="false">WycYdreRH8oRFcflPs6pxEKzU</string>
+    <string name="twitter_consumer_secret" translatable="false">tgrzbtIG44VblotHB22JYJmGjZjhgcqDeAYjJLM8LKjJKwywuT</string>
 
     <!-- SNACKBAR MESSAGE -->
     <string name="connection_succeed">Connection succeed</string>
