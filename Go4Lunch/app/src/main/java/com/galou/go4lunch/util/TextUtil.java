@@ -1,5 +1,9 @@
 package com.galou.go4lunch.util;
 
+import com.google.common.base.Joiner;
+
+import java.util.List;
+
 /**
  * Created by galou on 2019-04-30
  */
@@ -12,6 +16,11 @@ public abstract class TextUtil {
 
     public static boolean isTextLongEnough(String text, int minSize){
         return text.length() >= minSize;
+
+    }
+
+    public static String convertListToString(List<String> listString){
+        return Joiner.on(", ").join(listString);
 
     }
 

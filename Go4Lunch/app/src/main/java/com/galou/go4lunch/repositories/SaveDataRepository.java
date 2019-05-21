@@ -14,9 +14,9 @@ public class SaveDataRepository {
 
     public static final String KEY_PREF_NOTIFICATION_ENABLE = "notificationEnabled";
     public static final String KEY_PREF = "prefNotification";
-    public static final String USER_ID = "userId";
-    public static final String RESTAURANT_NAME = "restaurantName";
-    public static final String RESTAURANT_ID = "restaurantId";
+    public static final String KEY_PREF_USER_ID = "userId";
+    public static final String KEY_PREF_RESTAURANT_NAME = "restaurantName";
+    public static final String KEY_PREF_RESTAURANT_ID = "restaurantId";
 
     private static volatile SaveDataRepository INSTANCE;
 
@@ -38,10 +38,7 @@ public class SaveDataRepository {
 
     }
 
-    public Boolean getNotificationSettings(){
-        return preferences.getBoolean(KEY_PREF_NOTIFICATION_ENABLE, true);
-    }
-
+    //-----SAVE------
     public void saveNotificationSettings(boolean state){
         editor = preferences.edit();
         editor.putBoolean(KEY_PREF_NOTIFICATION_ENABLE, state);
@@ -50,19 +47,36 @@ public class SaveDataRepository {
 
     public void saveUserId(String userId){
         editor = preferences.edit();
-        editor.putString(USER_ID, userId);
+        editor.putString(KEY_PREF_USER_ID, userId);
         editor.apply();
     }
 
     public void saveRestaurantName(String name){
         editor = preferences.edit();
-        editor.putString(RESTAURANT_NAME, name);
+        editor.putString(KEY_PREF_RESTAURANT_NAME, name);
         editor.apply();
     }
 
     public void saveRestaurantId(String id){
         editor = preferences.edit();
-        editor.putString(RESTAURANT_ID, id);
+        editor.putString(KEY_PREF_RESTAURANT_ID, id);
         editor.apply();
+    }
+
+    //-----GET------
+    public Boolean getNotificationSettings(){
+        return preferences.getBoolean(KEY_PREF_NOTIFICATION_ENABLE, true);
+    }
+
+    public String getUserId(){
+        return preferences.getString(KEY_PREF_USER_ID, null);
+    }
+
+    public String getRestaurantName(){
+        return preferences.getString(KEY_PREF_RESTAURANT_NAME, null);
+    }
+
+    public String getRestaurantId(){
+        return preferences.getString(KEY_PREF_RESTAURANT_ID, null);
     }
 }

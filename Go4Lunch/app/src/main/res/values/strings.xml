@@ -79,6 +79,8 @@
     <string name="not_eating_here">You are not eating here anymore</string>
     <string name="is_joining">%s is joining!</string>
     <string name="no_restaurant_picked_message">You haven\'t picked a restaurant yet</string>
+    <string name="notificcationChannel">notificationChannel</string>
+    <string name="title_notification">Your lunch today</string>
 
 
     <!-- NEW -->
