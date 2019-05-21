@@ -1,7 +1,5 @@
 package com.galou.go4lunch.restoDetails;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -53,6 +51,7 @@ public class RestaurantDetailViewModel extends BaseViewModel {
     private MutableLiveData<List<User>> users = new MutableLiveData<>();
     private MutableLiveData<String> phoneNumber = new MutableLiveData<>();
     private MutableLiveData<String> webSite = new MutableLiveData<>();
+    private MutableLiveData<String> restaurantId = new MutableLiveData<>();
 
     public LiveData<List<User>> getUsers() {
         return users;
@@ -66,6 +65,10 @@ public class RestaurantDetailViewModel extends BaseViewModel {
         return webSite;
     }
 
+    public LiveData<String> getRestaurantId() {
+        return restaurantId;
+    }
+
     public RestaurantDetailViewModel(UserRepository userRepository, RestaurantRepository restaurantRepository) {
         this.userRepository = userRepository;
         this.restaurantRepository = restaurantRepository;
@@ -76,19 +79,25 @@ public class RestaurantDetailViewModel extends BaseViewModel {
         isLoading.setValue(true);
         String uidSelection = restaurantRepository.getRestaurantSelected();
         boolean isRestaurantStored = false;
-        for(Restaurant restaurant : restaurantRepository.getRestaurantsLoaded()){
-            if(restaurant.getUid().equals(uidSelection)){
-                this.restaurant = restaurant;
-                isRestaurantStored = true;
-                break;
+        if(restaurantRepository.getRestaurantsLoaded() != null) {
+            for (Restaurant restaurant : restaurantRepository.getRestaurantsLoaded()) {
+                if (restaurant.getUid().equals(uidSelection)) {
+                    this.restaurant = restaurant;
+                    isRestaurantStored = true;
+                    break;
+                }
             }
-        } 
+        }
         if(isRestaurantStored){
             configureInfoRestaurant();
 
         } else{
             fetchDetailFromApi(uidSelection);
         }
+    }
+
+    public void destroyDisposable(){
+        if (this.disposable != null && !this.disposable.isDisposed()) this.disposable.dispose();
     }
 
     private void configureInfoRestaurant(){
@@ -100,8 +109,8 @@ public class RestaurantDetailViewModel extends BaseViewModel {
         websiteAvailable.setValue(restaurant.getWebSite() != null);
         phoneAvailable.setValue(restaurant.getPhoneNumber() != null);
         isRestaurantLiked.setValue(checkIfRestaurantIsLiked());
-        if(user.getRestaurant() != null) {
-            isRestaurantPicked.setValue(user.getRestaurant().equals(restaurant.getUid()));
+        if(user.getRestaurantUid() != null) {
+            isRestaurantPicked.setValue(user.getRestaurantUid().equals(restaurant.getUid()));
         } else {
             isRestaurantPicked.setValue(false);
         }
@@ -115,19 +124,21 @@ public class RestaurantDetailViewModel extends BaseViewModel {
 
     private void createRestaurant(ApiDetailResponse response){
         ResultApiPlace result = response.getResult();
-        String uid = result.getId();
-        String name = result.getName();
-        Double latitude = result.getGeometry().getLocation().getLat();
-        Double longitude = result.getGeometry().getLocation().getLng();
-        String photo = restaurantRepository.getPhotoRestaurant(result.getPhotos().get(0).getPhotoReference());
-        String address = result.getVicinity();
-        int openingHours = OpeningHoursUtil.getOpeningTime(result.getOpeningHours());
-        int rating = RatingUtil.calculateRating(result.getRating());
-        String webSite = result.getWebsite();
-        String phoneNumber = result.getPhoneNumber();
-        Restaurant restaurant = new Restaurant(uid, name, latitude, longitude, address, openingHours, photo, rating, phoneNumber, webSite);
-        this.restaurant = restaurant;
-        configureInfoRestaurant();
+        if(result != null) {
+            String uid = result.getId();
+            String name = result.getName();
+            Double latitude = result.getGeometry().getLocation().getLat();
+            Double longitude = result.getGeometry().getLocation().getLng();
+            String photo = restaurantRepository.getPhotoRestaurant(result.getPhotos().get(0).getPhotoReference());
+            String address = result.getVicinity();
+            int openingHours = OpeningHoursUtil.getOpeningTime(result.getOpeningHours());
+            int rating = RatingUtil.calculateRating(result.getRating());
+            String webSite = result.getWebsite();
+            String phoneNumber = result.getPhoneNumber();
+            Restaurant restaurant = new Restaurant(uid, name, latitude, longitude, address, openingHours, photo, rating, phoneNumber, webSite);
+            this.restaurant = restaurant;
+            configureInfoRestaurant();
+        }
 
     }
 
@@ -189,13 +200,14 @@ public class RestaurantDetailViewModel extends BaseViewModel {
     public void updatePickedRestaurant() {
         isLoading.setValue(true);
         if(isRestaurantPicked.getValue()){
-            userRepository.updateRestaurantPicked(null, user.getUid())
+            userRepository.updateRestaurantPicked(null, null, user.getUid())
                     .addOnSuccessListener(onSuccessListener(REMOVE_RESTAURANT_PICKED))
                     .addOnFailureListener(this.onFailureListener(UPDATE_PICKED_RESTAURANT));
         } else {
-            userRepository.updateRestaurantPicked(restaurant.getUid(), user.getUid())
+            userRepository.updateRestaurantPicked(restaurant.getUid(), restaurant.getName(), user.getUid())
                     .addOnSuccessListener(onSuccessListener(UPDATE_RESTAURANT_PICKED))
                     .addOnFailureListener(this.onFailureListener(UPDATE_PICKED_RESTAURANT));
+            restaurantId.setValue(restaurant.getUid());
         }
 
     }
@@ -207,11 +219,14 @@ public class RestaurantDetailViewModel extends BaseViewModel {
                     snackBarText.setValue(R.string.eating_here_today);
                     isRestaurantPicked.setValue(true);
                     restaurant.addUser(user);
+                    fetchInfoRestaurant();
                     isLoading.setValue(false);
                     break;
                 case REMOVE_RESTAURANT_PICKED:
                     snackBarText.setValue(R.string.not_eating_here);
                     isRestaurantPicked.setValue(false);
+                    restaurant.removeUser(user);
+                    fetchInfoRestaurant();
                     isLoading.setValue(false);
                     break;
                 case UPDATE_RESTAURANT_LIKED:

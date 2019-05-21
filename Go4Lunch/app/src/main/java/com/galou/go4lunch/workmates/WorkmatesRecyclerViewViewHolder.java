@@ -32,10 +32,10 @@ public class WorkmatesRecyclerViewViewHolder extends RecyclerView.ViewHolder {
 
     void updateWithUser(User user, RequestManager glide){
         String textToDisplay;
-        if(user.getRestaurant() != null){
+        if(user.getRestaurantName() != null){
             textToDisplay = String.format(res.getString(R.string.display_text_user_list),
                     user.getUsername(),
-                    user.getRestaurant());
+                    user.getRestaurantName());
 
         } else {
             textToDisplay = String.format(res.getString(R.string.display_text_user_list_not_decided), user.getUsername());

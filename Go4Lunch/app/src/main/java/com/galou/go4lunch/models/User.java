@@ -14,7 +14,8 @@ public class User {
     private String username;
     private String email;
     @Nullable private String urlPicture;
-    @Nullable private String restaurant;
+    @Nullable private String restaurantUid;
+    @Nullable private String restaurantName;
     private List<String> likedRestaurants;
 
     public User(){}
@@ -56,12 +57,12 @@ public class User {
     }
 
     @Nullable
-    public String getRestaurant() {
-        return restaurant;
+    public String getRestaurantUid() {
+        return restaurantUid;
     }
 
-    public void setRestaurant(@Nullable String restaurant) {
-        this.restaurant = restaurant;
+    public void setRestaurantUid(@Nullable String restaurantUid) {
+        this.restaurantUid = restaurantUid;
     }
 
     public String getEmail() {
@@ -93,6 +94,15 @@ public class User {
         }
     }
 
+    @Nullable
+    public String getRestaurantName() {
+        return restaurantName;
+    }
+
+    public void setRestaurantName(@Nullable String restaurantName) {
+        this.restaurantName = restaurantName;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -100,7 +110,7 @@ public class User {
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", urlPicture='" + urlPicture + '\'' +
-                ", restaurant='" + restaurant + '\'' +
+                ", restaurantUid='" + restaurantUid + '\'' +
                 ", likedRestaurants=" + likedRestaurants +
                 '}';
     }

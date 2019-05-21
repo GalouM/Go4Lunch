@@ -1,6 +1,5 @@
 package com.galou.go4lunch.main;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -11,12 +10,7 @@ import com.galou.go4lunch.R;
 import com.galou.go4lunch.base.BaseViewModel;
 import com.galou.go4lunch.repositories.RestaurantRepository;
 import com.galou.go4lunch.repositories.UserRepository;
-import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.util.RetryAction;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import static com.galou.go4lunch.util.RetryAction.FETCH_USER;
 
 /**
  * Created by galou on 2019-04-23
@@ -25,8 +19,7 @@ public class MainActivityViewModel extends BaseViewModel {
 
     //----- PRIVATE LIVE DATA -----
     private final MutableLiveData<Object> logoutRequested = new MutableLiveData<>();
-    private final MutableLiveData<Object> settingsRequested = new MutableLiveData<>();
-    private final MutableLiveData<Object> openSignInActivityEvent = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> settingsRequested = new MutableLiveData<>();
     private final MutableLiveData<Object> openDetailRestaurant = new MutableLiveData<>();
 
     //----- PUBLIC LIVE DATA -----
@@ -44,7 +37,7 @@ public class MainActivityViewModel extends BaseViewModel {
     public LiveData<Object> getLogout() {
         return logoutRequested;
     }
-    public LiveData<Object> getSettings() { return settingsRequested; }
+    public LiveData<Boolean> getSettings() { return settingsRequested; }
     public LiveData<Object> getOpenDetailRestaurant() { return openDetailRestaurant; }
 
     public MainActivityViewModel(UserRepository userRepository, RestaurantRepository restaurantRepository) {
@@ -76,11 +69,12 @@ public class MainActivityViewModel extends BaseViewModel {
     }
 
     public void openSettings(){
-        settingsRequested.setValue(new Object());
+        settingsRequested.setValue(true);
     }
+    public void closeSettings() { settingsRequested.setValue(false);}
 
     public void updateRestaurantToDisplay() {
-        String uidRestaurant = user.getRestaurant();
+        String uidRestaurant = user.getRestaurantUid();
         if(uidRestaurant != null) {
             restaurantRepository.setRestaurantSelected(uidRestaurant);
             openDetailRestaurant.setValue(new Object());

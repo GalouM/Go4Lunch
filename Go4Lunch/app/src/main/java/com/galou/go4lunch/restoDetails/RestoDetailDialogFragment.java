@@ -50,6 +50,12 @@ public class RestoDetailDialogFragment extends BottomSheetDialogFragment impleme
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        viewModel.destroyDisposable();
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         configureBindingAndViewModel(view);
         viewModel.fetchInfoRestaurant();
@@ -88,6 +94,10 @@ public class RestoDetailDialogFragment extends BottomSheetDialogFragment impleme
         viewModel.getUsers().observe(this, this::showUsers);
     }
 
+    private void setupRestaurantId() {
+        viewModel.getRestaurantId().observe(this, this::saveRestaurantPicked);
+    }
+
     @Override
     public void openPhoneIntent(String phoneNumber) {
         Intent intent = new Intent(Intent.ACTION_DIAL);
@@ -100,6 +110,11 @@ public class RestoDetailDialogFragment extends BottomSheetDialogFragment impleme
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlWebsite));
         startActivity(intent);
 
+
+    }
+
+    @Override
+    public void saveRestaurantPicked(String id) {
 
     }
 

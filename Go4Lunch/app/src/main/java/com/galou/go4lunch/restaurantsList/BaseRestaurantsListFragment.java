@@ -29,6 +29,12 @@ public abstract class BaseRestaurantsListFragment extends Fragment implements Re
 
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        viewModel.destroyDisposable();
+    }
+
     protected RestaurantsListViewModel obtainViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory();
         return ViewModelProviders.of(this, viewModelFactory)

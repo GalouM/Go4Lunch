@@ -105,6 +105,18 @@ public class Restaurant {
         usersEatingHere.add(user);
     }
 
+    public void removeUser(User userToDelete){
+        String uidUser = userToDelete.getUid();
+        int position = 0;
+        for(User user : usersEatingHere){
+            if(user.getUid().equals(uidUser)){
+                usersEatingHere.remove(position);
+                break;
+            }
+            position += 1;
+        }
+    }
+
     public List<User> getUsersEatingHere(){
         return usersEatingHere;
     }

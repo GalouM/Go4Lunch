@@ -75,7 +75,7 @@
     <string name="website_button_text">WEBSITE</string>
     <string name="liked_text_button">LIKED</string>
     <string name="eating_here_today">You are eating here today</string>
-    <string name="restaurant_liked">You liked this restaurant</string>
+    <string name="restaurant_liked">You liked this restaurantUid</string>
     <string name="not_eating_here">You are not eating here anymore</string>
     <string name="is_joining">%s is joining!</string>
     <string name="no_restaurant_picked_message">You haven\'t picked a restaurant yet</string>

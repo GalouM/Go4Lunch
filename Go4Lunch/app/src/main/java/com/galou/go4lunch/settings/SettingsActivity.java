@@ -1,6 +1,8 @@
 package com.galou.go4lunch.settings;
 
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -41,6 +43,8 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
     private ActivitySettingsBinding binding;
     private SettingsViewModel viewModel;
 
+    private String userId;
+
     // DATA FOR PICTURE
     private static final String PERMS = Manifest.permission.READ_EXTERNAL_STORAGE;
     private static final int RC_IMAGE_PERMS = 100;
@@ -50,6 +54,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
     private SharedPreferences preferences;
     public static final String KEY_PREF_NOTIFICATION_ENABLE = "notificationEnabled";
     public static final String KEY_PREF = "prefNotification";
+    public static final String USER_ID = "userId";
 
     // FOR TESTING
     @VisibleForTesting
@@ -112,6 +117,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
         setupSnackBarWithAction();
         setupOpenConfirmationDialog();
         setupDeleteAccount();
+        setupUserId();
 
     }
 
@@ -147,6 +153,10 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
 
     private void setupOpenConfirmationDialog(){
         viewModel.getOpenDialog().observe(this, dialog -> openConfirmationDialog());
+    }
+
+    private void setupUserId(){
+        viewModel.getUserId().observe(this, id -> userId = id);
     }
 
     //----- LISTENER BUTTON -----
@@ -219,6 +229,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
     public void saveNotificationSettings(boolean state){
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(KEY_PREF_NOTIFICATION_ENABLE, state);
+        editor.putString(USER_ID, userId);
         editor.apply();
     }
 
@@ -256,6 +267,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
 
     }
+
 
 
     // -----------------

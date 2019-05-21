@@ -31,7 +31,6 @@ public class RestaurantDetailRVViewHolder extends RecyclerView.ViewHolder {
     }
 
     void updateWithUser(User user, RequestManager glide){
-
         textView.setText(String.format(res.getString(R.string.is_joining), user.getUsername()));
 
         if(user.getUrlPicture() != null){

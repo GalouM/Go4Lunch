@@ -74,7 +74,7 @@ public class WorkmatesViewModel extends BaseViewModel {
     }
 
     public void updateRestaurantToDisplay(User userSelected) {
-        String uidRestaurant = userSelected.getRestaurant();
+        String uidRestaurant = userSelected.getRestaurantUid();
         if(uidRestaurant != null) {
             restaurantRepository.setRestaurantSelected(uidRestaurant);
             openDetailRestaurant.setValue(new Object());

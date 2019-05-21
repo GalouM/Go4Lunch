@@ -46,6 +46,7 @@ public class SettingsViewModel extends BaseViewModel {
     //----- PRIVATE LIVE DATA -----
     private final MutableLiveData<Object> deleteUser = new MutableLiveData<>();
     private final MutableLiveData<Object> openDialog = new MutableLiveData<>();
+    private final MutableLiveData<String> userId = new MutableLiveData<>();
 
     //----- GETTER -----
     public LiveData<Object> getDeleteUser(){
@@ -54,6 +55,7 @@ public class SettingsViewModel extends BaseViewModel {
     public LiveData<Object> getOpenDialog() {
         return openDialog;
     }
+    public LiveData<String> getUserId() { return userId;}
 
     private String newUsername;
     private String newEmail;
@@ -62,6 +64,7 @@ public class SettingsViewModel extends BaseViewModel {
 
     public SettingsViewModel(UserRepository userRepository) {
         this.userRepository = userRepository;
+        user = userRepository.getUser();
     }
 
     // --------------------
@@ -70,18 +73,8 @@ public class SettingsViewModel extends BaseViewModel {
 
     public void configureUser(){
         isLoading.setValue(true);
-        if(userRepository.getUser() == null) {
-            userRepository.getUserFromFirebase(getCurrentUserUid())
-                    .addOnFailureListener(this.onFailureListener(FETCH_USER))
-                    .addOnSuccessListener(documentSnapshot -> {
-                        user = documentSnapshot.toObject(User.class);
-                        userRepository.updateUserRepository(user);
-                        this.configureInfoUser();
-                    });
-        } else {
-            user = userRepository.getUser();
-            this.configureInfoUser();
-        }
+        this.configureInfoUser();
+
     }
 
     // --------------------
@@ -93,6 +86,7 @@ public class SettingsViewModel extends BaseViewModel {
             username.setValue(user.getUsername());
             email.setValue(user.getEmail());
             urlPicture.setValue(user.getUrlPicture());
+            userId.setValue(user.getUid());
             isLoading.setValue(false);
         }
     }

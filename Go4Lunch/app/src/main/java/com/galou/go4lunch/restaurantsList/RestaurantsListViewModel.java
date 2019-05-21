@@ -1,7 +1,5 @@
 package com.galou.go4lunch.restaurantsList;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -20,6 +18,7 @@ import com.galou.go4lunch.util.OpeningHoursUtil;
 import com.galou.go4lunch.util.RatingUtil;
 import com.galou.go4lunch.util.RetryAction;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
@@ -39,7 +38,6 @@ public class RestaurantsListViewModel extends BaseViewModel {
     private RestaurantRepository restaurantRepository;
     private Disposable disposableRestaurant;
     private Disposable disposableDistance;
-    private Disposable disposablePhoto;
     private List<Restaurant> restaurants;
     private List<User> users;
 
@@ -102,6 +100,11 @@ public class RestaurantsListViewModel extends BaseViewModel {
         }
     }
 
+    public void destroyDisposable(){
+        if (this.disposableRestaurant != null && !this.disposableRestaurant.isDisposed()) this.disposableRestaurant.dispose();
+        if (this.disposableDistance != null && !this.disposableDistance.isDisposed()) this.disposableDistance.dispose();
+    }
+
     // --------------------
     // OBSERVER API
     // --------------------
@@ -159,7 +162,7 @@ public class RestaurantsListViewModel extends BaseViewModel {
         restaurants = new ArrayList<>();
         for (ApiDetailResponse detailResult : results){
             ResultApiPlace result = detailResult.getResult();
-            String uid = result.getId();
+            String uid = result.getPlaceId();
             String name = result.getName();
             Double latitude = result.getGeometry().getLocation().getLat();
             Double longitude = result.getGeometry().getLocation().getLng();
@@ -193,8 +196,8 @@ public class RestaurantsListViewModel extends BaseViewModel {
 
     private void checkUserRestaurant(){
         for (User user : users) {
-            if (user.getRestaurant() != null) {
-                String restaurantPicked = user.getRestaurant();
+            if (user.getRestaurantUid() != null) {
+                String restaurantPicked = user.getRestaurantUid();
                 for (Restaurant restaurant : restaurants) {
                     String restaurantUid = restaurant.getUid();
                     if (restaurantUid.equals(restaurantPicked)) {

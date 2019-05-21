@@ -1,8 +1,11 @@
 package com.galou.go4lunch.main;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -38,8 +41,16 @@ import com.galou.go4lunch.settings.SettingsActivity;
 import com.galou.go4lunch.util.RetryAction;
 import com.galou.go4lunch.util.SnackBarUtil;
 import com.galou.go4lunch.workmates.WorkmatesFragment;
+import com.google.android.libraries.places.api.model.AutocompletePrediction;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainActivityContract {
 
@@ -47,9 +58,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private Toolbar toolbar;
-    private ActivityMainBinding binding;
 
+    private ActivityMainBinding binding;
     private MainActivityViewModel viewModel;
+
+    private int AUTOCOMPLETE_REQUEST_CODE = 1;
+    private List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+
+    public static final String CHANNEL_ID = "channelID";
 
     // --------------------
     // LIFE CYCLE STATE
@@ -61,17 +77,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.configureBindingAndViewModel();
         this.configureUI();
         this.createViewModelConnections();
+        this.createNotificationChannel();
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.e("resume", "main");
         viewModel.configureInfoUser();
+        viewModel.closeSettings();
         for (int i = 0; i < navigationView.getMenu().size(); i++) {
             navigationView.getMenu().getItem(i).setChecked(false);
         }
     }
+
 
     // --------------------
     // VIEW MODEL CONNECTIONS
@@ -112,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void setupSettingsRequest(){
-        viewModel.getSettings().observe(this, setting -> settings());
+        viewModel.getSettings().observe(this, this::settings);
     }
 
     private void setupOpenDetailRestaurant(){
@@ -156,19 +176,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_activity_menu, menu);
-
-        MenuItem searchItem = menu.findItem(R.id.menu_main_activity_search);
-        SearchManager searchManager = (SearchManager) MainActivity.this.getSystemService(Context.SEARCH_SERVICE);
-
-        SearchView searchView = null;
-        if(searchItem != null){
-            searchView = (SearchView) searchItem.getActionView();
-        }
-        if(searchView != null){
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(MainActivity.this.getComponentName()));
-        }
-
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id  = item.getItemId();
+        if(id == R.id.menu_main_activity_search){
+            Intent intent = new Autocomplete.IntentBuilder(
+                    AutocompleteActivityMode.OVERLAY, fields)
+                    .build(this);
+            startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
 
     }
 
@@ -279,9 +300,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void settings() {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
+    public void settings(Boolean setting) {
+        if(setting) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+        }
 
     }
 
@@ -289,6 +312,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void displayRestaurantDetail(){
         RestoDetailDialogFragment restoDetailDialogFragment = new RestoDetailDialogFragment();
         restoDetailDialogFragment.show(getSupportFragmentManager(), "MODAL");
+    }
+
+    // -----------------
+    // CREATE NOTIFICATION CHANNEL
+    // -----------------
+
+    private void createNotificationChannel(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            CharSequence name = "My News channel";
+            String description = "Notification channel for My News";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     // --------------------

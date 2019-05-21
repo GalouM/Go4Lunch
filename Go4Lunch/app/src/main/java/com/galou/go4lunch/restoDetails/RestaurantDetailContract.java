@@ -12,4 +12,5 @@ public interface RestaurantDetailContract {
     void openPhoneIntent(String phoneNumber);
     void openWebViewIntent(String urlWebsite);
     void showUsers(List<User> users);
+    void saveRestaurantPicked(String id);
 }
