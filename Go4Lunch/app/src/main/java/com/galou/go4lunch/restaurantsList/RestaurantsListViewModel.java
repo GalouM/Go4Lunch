@@ -161,21 +161,12 @@ public class RestaurantsListViewModel extends BaseViewModel {
     private void createRestaurantList(List<ApiDetailResponse> results){
         restaurants = new ArrayList<>();
         for (ApiDetailResponse detailResult : results){
-            ResultApiPlace result = detailResult.getResult();
-            String uid = result.getPlaceId();
-            String name = result.getName();
-            Double latitude = result.getGeometry().getLocation().getLat();
-            Double longitude = result.getGeometry().getLocation().getLng();
-            String photo = restaurantRepository.getPhotoRestaurant(result.getPhotos().get(0).getPhotoReference());
-            String address = result.getVicinity();
-            int openingHours = OpeningHoursUtil.getOpeningTime(result.getOpeningHours());
-            int rating = RatingUtil.calculateRating(result.getRating());
-            String webSite = result.getWebsite();
-            String phoneNumber = result.getPhoneNumber();
-            Restaurant restaurant = new Restaurant(uid, name, latitude, longitude, address, openingHours, photo, rating, phoneNumber, webSite);
-            restaurants.add(restaurant);
-            LatLng positionRestaurant = new LatLng(latitude, longitude);
-            this.disposableDistance = restaurantRepository.getDistanceToPoint(convertLocationForApi(positionRestaurant)).subscribeWith(getObserverDistance(restaurant));
+            if(detailResult.getResult() != null) {
+                Restaurant restaurant = restaurantRepository.createRestaurant(detailResult.getResult());
+                restaurants.add(restaurant);
+                LatLng positionRestaurant = new LatLng(restaurant.getLatitude(), restaurant.getLongitude());
+                this.disposableDistance = restaurantRepository.getDistanceToPoint(convertLocationForApi(positionRestaurant)).subscribeWith(getObserverDistance(restaurant));
+            }
 
         }
         this.fetchListUser();

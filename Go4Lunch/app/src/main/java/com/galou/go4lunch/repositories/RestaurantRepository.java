@@ -7,6 +7,8 @@ import com.galou.go4lunch.models.DistanceApiResponse;
 import com.galou.go4lunch.models.Restaurant;
 import com.galou.go4lunch.models.ResultApiPlace;
 import com.galou.go4lunch.models.User;
+import com.galou.go4lunch.util.OpeningHoursUtil;
+import com.galou.go4lunch.util.RatingUtil;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -98,8 +100,20 @@ public class RestaurantRepository {
         return restaurantSelected;
     }
 
-    public void setUserEatingRestaurant(int position, User user){
-        restaurants.get(position).addUser(user);
+    public Restaurant createRestaurant(ResultApiPlace result){
+        String uid = result.getPlaceId();
+        String name = result.getName();
+        Double latitude = result.getGeometry().getLocation().getLat();
+        Double longitude = result.getGeometry().getLocation().getLng();
+        String photo = this.getPhotoRestaurant(result.getPhotos().get(0).getPhotoReference());
+        String address = result.getVicinity();
+        int openingHours = OpeningHoursUtil.getOpeningTime(result.getOpeningHours());
+        int rating = RatingUtil.calculateRating(result.getRating());
+        String webSite = result.getWebsite();
+        String phoneNumber = result.getPhoneNumber();
+        return new Restaurant(uid, name, latitude, longitude, address, openingHours, photo, rating, phoneNumber, webSite);
+
+
     }
 
 

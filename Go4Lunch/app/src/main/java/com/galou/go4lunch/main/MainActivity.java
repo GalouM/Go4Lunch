@@ -65,8 +65,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private int AUTOCOMPLETE_REQUEST_CODE = 1;
     private List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
 
-    public static final String CHANNEL_ID = "channelID";
-
     // --------------------
     // LIFE CYCLE STATE
     // --------------------
@@ -77,14 +75,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.configureBindingAndViewModel();
         this.configureUI();
         this.createViewModelConnections();
-        this.createNotificationChannel();
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e("resume", "main");
         viewModel.configureInfoUser();
         viewModel.closeSettings();
         for (int i = 0; i < navigationView.getMenu().size(); i++) {
@@ -312,22 +308,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void displayRestaurantDetail(){
         RestoDetailDialogFragment restoDetailDialogFragment = new RestoDetailDialogFragment();
         restoDetailDialogFragment.show(getSupportFragmentManager(), "MODAL");
-    }
-
-    // -----------------
-    // CREATE NOTIFICATION CHANNEL
-    // -----------------
-
-    private void createNotificationChannel(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            CharSequence name = "My News channel";
-            String description = "Notification channel for My News";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
     }
 
     // --------------------

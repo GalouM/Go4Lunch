@@ -172,10 +172,8 @@ public class SettingsViewModel extends BaseViewModel {
     // --------------------
 
     private void uploadPhotoInFirebase(final String urlPhoto) {
-        Log.e("upload", " start");
         String uuid = UUID.randomUUID().toString();
         StorageReference imageRef = FirebaseStorage.getInstance().getReference(uuid);
-        Log.e("upload", "storage ref");
         imageRef.putFile(Uri.parse(urlPhoto))
                 .addOnSuccessListener(this::getUrlPhotoFromFirebase)
                 .addOnFailureListener(this.onFailureListener(UPDATE_PHOTO_DB));
@@ -183,7 +181,6 @@ public class SettingsViewModel extends BaseViewModel {
     }
 
     private void getUrlPhotoFromFirebase(UploadTask.TaskSnapshot taskSnapshot){
-        Log.e("upload", "done");
         taskSnapshot.getMetadata().getReference().getDownloadUrl()
                 .addOnSuccessListener(uri -> {
                     newPhotoUrl = uri.toString();

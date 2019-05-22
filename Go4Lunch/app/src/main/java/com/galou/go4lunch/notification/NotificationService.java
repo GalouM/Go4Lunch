@@ -71,7 +71,7 @@ public class NotificationService extends FirebaseMessagingService {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()){
                         User user = documentSnapshot.toObject(User.class);
-                        if(user != null){
+                        if(user != null && user.getRestaurantUid() != null){
                             String restaurantUid = user.getRestaurantUid();
                             if(restaurantUid.equals(restaurantId)){
                                 usersName.add(user.getUsername());

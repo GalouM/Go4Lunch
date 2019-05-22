@@ -41,6 +41,10 @@ public class RestoDetailDialogFragment extends BottomSheetDialogFragment impleme
     private RestaurantDetailRVAdapter adapter;
     private RecyclerView recyclerView;
 
+    // --------------------
+    // LIFE CYCLE SATE
+    // --------------------
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -58,10 +62,13 @@ public class RestoDetailDialogFragment extends BottomSheetDialogFragment impleme
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         configureBindingAndViewModel(view);
-        viewModel.fetchInfoRestaurant();
         configureRecycleView(view);
 
     }
+
+    // --------------------
+    // VIEW MODEL CONNECTIONS
+    // --------------------
 
     private void configureBindingAndViewModel(View view) {
         binding = FragmentItemListDialogBinding.bind(view);
@@ -73,6 +80,7 @@ public class RestoDetailDialogFragment extends BottomSheetDialogFragment impleme
         setupOpenPhoneIntent();
         setupOpenWebsite();
         setupUsers();
+        viewModel.fetchInfoRestaurant();
         viewModel.configureSaveDataRepo(getContext());
 
     }
@@ -95,42 +103,6 @@ public class RestoDetailDialogFragment extends BottomSheetDialogFragment impleme
         viewModel.getUsers().observe(this, this::showUsers);
     }
 
-    @Override
-    public void openPhoneIntent(String phoneNumber) {
-        Intent intent = new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse(String.format("tel:%s", phoneNumber)));
-        startActivity(intent);
-    }
-
-    @Override
-    public void openWebViewIntent(String urlWebsite) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlWebsite));
-        startActivity(intent);
-
-
-    }
-
-    @Override
-    public void saveRestaurantPicked(String id) {
-
-    }
-
-    private void configureRecycleView(View view){
-        users = new ArrayList<>();
-        adapter = new RestaurantDetailRVAdapter(users, Glide.with(this));
-        recyclerView = view.findViewById(R.id.recycler_view_detail_resto);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(adapter);
-    }
-
-
-    @Override
-    public void showUsers(List<User> users){
-        this.users = users;
-        adapter.update(this.users);
-
-    }
-
     private ButtonActionListener getButtonActionListener(){
         return view -> {
             int id = view.getId();
@@ -151,6 +123,51 @@ public class RestoDetailDialogFragment extends BottomSheetDialogFragment impleme
 
         };
     }
+
+    // --------------------
+    // ACTION FROM VIEWMODEL
+    // --------------------
+
+    @Override
+    public void openPhoneIntent(String phoneNumber) {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse(String.format("tel:%s", phoneNumber)));
+        startActivity(intent);
+    }
+
+    @Override
+    public void openWebViewIntent(String urlWebsite) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlWebsite));
+        startActivity(intent);
+
+
+    }
+
+    @Override
+    public void saveRestaurantPicked(String id) {
+
+    }
+
+    @Override
+    public void showUsers(List<User> users){
+        this.users = users;
+        adapter.update(this.users);
+
+    }
+
+    // --------------------
+    // CONFIGURE UI
+    // --------------------
+
+    private void configureRecycleView(View view){
+        users = new ArrayList<>();
+        adapter = new RestaurantDetailRVAdapter(users, Glide.with(this));
+        recyclerView = view.findViewById(R.id.recycler_view_detail_resto);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(adapter);
+    }
+
+
 
 
 
