@@ -19,6 +19,8 @@ import androidx.fragment.app.Fragment;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.databinding.FragmentMapViewBinding;
 import com.galou.go4lunch.models.Restaurant;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -29,6 +31,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
@@ -52,10 +55,6 @@ public class MapViewFragment extends BaseRestaurantsListFragment implements OnMa
 
     private FragmentMapViewBinding binding;
 
-    // FOR GPS PERMISSION
-    private static final String PERMS = Manifest.permission.ACCESS_FINE_LOCATION;
-    private static final int RC_LOCATION_PERMS = 100;
-
     private static float ZOOM_USER_LOCATION_VALUE = 15;
 
     // FOR MAP STATE WHEN ROTATE
@@ -74,6 +73,7 @@ public class MapViewFragment extends BaseRestaurantsListFragment implements OnMa
         View view = inflater.inflate(R.layout.fragment_map_view, container, false);
         Places.initialize(getApplicationContext(), getString(R.string.google_api_key));
         PlacesClient placesClient = Places.createClient(getActivity());
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         this.configureBindingAndViewModel(view);
         this.createViewModelConnections();
@@ -132,24 +132,19 @@ public class MapViewFragment extends BaseRestaurantsListFragment implements OnMa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
-        this.setupMap();
+        this.fetchLastKnowLocation();
 
     }
 
-    @AfterPermissionGranted(RC_LOCATION_PERMS)
-    private void setupMap(){
-        if(! EasyPermissions.hasPermissions(getActivity(), PERMS)){
-            EasyPermissions.requestPermissions(
-                    this, getString(R.string.need_permission_message), RC_LOCATION_PERMS, PERMS);
-            return;
-        }
+    @Override
+    protected void setupLocation(){
         this.displayLocationUser();
         if(cameraInitialPosition != null){
             this.googleMap.moveCamera(cameraInitialPosition);
         } else {
             this.centerCameraOnGPSLocation();
         }
-        viewModel.setupLocation(convertLocationForApi(getLocationUser()));
+        viewModel.setupLocation(convertLocationForApi(locationUser));
         viewModel.requestListRestaurants();
 
     }
@@ -181,16 +176,11 @@ public class MapViewFragment extends BaseRestaurantsListFragment implements OnMa
     }
 
     @SuppressLint("MissingPermission")
-    private void centerCameraOnGPSLocation(){
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(getLocationUser()));
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(ZOOM_USER_LOCATION_VALUE));
-    }
-
-    @SuppressLint("MissingPermission")
-    private LatLng getLocationUser() {
-        LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        Location currentLocation = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        return (new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
+    private void centerCameraOnGPSLocation() {
+        if (locationUser != null){
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(locationUser));
+            googleMap.animateCamera(CameraUpdateFactory.zoomTo(ZOOM_USER_LOCATION_VALUE));
+        }
     }
 
     // --------------------
@@ -223,29 +213,4 @@ public class MapViewFragment extends BaseRestaurantsListFragment implements OnMa
 
     }
 
-    // --------------------
-    // PERMISSIONS
-    // --------------------
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-    }
-
-
-
-    @Override
-    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-        if (requestCode == RC_LOCATION_PERMS){
-            setupMap();
-        }
-
-    }
-
-
-    @Override
-    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
-
-    }
 }

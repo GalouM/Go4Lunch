@@ -16,9 +16,12 @@ import com.galou.go4lunch.databinding.FragmentListViewBinding;
 import com.galou.go4lunch.models.Restaurant;
 import com.galou.go4lunch.restoDetails.RestoDetailDialogFragment;
 import com.galou.go4lunch.util.ItemClickSupport;
+import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.galou.go4lunch.util.PositionUtil.convertLocationForApi;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,6 +45,7 @@ public class ListViewFragment extends BaseRestaurantsListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list_view, container, false);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         this.configureRecycleView(view);
         this.configureBindingAndViewModel(view);
         this.createViewModelConnections();
@@ -73,6 +77,12 @@ public class ListViewFragment extends BaseRestaurantsListFragment {
 
     }
 
+    @Override
+    protected void setupLocation() {
+        viewModel.setupLocation(convertLocationForApi(locationUser));
+        viewModel.requestListRestaurants();
+
+    }
 
     // --------------------
     // ACTION FROM VIEWMODEL

@@ -59,10 +59,16 @@ public class RestaurantRepository {
     public Observable<List<ApiDetailResponse>> streamFetchListRestaurantDetails(){
         return streamFetchRestaurantsNearBy(this.location)
                 .map(ApiNearByResponse::getResults)
-                .concatMap((Function<List<ResultApiPlace>, Observable<List<ApiDetailResponse>>>) results -> Observable.fromIterable(results)
-                        .concatMap((Function<ResultApiPlace, Observable<ApiDetailResponse>>) result -> streamFetchRestaurantDetails(result.getPlaceId()))
-                        .toList()
-                        .toObservable());
+                .concatMap((Function<List<ResultApiPlace>, Observable<List<ApiDetailResponse>>>) results -> {
+                    if(results != null && results.size() > 0) {
+                         return Observable.fromIterable(results)
+                                .concatMap((Function<ResultApiPlace, Observable<ApiDetailResponse>>) result -> streamFetchRestaurantDetails(result.getPlaceId()))
+                                .toList()
+                                .toObservable();
+                    } else {
+                        return null;
+                    }
+                });
     }
 
     public Observable<DistanceApiResponse> getDistanceToPoint(String point){

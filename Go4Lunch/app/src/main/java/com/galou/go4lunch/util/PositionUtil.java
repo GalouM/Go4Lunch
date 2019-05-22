@@ -8,10 +8,13 @@ import com.google.android.gms.maps.model.LatLng;
 public abstract class PositionUtil {
 
     public static String convertLocationForApi(LatLng position){
-        Double lat = position.latitude;
-        Double lng = position.longitude;
+        if(position != null) {
+            Double lat = position.latitude;
+            Double lng = position.longitude;
 
-        return lat.toString() + "," + lng.toString();
+            return lat.toString() + "," + lng.toString();
+        }
+        return null;
     }
 
 

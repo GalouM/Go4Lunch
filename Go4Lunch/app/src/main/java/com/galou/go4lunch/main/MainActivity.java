@@ -1,7 +1,9 @@
 package com.galou.go4lunch.main;
 
+import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -34,6 +36,7 @@ import com.galou.go4lunch.databinding.ActivityMainBinding;
 import com.galou.go4lunch.databinding.MainActivityNavHeaderBinding;
 import com.galou.go4lunch.injection.Injection;
 import com.galou.go4lunch.injection.ViewModelFactory;
+import com.galou.go4lunch.notification.NotificationLunchService;
 import com.galou.go4lunch.restaurantsList.ListViewFragment;
 import com.galou.go4lunch.restaurantsList.MapViewFragment;
 import com.galou.go4lunch.restoDetails.RestoDetailDialogFragment;
@@ -62,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ActivityMainBinding binding;
     private MainActivityViewModel viewModel;
 
+    private PendingIntent pendingIntent;
+
     private int AUTOCOMPLETE_REQUEST_CODE = 1;
     private List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
 
@@ -75,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.configureBindingAndViewModel();
         this.configureUI();
         this.createViewModelConnections();
+        this.createNotificationChannel();
+        this.configureNotificationIntent();
 
     }
 
@@ -308,6 +315,49 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void displayRestaurantDetail(){
         RestoDetailDialogFragment restoDetailDialogFragment = new RestoDetailDialogFragment();
         restoDetailDialogFragment.show(getSupportFragmentManager(), "MODAL");
+    }
+
+    @Override
+    public void setupNotification(boolean enable) {
+        if(enable) enableNotifications();
+        if(!enable) disableNotification();
+
+    }
+
+    // -----------------
+    // NOTIFICATION
+    // -----------------
+
+    private void createNotificationChannel(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            String channelId = getString(R.string.notificcationChannel);
+            CharSequence name = getString(R.string.name_channel);
+            String description = getString(R.string.description_channel);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(channelId, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void configureNotificationIntent(){
+        Intent notificationIntent = new Intent(this, NotificationLunchService.class);
+        pendingIntent = PendingIntent.getBroadcast(this, 0,
+                notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+    }
+
+    private void enableNotifications() {
+        AlarmManager manager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,0, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
+
+    }
+
+    private void disableNotification() {
+        AlarmManager manager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        manager.cancel(pendingIntent);
+
     }
 
     // --------------------

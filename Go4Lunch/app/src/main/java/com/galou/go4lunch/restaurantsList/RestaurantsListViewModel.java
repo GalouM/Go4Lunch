@@ -44,14 +44,17 @@ public class RestaurantsListViewModel extends BaseViewModel {
     //----- PRIVATE LIVE DATA -----
     private MutableLiveData<List<Restaurant>> restaurantsList = new MutableLiveData<>();
     private MutableLiveData<Object> openDetailRestaurant = new MutableLiveData<>();
+    private MutableLiveData<Object> requestLocation = new MutableLiveData<>();
 
     //----- GETTER LIVE DATA -----
     public LiveData<List<Restaurant>> getRestaurantsList(){
         return restaurantsList;
     }
-
     public LiveData<Object> getOpenDetailRestaurant() {
         return openDetailRestaurant;
+    }
+    public LiveData<Object> getRequestLocation() {
+        return requestLocation;
     }
 
     public RestaurantsListViewModel(UserRepository userRepository, RestaurantRepository restaurantRepository) {
@@ -99,6 +102,12 @@ public class RestaurantsListViewModel extends BaseViewModel {
             this.requestListRestaurants();
         }
     }
+
+    public void noLocationAvailable(){
+        snackBarText.setValue(R.string.no_location_message);
+
+    }
+
 
     public void destroyDisposable(){
         if (this.disposableRestaurant != null && !this.disposableRestaurant.isDisposed()) this.disposableRestaurant.dispose();
@@ -205,7 +214,10 @@ public class RestaurantsListViewModel extends BaseViewModel {
     }
 
     private void fetchListRestaurant(){
-        if(restaurantRepository.getLocation() != null) {
+        if(restaurantRepository.getLocation() == null){
+            requestLocation.setValue(new Object());
+        }
+        if(restaurantRepository.getLocation() != null &&restaurantRepository.streamFetchListRestaurantDetails() != null) {
             this.disposableRestaurant = restaurantRepository.streamFetchListRestaurantDetails().subscribeWith(getObserverRestaurants());
         } else {
             snackBarText.setValue(R.string.no_location_message);
