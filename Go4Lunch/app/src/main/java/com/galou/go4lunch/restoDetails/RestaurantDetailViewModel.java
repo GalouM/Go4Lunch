@@ -131,11 +131,12 @@ public class RestaurantDetailViewModel extends BaseViewModel {
     public void updatePickedRestaurant() {
         isLoading.setValue(true);
         if(isRestaurantPicked.getValue()){
-            userRepository.updateRestaurantPicked(null, null, user.getUid())
+            userRepository.updateRestaurantPicked(null, null, null, user.getUid())
                     .addOnSuccessListener(onSuccessListener(REMOVE_RESTAURANT_PICKED))
                     .addOnFailureListener(this.onFailureListener(UPDATE_PICKED_RESTAURANT));
         } else {
-            userRepository.updateRestaurantPicked(restaurant.getUid(), restaurant.getName(), user.getUid())
+            userRepository.updateRestaurantPicked(restaurant.getUid(), restaurant.getName(),
+                    restaurant.getAddress(), user.getUid())
                     .addOnSuccessListener(onSuccessListener(UPDATE_RESTAURANT_PICKED))
                     .addOnFailureListener(this.onFailureListener(UPDATE_PICKED_RESTAURANT));
         }

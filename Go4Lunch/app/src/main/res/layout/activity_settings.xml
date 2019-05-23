@@ -48,8 +48,8 @@
         app:layout_constraintTop_toBottomOf="@id/layout_toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:imageUrlCircle="@{viewmodel.urlPicture}"
         android:src="@drawable/ic_anon_user_48dp"
+        app:imageUrlCircle="@{viewmodel.urlPicture}"
         android:onClick="@{(view) -> listener.onClick(view)}"/>
 
     <ImageView

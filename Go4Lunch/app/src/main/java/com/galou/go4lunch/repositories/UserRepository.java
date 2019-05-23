@@ -64,11 +64,14 @@ public class UserRepository {
                 "username", username, "email", email);
     }
 
-    public Task<Void> updateRestaurantPicked(String restaurantUid, String restaurantName, String uid){
+    public Task<Void> updateRestaurantPicked(String restaurantUid, String restaurantName, String restaurantAddress, String uid){
         user.setRestaurantUid(restaurantUid);
         user.setRestaurantName(restaurantName);
+        user.setRestaurantAddress(restaurantAddress);
         return userCollection.document(uid).update(
-                "restaurantUid", restaurantUid, "restaurantName", restaurantName);
+                "restaurantUid", restaurantUid,
+                "restaurantName", restaurantName,
+                "restaurantAddress", restaurantAddress);
     }
 
     public Task<Void> updateUrlPicture(String urlPicture, String uid){

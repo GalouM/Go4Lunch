@@ -33,8 +33,8 @@ public class NotificationService extends FirebaseMessagingService {
     private SaveDataRepository saveDataRepository;
     private UserRepository userRepository;
     private String restaurantName;
+    private String restaurantAddress;
     private String usersJoining;
-    private String message;
     private User currentUser;
     private String currentUserId;
     private List<User> users;
@@ -45,7 +45,6 @@ public class NotificationService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        Log.e("message", "received");
         context = getApplicationContext();
         if(remoteMessage.getNotification() != null) {
             this.configureRepositories();
@@ -96,6 +95,7 @@ public class NotificationService extends FirebaseMessagingService {
                 }
             }
             restaurantName = currentUser.getRestaurantName();
+            restaurantAddress = currentUser.getRestaurantAddress();
             usersJoining = TextUtil.convertListToString(usersName);
             showNotification();
         }
@@ -115,7 +115,7 @@ public class NotificationService extends FirebaseMessagingService {
         String messageBody;
         if(usersJoining != null) {
             message = context.getString(R.string.notification_message);
-            messageBody = String.format(message, restaurantName, usersJoining);
+            messageBody = String.format(message, restaurantName, usersJoining, restaurantAddress);
         } else {
             message = context.getString(R.string.message_notification_alone);
             messageBody = String.format(message, restaurantName);
@@ -124,7 +124,7 @@ public class NotificationService extends FirebaseMessagingService {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
                 .setSmallIcon(R.drawable.go4lunch_icon)
                 .setContentTitle(context.getString(R.string.title_notification))
-                .setContentText("You have a lunch setup for today")
+                .setContentText(context.getString(R.string.subtitle_notification))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setContentIntent(pendingIntent)
@@ -133,7 +133,7 @@ public class NotificationService extends FirebaseMessagingService {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence channelName = "Message provenant de Firebase";
+            CharSequence channelName = context.getString(R.string.channel_notification_name);
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel mChannel = new NotificationChannel(channelId, channelName, importance);
             notificationManager.createNotificationChannel(mChannel);

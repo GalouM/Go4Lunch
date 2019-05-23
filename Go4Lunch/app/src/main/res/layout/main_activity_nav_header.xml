@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/really_small_margin">
+            android:layout_marginStart="@dimen/really_small_margin">
 
             <TextView
                 android:layout_width="wrap_content"

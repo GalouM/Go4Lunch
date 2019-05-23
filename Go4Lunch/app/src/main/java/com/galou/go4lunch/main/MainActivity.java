@@ -32,6 +32,7 @@ import com.galou.go4lunch.databinding.ActivityMainBinding;
 import com.galou.go4lunch.databinding.MainActivityNavHeaderBinding;
 import com.galou.go4lunch.injection.Injection;
 import com.galou.go4lunch.injection.ViewModelFactory;
+import com.galou.go4lunch.notification.EraseRestaurantInfo;
 import com.galou.go4lunch.restaurantsList.ListViewFragment;
 import com.galou.go4lunch.restaurantsList.MapViewFragment;
 import com.galou.go4lunch.restoDetails.RestoDetailDialogFragment;
@@ -46,6 +47,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainActivityContract {
@@ -73,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.configureBindingAndViewModel();
         this.configureUI();
         this.createViewModelConnections();
+        this.configureResetData();
 
     }
 
@@ -315,6 +318,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @VisibleForTesting
     public CountingIdlingResource getEspressoIdlingResourceForMainActivity() {
         return viewModel.getEspressoIdlingResource();
+    }
+
+    // --------------------
+    // RESET DATA RESTAURANT EVERY DAY
+    // --------------------
+
+    /*
+    this shouln't be done from the application but from a central server instead
+     */
+    private void configureResetData(){
+        Intent notificationIntent = new Intent(this, EraseRestaurantInfo.class);
+        pendingIntent = PendingIntent.getBroadcast(this, 0,
+                notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Calendar resetTime = Calendar.getInstance();
+        resetTime.set(Calendar.HOUR_OF_DAY, 16);
+        resetTime.set(Calendar.MINUTE, 0);
+        AlarmManager manager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        manager.set(AlarmManager.RTC, resetTime.getTimeInMillis(), pendingIntent);
     }
 }
 

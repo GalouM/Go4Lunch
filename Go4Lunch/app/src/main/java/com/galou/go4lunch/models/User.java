@@ -16,6 +16,7 @@ public class User {
     @Nullable private String urlPicture;
     @Nullable private String restaurantUid;
     @Nullable private String restaurantName;
+    @Nullable private String restaurantAddress;
     private List<String> likedRestaurants;
 
     public User(){}
@@ -101,6 +102,15 @@ public class User {
 
     public void setRestaurantName(@Nullable String restaurantName) {
         this.restaurantName = restaurantName;
+    }
+
+    @Nullable
+    public String getRestaurantAddress() {
+        return restaurantAddress;
+    }
+
+    public void setRestaurantAddress(@Nullable String restaurantAddress) {
+        this.restaurantAddress = restaurantAddress;
     }
 
     @Override

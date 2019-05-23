@@ -65,14 +65,17 @@ public class AuthenticationViewModel extends BaseViewModel {
 
     void checkIfUserIsLogged(){
         if (isCurrentUserLogged()){
+            Log.e("here", "fetching");
             this.fetchCurrentUserFromFirestore();
         } else {
+            Log.e("here", "open sign in");
             openSignInActivityEvent.setValue(new Object());
         }
     }
 
     private void fetchCurrentUserFromFirestore(){
         if (isCurrentUserLogged()) {
+            Log.e("current user", getCurrentUser().getDisplayName());
             userRepository.getUserFromFirebase(getCurrentUser().getUid())
                     .addOnFailureListener(this.onFailureListener(FETCH_USER))
                     .addOnSuccessListener(documentSnapshot -> {
