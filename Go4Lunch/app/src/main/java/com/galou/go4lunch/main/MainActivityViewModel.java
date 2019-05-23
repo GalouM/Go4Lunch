@@ -24,7 +24,6 @@ public class MainActivityViewModel extends BaseViewModel {
     private final MutableLiveData<Object> logoutRequested = new MutableLiveData<>();
     private final MutableLiveData<Boolean> settingsRequested = new MutableLiveData<>();
     private final MutableLiveData<Object> openDetailRestaurant = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> isNotificationEnable = new MutableLiveData<>();
 
     //----- PUBLIC LIVE DATA -----
     public final MutableLiveData<String> username = new MutableLiveData<>();
@@ -44,7 +43,6 @@ public class MainActivityViewModel extends BaseViewModel {
     }
     public LiveData<Boolean> getSettings() { return settingsRequested; }
     public LiveData<Object> getOpenDetailRestaurant() { return openDetailRestaurant; }
-    public LiveData<Boolean> getIsNotificationEnable(){ return isNotificationEnable; }
 
     public MainActivityViewModel(UserRepository userRepository, RestaurantRepository restaurantRepository, SaveDataRepository saveDataRepository) {
         this.userRepository = userRepository;
@@ -68,7 +66,6 @@ public class MainActivityViewModel extends BaseViewModel {
         email.setValue(user.getEmail());
         urlPicture.setValue(user.getUrlPicture());
         saveDataRepository.saveUserId(user.getUid());
-        isNotificationEnable.setValue(saveDataRepository.getNotificationSettings(user.getUid()));
     }
 
     // --------------------
