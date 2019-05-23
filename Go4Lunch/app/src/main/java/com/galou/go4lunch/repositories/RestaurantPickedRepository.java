@@ -1,5 +1,12 @@
 package com.galou.go4lunch.repositories;
 
+import com.galou.go4lunch.models.RestaurantPicked;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
 public class RestaurantPickedRepository {
 
     private static final String COLLECTION_NAME = "restaurantPicked";
@@ -49,8 +56,8 @@ public class RestaurantPickedRepository {
         return restaurantPickedCollection.document(uid).delete();
     }
 
-    public void updateUserRepository(User user){
-        this.user = user;
+    public void updateRestaurantRepository(RestaurantPicked restaurantPicked){
+        this.restaurantPicked = restaurantPicked;
     }
 
 }

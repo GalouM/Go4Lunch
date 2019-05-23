@@ -56,11 +56,10 @@
         </activity>
 
         <!-- NOTIFICATION SERVICE -->
-        <service android:name=".notification.NotificationService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-            </intent-filter>
-        </service>
+        <receiver
+            android:name=".notification.NotificationLunchService"
+            android:exported="true">
+        </receiver>
 
         <!-- ERASE INFOS SERVICE -->
         <receiver android:name=".notification.EraseRestaurantInfo"

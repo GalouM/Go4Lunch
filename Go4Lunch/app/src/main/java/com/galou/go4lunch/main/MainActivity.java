@@ -33,6 +33,7 @@ import com.galou.go4lunch.databinding.MainActivityNavHeaderBinding;
 import com.galou.go4lunch.injection.Injection;
 import com.galou.go4lunch.injection.ViewModelFactory;
 import com.galou.go4lunch.notification.EraseRestaurantInfo;
+import com.galou.go4lunch.notification.NotificationLunchService;
 import com.galou.go4lunch.restaurantsList.ListViewFragment;
 import com.galou.go4lunch.restaurantsList.MapViewFragment;
 import com.galou.go4lunch.restoDetails.RestoDetailDialogFragment;
@@ -60,7 +61,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ActivityMainBinding binding;
     private MainActivityViewModel viewModel;
 
-    private PendingIntent pendingIntent;
+    private PendingIntent pendingIntentAlarm;
+    private PendingIntent pendingIntentReset;
 
     private int AUTOCOMPLETE_REQUEST_CODE = 1;
     private List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
@@ -76,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.configureUI();
         this.createViewModelConnections();
         this.configureResetData();
+        this.createNotificationChannel();
+        this.configureNotificationIntent();
 
     }
 
@@ -113,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setupLogoutRequest();
         setupSettingsRequest();
         setupOpenDetailRestaurant();
+        setupNotification();
     }
 
     private void setupSnackBar(){
@@ -135,6 +140,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void setupOpenDetailRestaurant(){
         viewModel.getOpenDetailRestaurant().observe(this, open -> displayRestaurantDetail());
+    }
+
+    private void setupNotification(){
+        viewModel.getIsNotificationEnable().observe(this, this::configureNotification);
     }
 
     // --------------------
@@ -312,6 +321,52 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         restoDetailDialogFragment.show(getSupportFragmentManager(), "MODAL");
     }
 
+    @Override
+    public void configureNotification(boolean isEnable) {
+        if(isEnable) enableNotifications();
+        if(!isEnable) disableNotification();
+
+    }
+
+    // -----------------
+    // NOTIFICATION
+    // -----------------
+
+    private void createNotificationChannel(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            String channelId = getString(R.string.notificcationChannel);
+            CharSequence name = getString(R.string.name_channel);
+            String description = getString(R.string.description_channel);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(channelId, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void configureNotificationIntent(){
+        Intent notificationIntent = new Intent(this, NotificationLunchService.class);
+        pendingIntentAlarm = PendingIntent.getBroadcast(this, 0,
+                notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+    }
+
+    private void enableNotifications() {
+        Calendar notificationTime = Calendar.getInstance();
+        notificationTime.set(Calendar.HOUR_OF_DAY, 13);
+        notificationTime.set(Calendar.MINUTE, 15);
+        AlarmManager manager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        manager.set(AlarmManager.RTC, notificationTime.getTimeInMillis(), pendingIntentAlarm);
+
+    }
+
+    private void disableNotification() {
+        AlarmManager manager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        manager.cancel(pendingIntentAlarm);
+
+    }
+
     // --------------------
     // TESTING
     // --------------------
@@ -329,13 +384,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      */
     private void configureResetData(){
         Intent notificationIntent = new Intent(this, EraseRestaurantInfo.class);
-        pendingIntent = PendingIntent.getBroadcast(this, 0,
+        pendingIntentReset = PendingIntent.getBroadcast(this, 0,
                 notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         Calendar resetTime = Calendar.getInstance();
         resetTime.set(Calendar.HOUR_OF_DAY, 16);
         resetTime.set(Calendar.MINUTE, 0);
         AlarmManager manager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        manager.set(AlarmManager.RTC, resetTime.getTimeInMillis(), pendingIntent);
+        manager.set(AlarmManager.RTC, resetTime.getTimeInMillis(), pendingIntentReset);
     }
 }
 

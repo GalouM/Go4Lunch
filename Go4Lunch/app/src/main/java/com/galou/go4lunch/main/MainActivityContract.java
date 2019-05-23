@@ -7,4 +7,5 @@ public interface MainActivityContract {
     void logoutUser();
     void settings(Boolean setting);
     void displayRestaurantDetail();
+    void configureNotification(boolean isEnable);
 }
