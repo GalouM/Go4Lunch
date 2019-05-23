@@ -100,7 +100,7 @@ public class NotificationLunchService extends BroadcastReceiver {
         String channelId = context.getString(R.string.notificcationChannel);
         String message;
         String messageBody;
-        if(usersJoining != null) {
+        if(usersJoining != null && usersJoining.length() > 0) {
             message = context.getString(R.string.notification_message);
             messageBody = String.format(message, restaurantName, usersJoining, restaurantAddress);
         } else {
