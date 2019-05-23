@@ -3,6 +3,7 @@ package com.galou.go4lunch.notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -27,14 +28,15 @@ public class NotificationLunchService extends BroadcastReceiver {
     private String restaurantName;
     private String usersJoining;
     private Context context;
-    private String channelId;
+    private User currentUser;
+    private String currentUserId;
+    private List<User> users;
 
     private final int NOTIFICATION_ID = 007;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
-        channelId = context.getString(R.string.notificcationChannel);
         this.configureRepositories();
     }
 
@@ -46,38 +48,45 @@ public class NotificationLunchService extends BroadcastReceiver {
         userRepository = UserRepository.getInstance();
         saveDataRepository = SaveDataRepository.getInstance();
         saveDataRepository.configureContext(context);
-        String userId = saveDataRepository.getUserId();
-        if(saveDataRepository.getNotificationSettings(userId)
-                && saveDataRepository.getRestaurantName() != null
+        currentUserId = saveDataRepository.getUserId();
+        if(saveDataRepository.getNotificationSettings(currentUserId)
                 && saveDataRepository.getUserId() != null){
-            this.fetchInfoRestaurant();
+            this.fetchUsers();
         }
 
     }
 
-    private void fetchInfoRestaurant() {
-        restaurantName = saveDataRepository.getRestaurantName();
-        this.fetchNameUsersGoing(saveDataRepository.getRestaurantId());
-    }
-
-    private void fetchNameUsersGoing(String restaurantId) {
-        List<String> usersName = new ArrayList<>();
+    private void fetchUsers() {
+        users = new ArrayList<>();
         userRepository.getAllUsersFromFirebase()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()){
                         User user = documentSnapshot.toObject(User.class);
-                        if(user != null && user.getRestaurantUid() != null){
-                            String restaurantUid = user.getRestaurantUid();
-                            if(restaurantUid.equals(restaurantId)){
-                                usersName.add(user.getUsername());
+                        if(user != null && user.getRestaurantUid() != null) {
+                            if (user.getUid().equals(currentUserId)) {
+                                currentUser = user;
+                            } else {
+                                users.add(user);
                             }
-
                         }
                     }
-                    usersJoining = TextUtil.convertListToString(usersName);
-                    showNotification();
+                    fetchUsersGoing();
                 });
 
+    }
+
+    private void fetchUsersGoing(){
+        if(currentUser != null) {
+            List<String> usersName = new ArrayList<>();
+            for (User user : users) {
+                if (user.getRestaurantUid().equals(currentUser.getRestaurantUid())){
+                    usersName.add(user.getUsername());
+                }
+            }
+            restaurantName = currentUser.getRestaurantName();
+            usersJoining = TextUtil.convertListToString(usersName);
+            showNotification();
+        }
     }
 
     // -------------------
@@ -86,16 +95,25 @@ public class NotificationLunchService extends BroadcastReceiver {
 
     private void showNotification(){
         String channelId = context.getString(R.string.notificcationChannel);
-        String message = context.getString(R.string.notification_message);
-        String messageBody = String.format(message, restaurantName, usersJoining);
+        String message;
+        String messageBody;
+        if(usersJoining != null) {
+            message = context.getString(R.string.notification_message);
+            messageBody = String.format(message, restaurantName, usersJoining);
+        } else {
+            message = context.getString(R.string.message_notification_alone);
+            messageBody = String.format(message, restaurantName);
+        }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
                 .setSmallIcon(R.drawable.go4lunch_icon)
                 .setContentTitle(context.getString(R.string.title_notification))
                 .setContentText(messageBody)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(messageBody));
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
         notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
 
     }
 }
+

@@ -98,7 +98,6 @@ public class SettingsViewModel extends BaseViewModel {
             urlPicture.setValue(user.getUrlPicture());
             isLoading.setValue(false);
             isNotificationEnabled.setValue(saveDataRepository.getNotificationSettings(user.getUid()));
-            saveDataRepository.saveUserId(user.getUid());
         }
     }
 

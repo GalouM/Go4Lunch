@@ -36,7 +36,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             return (T) new AuthenticationViewModel(userRepository);
         }
         if(modelClass.isAssignableFrom(MainActivityViewModel.class)){
-            return (T) new MainActivityViewModel(userRepository, restaurantRepository);
+            return (T) new MainActivityViewModel(userRepository, restaurantRepository, saveDataRepository);
         }
         if(modelClass.isAssignableFrom(SettingsViewModel.class)){
             return (T) new SettingsViewModel(userRepository, saveDataRepository);
@@ -48,7 +48,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             return (T) new RestaurantsListViewModel(userRepository, restaurantRepository);
         }
         if(modelClass.isAssignableFrom(RestaurantDetailViewModel.class)){
-            return (T) new RestaurantDetailViewModel(userRepository, restaurantRepository, saveDataRepository);
+            return (T) new RestaurantDetailViewModel(userRepository, restaurantRepository);
         }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }

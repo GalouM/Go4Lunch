@@ -42,7 +42,6 @@ import static com.galou.go4lunch.util.RetryAction.UPDATE_PICKED_RESTAURANT;
 public class RestaurantDetailViewModel extends BaseViewModel {
 
     private RestaurantRepository restaurantRepository;
-    private SaveDataRepository saveDataRepository;
     private Restaurant restaurant;
     private Disposable disposable;
 
@@ -72,22 +71,15 @@ public class RestaurantDetailViewModel extends BaseViewModel {
         return webSite;
     }
 
-    public RestaurantDetailViewModel(UserRepository userRepository, RestaurantRepository restaurantRepository, SaveDataRepository saveDataRepository) {
+    public RestaurantDetailViewModel(UserRepository userRepository, RestaurantRepository restaurantRepository) {
         this.userRepository = userRepository;
         this.restaurantRepository = restaurantRepository;
-        this.saveDataRepository = saveDataRepository;
         user = userRepository.getUser();
     }
 
     // --------------------
     // START
     // --------------------
-
-    public void configureSaveDataRepo(Context context){
-        if(saveDataRepository.getPreferences() == null){
-            saveDataRepository.configureContext(context);
-        }
-    }
 
     public void fetchInfoRestaurant(){
         isLoading.setValue(true);
@@ -142,14 +134,10 @@ public class RestaurantDetailViewModel extends BaseViewModel {
             userRepository.updateRestaurantPicked(null, null, user.getUid())
                     .addOnSuccessListener(onSuccessListener(REMOVE_RESTAURANT_PICKED))
                     .addOnFailureListener(this.onFailureListener(UPDATE_PICKED_RESTAURANT));
-            saveDataRepository.saveRestaurantId(null);
-            saveDataRepository.saveRestaurantName(null);
         } else {
             userRepository.updateRestaurantPicked(restaurant.getUid(), restaurant.getName(), user.getUid())
                     .addOnSuccessListener(onSuccessListener(UPDATE_RESTAURANT_PICKED))
                     .addOnFailureListener(this.onFailureListener(UPDATE_PICKED_RESTAURANT));
-            saveDataRepository.saveRestaurantId(restaurant.getUid());
-            saveDataRepository.saveRestaurantName(restaurant.getName());
         }
 
     }

@@ -1,5 +1,7 @@
 package com.galou.go4lunch.main;
 
+import android.content.Context;
+
 import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -9,6 +11,7 @@ import com.galou.go4lunch.BuildConfig;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.base.BaseViewModel;
 import com.galou.go4lunch.repositories.RestaurantRepository;
+import com.galou.go4lunch.repositories.SaveDataRepository;
 import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.util.RetryAction;
 
@@ -21,6 +24,7 @@ public class MainActivityViewModel extends BaseViewModel {
     private final MutableLiveData<Object> logoutRequested = new MutableLiveData<>();
     private final MutableLiveData<Boolean> settingsRequested = new MutableLiveData<>();
     private final MutableLiveData<Object> openDetailRestaurant = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isNotificationEnable = new MutableLiveData<>();
 
     //----- PUBLIC LIVE DATA -----
     public final MutableLiveData<String> username = new MutableLiveData<>();
@@ -32,6 +36,7 @@ public class MainActivityViewModel extends BaseViewModel {
     protected CountingIdlingResource espressoTestIdlingResource;
 
     private RestaurantRepository restaurantRepository;
+    private SaveDataRepository saveDataRepository;
 
     //----- GETTER LIVE DATA -----
     public LiveData<Object> getLogout() {
@@ -39,10 +44,12 @@ public class MainActivityViewModel extends BaseViewModel {
     }
     public LiveData<Boolean> getSettings() { return settingsRequested; }
     public LiveData<Object> getOpenDetailRestaurant() { return openDetailRestaurant; }
+    public LiveData<Boolean> getIsNotificationEnable(){ return isNotificationEnable; }
 
-    public MainActivityViewModel(UserRepository userRepository, RestaurantRepository restaurantRepository) {
+    public MainActivityViewModel(UserRepository userRepository, RestaurantRepository restaurantRepository, SaveDataRepository saveDataRepository) {
         this.userRepository = userRepository;
         this.restaurantRepository = restaurantRepository;
+        this.saveDataRepository = saveDataRepository;
         this.user = userRepository.getUser();
     }
 
@@ -50,10 +57,18 @@ public class MainActivityViewModel extends BaseViewModel {
     // START
     // --------------------
 
+    public void configureSaveDataRepo(Context context){
+        if(saveDataRepository.getPreferences() == null){
+            saveDataRepository.configureContext(context);
+        }
+    }
+
     public void configureInfoUser(){
         username.setValue(user.getUsername());
         email.setValue(user.getEmail());
         urlPicture.setValue(user.getUrlPicture());
+        saveDataRepository.saveUserId(user.getUid());
+        isNotificationEnable.setValue(saveDataRepository.getNotificationSettings(user.getUid()));
     }
 
     // --------------------

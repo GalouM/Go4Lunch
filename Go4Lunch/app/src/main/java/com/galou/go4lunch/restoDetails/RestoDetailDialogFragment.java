@@ -81,7 +81,6 @@ public class RestoDetailDialogFragment extends BottomSheetDialogFragment impleme
         setupOpenWebsite();
         setupUsers();
         viewModel.fetchInfoRestaurant();
-        viewModel.configureSaveDataRepo(getContext());
 
     }
 

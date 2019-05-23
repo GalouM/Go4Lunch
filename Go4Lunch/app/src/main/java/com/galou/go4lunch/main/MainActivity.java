@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         viewModel = obtainViewModel();
         binding.setViewmodel(viewModel);
         binding.setLifecycleOwner(this);
+        viewModel.configureSaveDataRepo(getApplicationContext());
     }
 
     private MainActivityViewModel obtainViewModel() {
@@ -118,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setupLogoutRequest();
         setupSettingsRequest();
         setupOpenDetailRestaurant();
+        setupNotification();
     }
 
     private void setupSnackBar(){
@@ -140,6 +142,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void setupOpenDetailRestaurant(){
         viewModel.getOpenDetailRestaurant().observe(this, open -> displayRestaurantDetail());
+    }
+
+    private void setupNotification(){
+        viewModel.getIsNotificationEnable().observe(this, this::configureNotification);
     }
 
     // --------------------
@@ -318,7 +324,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void setupNotification(boolean enable) {
+    public void configureNotification(boolean enable) {
         if(enable) enableNotifications();
         if(!enable) disableNotification();
 

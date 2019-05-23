@@ -12,11 +12,8 @@ public class SaveDataRepository {
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
 
-    public static final String KEY_PREF_NOTIFICATION_ENABLE = "notificationEnabled";
     public static final String KEY_PREF = "prefNotification";
     public static final String KEY_PREF_USER_ID = "userId";
-    public static final String KEY_PREF_RESTAURANT_NAME = "restaurantName";
-    public static final String KEY_PREF_RESTAURANT_ID = "restaurantId";
 
     private static volatile SaveDataRepository INSTANCE;
 
@@ -51,18 +48,6 @@ public class SaveDataRepository {
         editor.apply();
     }
 
-    public void saveRestaurantName(String name){
-        editor = preferences.edit();
-        editor.putString(KEY_PREF_RESTAURANT_NAME, name);
-        editor.apply();
-    }
-
-    public void saveRestaurantId(String id){
-        editor = preferences.edit();
-        editor.putString(KEY_PREF_RESTAURANT_ID, id);
-        editor.apply();
-    }
-
     //-----GET------
     public Boolean getNotificationSettings(String userId){
         return preferences.getBoolean(userId, true);
@@ -70,13 +55,5 @@ public class SaveDataRepository {
 
     public String getUserId(){
         return preferences.getString(KEY_PREF_USER_ID, null);
-    }
-
-    public String getRestaurantName(){
-        return preferences.getString(KEY_PREF_RESTAURANT_NAME, null);
-    }
-
-    public String getRestaurantId(){
-        return preferences.getString(KEY_PREF_RESTAURANT_ID, null);
     }
 }
