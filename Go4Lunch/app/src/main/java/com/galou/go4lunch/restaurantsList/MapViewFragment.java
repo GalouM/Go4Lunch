@@ -144,7 +144,7 @@ public class MapViewFragment extends BaseRestaurantsListFragment implements OnMa
         } else {
             this.centerCameraOnGPSLocation();
         }
-        viewModel.setupLocation(convertLocationForApi(locationUser));
+        viewModel.setupLocation(locationUser);
         viewModel.requestListRestaurants();
 
     }

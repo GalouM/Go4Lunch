@@ -1,5 +1,7 @@
 package com.galou.go4lunch.repositories;
 
+import android.location.Location;
+
 import com.galou.go4lunch.api.GooglePlaceService;
 import com.galou.go4lunch.models.ApiDetailResponse;
 import com.galou.go4lunch.models.ApiNearByResponse;
@@ -8,7 +10,9 @@ import com.galou.go4lunch.models.Restaurant;
 import com.galou.go4lunch.models.ResultApiPlace;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.util.OpeningHoursUtil;
+import com.galou.go4lunch.util.PositionUtil;
 import com.galou.go4lunch.util.RatingUtil;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +31,7 @@ public class RestaurantRepository {
 
     private List<Restaurant> restaurants;
     private String restaurantSelected;
-    private String location;
+    private LatLng location;
 
     private static volatile RestaurantRepository INSTANCE;
 
@@ -57,7 +61,7 @@ public class RestaurantRepository {
     }
 
     public Observable<List<ApiDetailResponse>> streamFetchListRestaurantDetails(){
-        return streamFetchRestaurantsNearBy(this.location)
+        return streamFetchRestaurantsNearBy(PositionUtil.convertLocationForApi(this.location))
                 .map(ApiNearByResponse::getResults)
                 .concatMap((Function<List<ResultApiPlace>, Observable<List<ApiDetailResponse>>>) results -> {
                     if(results != null && results.size() > 0) {
@@ -72,7 +76,7 @@ public class RestaurantRepository {
     }
 
     public Observable<DistanceApiResponse> getDistanceToPoint(String point){
-        return googlePlaceService.getDistancePoints(this.location, point)
+        return googlePlaceService.getDistancePoints(PositionUtil.convertLocationForApi(this.location), point)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .timeout(10, TimeUnit.SECONDS);
@@ -90,11 +94,11 @@ public class RestaurantRepository {
         this.restaurants = restaurants;
     }
 
-    public String getLocation() {
+    public LatLng getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(LatLng location) {
         this.location = location;
     }
 

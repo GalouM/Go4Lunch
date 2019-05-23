@@ -38,10 +38,18 @@ import com.galou.go4lunch.restaurantsList.ListViewFragment;
 import com.galou.go4lunch.restaurantsList.MapViewFragment;
 import com.galou.go4lunch.restoDetails.RestoDetailDialogFragment;
 import com.galou.go4lunch.settings.SettingsActivity;
+import com.galou.go4lunch.util.PositionUtil;
 import com.galou.go4lunch.util.RetryAction;
 import com.galou.go4lunch.util.SnackBarUtil;
 import com.galou.go4lunch.workmates.WorkmatesFragment;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.RectangularBounds;
+import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -66,6 +74,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private int AUTOCOMPLETE_REQUEST_CODE = 1;
     private List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+    private Intent autoCompleteIntent;
+
+    private static int[] TIME_NOTIFICATION = {12, 0};
+
 
     // --------------------
     // LIFE CYCLE STATE
@@ -146,6 +158,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         viewModel.getIsNotificationEnable().observe(this, this::configureNotification);
     }
 
+    private void setupLocationAutocomplete(){
+        viewModel.getLocation().observe(this, this::configureAutocomplete);
+    }
+
     // --------------------
     // CONFIGURE NAV UI
     // --------------------
@@ -189,11 +205,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id  = item.getItemId();
-        if(id == R.id.menu_main_activity_search){
-            Intent intent = new Autocomplete.IntentBuilder(
-                    AutocompleteActivityMode.OVERLAY, fields)
-                    .build(this);
-            startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+        if(id == R.id.menu_main_activity_search && autoCompleteIntent != null){
+            startActivityForResult(autoCompleteIntent, AUTOCOMPLETE_REQUEST_CODE);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -328,6 +341,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    public void configureAutocomplete(LatLng position){
+        autoCompleteIntent = new Autocomplete.IntentBuilder(
+                AutocompleteActivityMode.OVERLAY, fields)
+                .setTypeFilter(TypeFilter.ESTABLISHMENT)
+                .setLocationBias(RectangularBounds.newInstance(position, position))
+                .build(this);
+
+    }
+
     // -----------------
     // NOTIFICATION
     // -----------------
@@ -354,8 +376,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void enableNotifications() {
         Calendar notificationTime = Calendar.getInstance();
-        notificationTime.set(Calendar.HOUR_OF_DAY, 13);
-        notificationTime.set(Calendar.MINUTE, 15);
+        notificationTime.set(Calendar.HOUR_OF_DAY, 14);
+        notificationTime.set(Calendar.MINUTE, 12);
         AlarmManager manager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         manager.set(AlarmManager.RTC, notificationTime.getTimeInMillis(), pendingIntentAlarm);
 
@@ -366,6 +388,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         manager.cancel(pendingIntentAlarm);
 
     }
+
 
     // --------------------
     // TESTING
@@ -387,8 +410,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         pendingIntentReset = PendingIntent.getBroadcast(this, 0,
                 notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         Calendar resetTime = Calendar.getInstance();
-        resetTime.set(Calendar.HOUR_OF_DAY, 16);
-        resetTime.set(Calendar.MINUTE, 0);
+        resetTime.set(Calendar.HOUR_OF_DAY, TIME_NOTIFICATION[0]);
+        resetTime.set(Calendar.MINUTE, TIME_NOTIFICATION[1]);
         AlarmManager manager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         manager.set(AlarmManager.RTC, resetTime.getTimeInMillis(), pendingIntentReset);
     }

@@ -14,6 +14,7 @@ import com.galou.go4lunch.repositories.RestaurantRepository;
 import com.galou.go4lunch.repositories.SaveDataRepository;
 import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.util.RetryAction;
+import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Created by galou on 2019-04-23
@@ -25,6 +26,7 @@ public class MainActivityViewModel extends BaseViewModel {
     private final MutableLiveData<Boolean> settingsRequested = new MutableLiveData<>();
     private final MutableLiveData<Object> openDetailRestaurant = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isNotificationEnable = new MutableLiveData<>();
+    private MutableLiveData<LatLng> location = new MutableLiveData<>();
 
     //----- PUBLIC LIVE DATA -----
     public final MutableLiveData<String> username = new MutableLiveData<>();
@@ -45,6 +47,7 @@ public class MainActivityViewModel extends BaseViewModel {
     public LiveData<Boolean> getSettings() { return settingsRequested; }
     public LiveData<Object> getOpenDetailRestaurant() { return openDetailRestaurant; }
     public LiveData<Boolean> getIsNotificationEnable(){ return isNotificationEnable; }
+    public LiveData<LatLng> getLocation(){ return location; }
 
     public MainActivityViewModel(UserRepository userRepository, RestaurantRepository restaurantRepository, SaveDataRepository saveDataRepository) {
         this.userRepository = userRepository;

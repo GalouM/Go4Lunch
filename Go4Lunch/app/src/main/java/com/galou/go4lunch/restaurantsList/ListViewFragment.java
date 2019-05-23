@@ -79,7 +79,7 @@ public class ListViewFragment extends BaseRestaurantsListFragment {
 
     @Override
     protected void setupLocation() {
-        viewModel.setupLocation(convertLocationForApi(locationUser));
+        viewModel.setupLocation(locationUser);
         viewModel.requestListRestaurants();
 
     }

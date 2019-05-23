@@ -27,6 +27,7 @@ public class NotificationLunchService extends BroadcastReceiver {
     private SaveDataRepository saveDataRepository;
     private UserRepository userRepository;
     private String restaurantName;
+    private String restaurantAddress;
     private String usersJoining;
     private Context context;
     private User currentUser;
@@ -85,6 +86,7 @@ public class NotificationLunchService extends BroadcastReceiver {
                 }
             }
             restaurantName = currentUser.getRestaurantName();
+            restaurantAddress = currentUser.getRestaurantAddress();
             usersJoining = TextUtil.convertListToString(usersName);
             showNotification();
         }
@@ -100,10 +102,10 @@ public class NotificationLunchService extends BroadcastReceiver {
         String messageBody;
         if(usersJoining != null) {
             message = context.getString(R.string.notification_message);
-            messageBody = String.format(message, restaurantName, usersJoining);
+            messageBody = String.format(message, restaurantName, usersJoining, restaurantAddress);
         } else {
             message = context.getString(R.string.message_notification_alone);
-            messageBody = String.format(message, restaurantName);
+            messageBody = String.format(message, restaurantName, restaurantAddress);
         }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)

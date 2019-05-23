@@ -88,7 +88,7 @@
     <string name="notification_message">You are eating at %s with %s on %s</string>
     <string name="name_channel">Go4Lunch channel</string>
     <string name="description_channel">Notification channel</string>
-    <string name="message_notification_alone">You are eating at %s</string>
+    <string name="message_notification_alone">You are eating at %s on %s</string>
     <string name="subtitle_notification">You have a lunch setup for today</string>
     <string name="channel_notification_name">Message provenant de Firebase</string>
 

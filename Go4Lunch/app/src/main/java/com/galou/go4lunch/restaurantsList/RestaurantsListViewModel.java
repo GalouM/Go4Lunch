@@ -66,7 +66,7 @@ public class RestaurantsListViewModel extends BaseViewModel {
     // START
     // --------------------
 
-    public void setupLocation(String location){
+    public void setupLocation(LatLng location){
         restaurantRepository.setLocation(location);
 
     }
