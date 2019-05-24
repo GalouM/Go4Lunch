@@ -19,11 +19,5 @@
         android:icon="@drawable/baseline_people_24"
         android:title="@string/bottom_navigation_menu_workmates"
         app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/action_chat"
-        android:enabled="true"
-        android:icon="@drawable/baseline_chat_24"
-        android:title="@string/bottom_navigation_menu_chat"
-        app:showAsAction="ifRoom" />
 
 </menu>

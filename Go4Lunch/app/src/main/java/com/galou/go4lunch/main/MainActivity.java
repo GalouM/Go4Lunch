@@ -285,10 +285,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 WorkmatesFragment workmatesView = new WorkmatesFragment();
                 replaceAndShowFragment(workmatesView);
                 break;
-            case R.id.action_chat:
-                ChatFragment chatView = new ChatFragment();
-                replaceAndShowFragment(chatView);
-                break;
         }
 
         return true;
