@@ -22,10 +22,10 @@ public abstract class PositionUtil {
     }
 
     public static LatLngBounds convertToBounds(LatLng center, double radius){
-        double distancefromCenter = radius * Math.sqrt(2.0);
-        LatLng soutWest = SphericalUtil.computeOffset(center, distancefromCenter, 225.0);
-        LatLng nortEast = SphericalUtil.computeOffset(center, distancefromCenter, 45.0);
-        return new LatLngBounds(soutWest, nortEast);
+        double distanceFromCenter = radius * Math.sqrt(2.0);
+        LatLng southWest = SphericalUtil.computeOffset(center, distanceFromCenter, 225.0);
+        LatLng northEast = SphericalUtil.computeOffset(center, distanceFromCenter, 45.0);
+        return new LatLngBounds(southWest, northEast);
     }
 
 

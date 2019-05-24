@@ -1,5 +1,7 @@
 package com.galou.go4lunch.main;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -8,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,7 +30,6 @@ import androidx.test.espresso.idling.CountingIdlingResource;
 import com.firebase.ui.auth.AuthUI;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.authentication.AuthenticationActivity;
-import com.galou.go4lunch.chat.ChatFragment;
 import com.galou.go4lunch.databinding.ActivityMainBinding;
 import com.galou.go4lunch.databinding.MainActivityNavHeaderBinding;
 import com.galou.go4lunch.injection.Injection;
@@ -42,15 +44,18 @@ import com.galou.go4lunch.util.PositionUtil;
 import com.galou.go4lunch.util.RetryAction;
 import com.galou.go4lunch.util.SnackBarUtil;
 import com.galou.go4lunch.workmates.WorkmatesFragment;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.AutocompleteFilter;
-import com.google.android.gms.location.places.Places;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -59,7 +64,11 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainActivityContract {
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        MainActivityContract, EasyPermissions.PermissionCallbacks {
 
     private BottomNavigationView bottomNavigationView;
     private DrawerLayout drawerLayout;
@@ -72,11 +81,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private PendingIntent pendingIntentAlarm;
     private PendingIntent pendingIntentReset;
 
-    private int AUTOCOMPLETE_REQUEST_CODE = 1;
+    private int AUTOCOMPLETE_REQUEST_CODE = 12345;
     private List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
     private Intent autoCompleteIntent;
 
     private static int[] TIME_NOTIFICATION = {12, 0};
+
+    // FOR GPS PERMISSION
+    private static final String PERMS = Manifest.permission.ACCESS_FINE_LOCATION;
+    private static final int RC_LOCATION_PERMS = 100;
+    private FusedLocationProviderClient fusedLocationClient;
 
 
     // --------------------
@@ -86,12 +100,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Places.initialize(getApplicationContext(), getString(R.string.google_api_key));
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         this.configureBindingAndViewModel();
         this.configureUI();
         this.createViewModelConnections();
         this.configureResetData();
         this.createNotificationChannel();
         this.configureNotificationIntent();
+        this.fetchLastKnowLocation();
 
     }
 
@@ -102,6 +119,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         viewModel.closeSettings();
         for (int i = 0; i < navigationView.getMenu().size(); i++) {
             navigationView.getMenu().getItem(i).setChecked(false);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                boolean isRestaurant = false;
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                if(place.getTypes() != null) {
+
+                    for (Place.Type type : place.getTypes()) {
+                        if (type == Place.Type.RESTAURANT) {
+                            isRestaurant = true;
+                            break;
+                        }
+                    }
+                }
+                if(isRestaurant || place.getTypes() == null) {
+                    viewModel.showRestaurantSelected(place.getId());
+                }
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                Status status = Autocomplete.getStatusFromIntent(data);
+            } else if (resultCode == RESULT_CANCELED) {
+            }
         }
     }
 
@@ -130,6 +173,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setupSettingsRequest();
         setupOpenDetailRestaurant();
         setupNotification();
+        setupLocationAutocomplete();
     }
 
     private void setupSnackBar(){
@@ -205,6 +249,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id  = item.getItemId();
+        Log.e("here", "click");
         if(id == R.id.menu_main_activity_search && autoCompleteIntent != null){
             startActivityForResult(autoCompleteIntent, AUTOCOMPLETE_REQUEST_CODE);
             return true;
@@ -255,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 viewModel.logoutUserFromApp();
                 break;
             case R.id.main_activity_drawer_lunch:
-                viewModel.updateRestaurantToDisplay();
+                viewModel.showUserRestaurant();
                 break;
         }
         this.drawerLayout.closeDrawer(GravityCompat.START);
@@ -337,11 +382,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    @Override
     public void configureAutocomplete(LatLng position){
+        Log.e("here", "build intent");
+        LatLngBounds bounds = PositionUtil.convertToBounds(position, 2500);
         autoCompleteIntent = new Autocomplete.IntentBuilder(
                 AutocompleteActivityMode.OVERLAY, fields)
                 .setTypeFilter(TypeFilter.ESTABLISHMENT)
-                .setLocationBias(RectangularBounds.newInstance(position, position))
+                .setLocationRestriction(RectangularBounds.newInstance(bounds.southwest, bounds.northeast))
                 .build(this);
 
     }
@@ -382,6 +430,55 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void disableNotification() {
         AlarmManager manager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         manager.cancel(pendingIntentAlarm);
+
+    }
+
+    // --------------------
+    // GET LOCATION USER
+    // --------------------
+
+    @SuppressLint("MissingPermission")
+    @AfterPermissionGranted(RC_LOCATION_PERMS)
+    private void fetchLastKnowLocation(){
+        if(! EasyPermissions.hasPermissions(this, PERMS)){
+            EasyPermissions.requestPermissions(
+                    this, getString(R.string.need_permission_message), RC_LOCATION_PERMS, PERMS);
+            return;
+        }
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, location -> {
+                    if (location != null) {
+                        LatLng locationUser = new LatLng(location.getLatitude(), location.getLongitude());
+                        viewModel.configureLocationUser(locationUser);
+                    } else {
+                        viewModel.noLocationAvailable();
+                    }
+                });
+    }
+
+    // --------------------
+    // PERMISSIONS
+    // --------------------
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        if (requestCode == RC_LOCATION_PERMS){
+            fetchLastKnowLocation();
+        }
+
+    }
+
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
 
     }
 

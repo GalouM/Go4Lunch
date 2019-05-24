@@ -26,7 +26,7 @@ public class MainActivityViewModel extends BaseViewModel {
     private final MutableLiveData<Boolean> settingsRequested = new MutableLiveData<>();
     private final MutableLiveData<Object> openDetailRestaurant = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isNotificationEnable = new MutableLiveData<>();
-    private MutableLiveData<LatLng> location = new MutableLiveData<>();
+    private final MutableLiveData<LatLng> location = new MutableLiveData<>();
 
     //----- PUBLIC LIVE DATA -----
     public final MutableLiveData<String> username = new MutableLiveData<>();
@@ -91,7 +91,7 @@ public class MainActivityViewModel extends BaseViewModel {
     }
     public void closeSettings() { settingsRequested.setValue(false);}
 
-    public void updateRestaurantToDisplay() {
+    public void showUserRestaurant() {
         String uidRestaurant = user.getRestaurantUid();
         if(uidRestaurant != null) {
             restaurantRepository.setRestaurantSelected(uidRestaurant);
@@ -99,6 +99,22 @@ public class MainActivityViewModel extends BaseViewModel {
         } else {
             snackBarText.setValue(R.string.no_restaurant_picked_message);
         }
+    }
+
+    public void configureLocationUser(LatLng location){
+        restaurantRepository.setLocation(location);
+        this.location.setValue(location);
+
+    }
+
+    public void noLocationAvailable(){
+        snackBarText.setValue(R.string.no_location_message);
+
+    }
+
+    public void showRestaurantSelected(String uid){
+        restaurantRepository.setRestaurantSelected(uid);
+        openDetailRestaurant.setValue(new Object());
     }
 
     @Override

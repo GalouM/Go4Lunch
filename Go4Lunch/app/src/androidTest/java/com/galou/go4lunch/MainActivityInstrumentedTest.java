@@ -20,7 +20,6 @@ import androidx.test.rule.ActivityTestRule;
 import com.galou.go4lunch.main.MainActivity;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.repositories.UserRepository;
-import com.google.firebase.auth.FirebaseAuth;
 
 import org.junit.Before;
 import org.junit.Rule;

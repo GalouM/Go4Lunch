@@ -71,8 +71,6 @@ public class MapViewFragment extends BaseRestaurantsListFragment implements OnMa
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map_view, container, false);
-        Places.initialize(getApplicationContext(), getString(R.string.google_api_key));
-        PlacesClient placesClient = Places.createClient(getActivity());
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         this.configureBindingAndViewModel(view);
