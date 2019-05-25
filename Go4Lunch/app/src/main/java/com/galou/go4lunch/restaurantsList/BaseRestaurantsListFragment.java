@@ -34,10 +34,9 @@ public abstract class BaseRestaurantsListFragment extends Fragment implements Re
 
     // FOR LOCATION
     protected FusedLocationProviderClient fusedLocationClient;
-    protected LatLng locationUser;
 
     public abstract void displayRestaurants(List<Restaurant> restaurants);
-    protected abstract void setupLocation();
+    public abstract void configureLocation(LatLng location);
 
     protected void createViewModelConnections() {
         this.setupRestaurantDisplay();
@@ -45,6 +44,7 @@ public abstract class BaseRestaurantsListFragment extends Fragment implements Re
         this.setupSnackBar();
         this.setupOpenDetailRestaurant();
         this.setupRequestLocation();
+        this.setupLocationUser();
 
     }
 
@@ -90,6 +90,10 @@ public abstract class BaseRestaurantsListFragment extends Fragment implements Re
         viewModel.getRequestLocation().observe(this, request -> fetchLastKnowLocation());
     }
 
+    protected void setupLocationUser(){
+        viewModel.getLocationUser().observe(this, this::configureLocation);
+    }
+
     @Override
     public void displayRestaurantDetail(){
         RestoDetailDialogFragment restoDetailDialogFragment = new RestoDetailDialogFragment();
@@ -111,8 +115,8 @@ public abstract class BaseRestaurantsListFragment extends Fragment implements Re
         fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(getActivity(), location -> {
                     if (location != null) {
-                        locationUser = new LatLng(location.getLatitude(), location.getLongitude());
-                        this.setupLocation();
+                        LatLng locationUser = new LatLng(location.getLatitude(), location.getLongitude());
+                        viewModel.setupLocation(locationUser);
                     } else {
                         viewModel.noLocationAvailable();
                     }

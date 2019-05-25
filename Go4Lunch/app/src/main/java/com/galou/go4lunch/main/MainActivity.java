@@ -126,25 +126,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                boolean isRestaurant = false;
-                Place place = Autocomplete.getPlaceFromIntent(data);
-                if(place.getTypes() != null) {
-
-                    for (Place.Type type : place.getTypes()) {
-                        if (type == Place.Type.RESTAURANT) {
-                            isRestaurant = true;
-                            break;
-                        }
-                    }
-                }
-                if(isRestaurant || place.getTypes() == null) {
-                    viewModel.showRestaurantSelected(place.getId());
-                }
-            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
-                Status status = Autocomplete.getStatusFromIntent(data);
-            } else if (resultCode == RESULT_CANCELED) {
-            }
+            this.onAutocompleteRequest(resultCode, data);
         }
     }
 
@@ -249,7 +231,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id  = item.getItemId();
-        Log.e("here", "click");
         if(id == R.id.menu_main_activity_search && autoCompleteIntent != null){
             startActivityForResult(autoCompleteIntent, AUTOCOMPLETE_REQUEST_CODE);
             return true;
@@ -259,7 +240,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     //----- NAV DRAWER -----
-
     private void configureDrawerLayout(){
         drawerLayout = binding.drawerView;
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
@@ -309,8 +289,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     //----- BOTTOM NAV -----
-
-
     private void configureBottomView() {
         bottomNavigationView = binding.bottomNav;
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> updateMainFragment(item.getItemId()));
@@ -384,7 +362,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void configureAutocomplete(LatLng position){
-        Log.e("here", "build intent");
         LatLngBounds bounds = PositionUtil.convertToBounds(position, 2500);
         autoCompleteIntent = new Autocomplete.IntentBuilder(
                 AutocompleteActivityMode.OVERLAY, fields)
@@ -392,6 +369,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .setLocationRestriction(RectangularBounds.newInstance(bounds.southwest, bounds.northeast))
                 .build(this);
 
+    }
+
+    // -----------------
+    // AUTOCOMPLETE CLICK
+    // -----------------
+    private void onAutocompleteRequest(int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            boolean isRestaurant = false;
+            Place place = Autocomplete.getPlaceFromIntent(data);
+            if(place.getTypes() != null) {
+
+                for (Place.Type type : place.getTypes()) {
+                    if (type == Place.Type.RESTAURANT) {
+                        isRestaurant = true;
+                        break;
+                    }
+                }
+            }
+            if(isRestaurant) {
+                viewModel.showRestaurantSelected(place.getId());
+            }
+        } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+            Status status = Autocomplete.getStatusFromIntent(data);
+        } else if (resultCode == RESULT_CANCELED) {
+        }
     }
 
     // -----------------

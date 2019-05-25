@@ -1,25 +1,18 @@
 package com.galou.go4lunch.restaurantsList;
 
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.databinding.FragmentMapViewBinding;
 import com.galou.go4lunch.models.Restaurant;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -31,17 +24,10 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.util.List;
 
-import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
-import static com.galou.go4lunch.util.PositionUtil.convertLocationForApi;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -130,20 +116,22 @@ public class MapViewFragment extends BaseRestaurantsListFragment implements OnMa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
-        this.fetchLastKnowLocation();
+        viewModel.checkIfLocationIsAvailable();
 
     }
 
+
+
     @Override
-    protected void setupLocation(){
-        this.displayLocationUser();
-        if(cameraInitialPosition != null){
-            this.googleMap.moveCamera(cameraInitialPosition);
-        } else {
-            this.centerCameraOnGPSLocation();
+    public void configureLocation(LatLng location){
+        if(googleMap != null) {
+            this.displayLocationUser();
+            if (cameraInitialPosition != null) {
+                this.googleMap.moveCamera(cameraInitialPosition);
+            } else {
+                this.centerCameraOnGPSLocation(location);
+            }
         }
-        viewModel.setupLocation(locationUser);
-        viewModel.requestListRestaurants();
 
     }
 
@@ -171,10 +159,11 @@ public class MapViewFragment extends BaseRestaurantsListFragment implements OnMa
     private void displayLocationUser(){
         googleMap.setMyLocationEnabled(true);
 
+
     }
 
     @SuppressLint("MissingPermission")
-    private void centerCameraOnGPSLocation() {
+    private void centerCameraOnGPSLocation(LatLng locationUser) {
         if (locationUser != null){
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(locationUser));
             googleMap.animateCamera(CameraUpdateFactory.zoomTo(ZOOM_USER_LOCATION_VALUE));

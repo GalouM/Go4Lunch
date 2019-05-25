@@ -9,16 +9,12 @@ import com.galou.go4lunch.models.ApiDetailResponse;
 import com.galou.go4lunch.models.DistanceApiResponse;
 import com.galou.go4lunch.models.ElementApiDistance;
 import com.galou.go4lunch.models.Restaurant;
-import com.galou.go4lunch.models.ResultApiPlace;
 import com.galou.go4lunch.models.RowApiDistance;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.repositories.RestaurantRepository;
 import com.galou.go4lunch.repositories.UserRepository;
-import com.galou.go4lunch.util.OpeningHoursUtil;
-import com.galou.go4lunch.util.RatingUtil;
 import com.galou.go4lunch.util.RetryAction;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
@@ -45,6 +41,7 @@ public class RestaurantsListViewModel extends BaseViewModel {
     private MutableLiveData<List<Restaurant>> restaurantsList = new MutableLiveData<>();
     private MutableLiveData<Object> openDetailRestaurant = new MutableLiveData<>();
     private MutableLiveData<Object> requestLocation = new MutableLiveData<>();
+    private MutableLiveData<LatLng> locationUser = new MutableLiveData<>();
 
     //----- GETTER LIVE DATA -----
     public LiveData<List<Restaurant>> getRestaurantsList(){
@@ -56,6 +53,7 @@ public class RestaurantsListViewModel extends BaseViewModel {
     public LiveData<Object> getRequestLocation() {
         return requestLocation;
     }
+    public LiveData<LatLng> getLocationUser() {return locationUser;}
 
     public RestaurantsListViewModel(UserRepository userRepository, RestaurantRepository restaurantRepository) {
         this.userRepository = userRepository;
@@ -66,25 +64,19 @@ public class RestaurantsListViewModel extends BaseViewModel {
     // START
     // --------------------
 
-    public void setupLocation(LatLng location){
-        restaurantRepository.setLocation(location);
-
+    public void checkIfLocationIsAvailable(){
+        LatLng location = restaurantRepository.getLocation();
+        if(location == null){
+            requestLocation.setValue(new Object());
+        } else {
+            this.requestListRestaurants();
+            locationUser.setValue(location);
+        }
     }
 
     // --------------------
     // GET USER ACTION
     // --------------------
-
-    public void requestListRestaurants(){
-        isLoading.setValue(true);
-        if(restaurantRepository.getRestaurantsLoaded() == null || restaurantRepository.getRestaurantsLoaded().size() == 0) {
-            this.fetchListRestaurant();
-        } else {
-            restaurantsList.setValue(restaurantRepository.getRestaurantsLoaded());
-            isLoading.setValue(false);
-        }
-
-    }
 
     public void updateRestaurantSelected(String restaurantUid){
         restaurantRepository.setRestaurantSelected(restaurantUid);
@@ -105,6 +97,13 @@ public class RestaurantsListViewModel extends BaseViewModel {
 
     public void noLocationAvailable(){
         snackBarText.setValue(R.string.no_location_message);
+
+    }
+
+    public void setupLocation(LatLng location){
+        restaurantRepository.setLocation(location);
+        locationUser.setValue(location);
+        this.requestListRestaurants();
 
     }
 
@@ -167,6 +166,17 @@ public class RestaurantsListViewModel extends BaseViewModel {
     // --------------------
     // SETUP RESTAURANT LIST
     // --------------------
+    private void requestListRestaurants(){
+        isLoading.setValue(true);
+        if(restaurantRepository.getRestaurantsLoaded() == null || restaurantRepository.getRestaurantsLoaded().size() == 0) {
+            this.fetchListRestaurant();
+        } else {
+            restaurantsList.setValue(restaurantRepository.getRestaurantsLoaded());
+            isLoading.setValue(false);
+        }
+
+    }
+
     private void createRestaurantList(List<ApiDetailResponse> results){
         restaurants = new ArrayList<>();
         for (ApiDetailResponse detailResult : results){

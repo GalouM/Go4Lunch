@@ -14,14 +14,12 @@ import com.bumptech.glide.Glide;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.databinding.FragmentListViewBinding;
 import com.galou.go4lunch.models.Restaurant;
-import com.galou.go4lunch.restoDetails.RestoDetailDialogFragment;
 import com.galou.go4lunch.util.ItemClickSupport;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.galou.go4lunch.util.PositionUtil.convertLocationForApi;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,7 +47,7 @@ public class ListViewFragment extends BaseRestaurantsListFragment {
         this.configureRecycleView(view);
         this.configureBindingAndViewModel(view);
         this.createViewModelConnections();
-        viewModel.requestListRestaurants();
+        viewModel.checkIfLocationIsAvailable();
         return view;
     }
     
@@ -77,13 +75,6 @@ public class ListViewFragment extends BaseRestaurantsListFragment {
 
     }
 
-    @Override
-    protected void setupLocation() {
-        viewModel.setupLocation(locationUser);
-        viewModel.requestListRestaurants();
-
-    }
-
     // --------------------
     // ACTION FROM VIEWMODEL
     // --------------------
@@ -102,6 +93,6 @@ public class ListViewFragment extends BaseRestaurantsListFragment {
 
     }
 
-
-
+    @Override
+    public void configureLocation(LatLng location) {}
 }

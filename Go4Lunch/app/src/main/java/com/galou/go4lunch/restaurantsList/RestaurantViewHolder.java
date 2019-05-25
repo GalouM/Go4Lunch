@@ -1,7 +1,6 @@
 package com.galou.go4lunch.restaurantsList;
 
 import android.content.res.Resources;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
