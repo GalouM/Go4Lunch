@@ -13,6 +13,7 @@ import com.galou.go4lunch.models.RowApiDistance;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.repositories.RestaurantRepository;
 import com.galou.go4lunch.repositories.UserRepository;
+import com.galou.go4lunch.util.Event;
 import com.galou.go4lunch.util.RetryAction;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -39,7 +40,7 @@ public class RestaurantsListViewModel extends BaseViewModel {
 
     //----- PRIVATE LIVE DATA -----
     private MutableLiveData<List<Restaurant>> restaurantsList = new MutableLiveData<>();
-    private MutableLiveData<Object> openDetailRestaurant = new MutableLiveData<>();
+    private MutableLiveData<Event<Object>> openDetailRestaurant = new MutableLiveData<>();
     private MutableLiveData<Object> requestLocation = new MutableLiveData<>();
     private MutableLiveData<LatLng> locationUser = new MutableLiveData<>();
 
@@ -47,7 +48,7 @@ public class RestaurantsListViewModel extends BaseViewModel {
     public LiveData<List<Restaurant>> getRestaurantsList(){
         return restaurantsList;
     }
-    public LiveData<Object> getOpenDetailRestaurant() {
+    public LiveData<Event<Object>> getOpenDetailRestaurant() {
         return openDetailRestaurant;
     }
     public LiveData<Object> getRequestLocation() {
@@ -80,7 +81,7 @@ public class RestaurantsListViewModel extends BaseViewModel {
 
     public void updateRestaurantSelected(String restaurantUid){
         restaurantRepository.setRestaurantSelected(restaurantUid);
-        openDetailRestaurant.setValue(new Object());
+        openDetailRestaurant.setValue(new Event<>(new Object()));
     }
 
     public void onRefreshRestaurantListList(){
@@ -96,7 +97,7 @@ public class RestaurantsListViewModel extends BaseViewModel {
     }
 
     public void noLocationAvailable(){
-        snackBarText.setValue(R.string.no_location_message);
+        snackBarText.setValue(new Event(R.string.no_location_message));
 
     }
 
@@ -125,7 +126,7 @@ public class RestaurantsListViewModel extends BaseViewModel {
 
             @Override
             public void onError(Throwable e) {
-                snackBarWithAction.setValue(GET_RESTAURANTS);
+                snackBarWithAction.setValue(new Event<>(GET_RESTAURANTS));
                 isLoading.setValue(false);
 
             }
@@ -230,7 +231,7 @@ public class RestaurantsListViewModel extends BaseViewModel {
         if(restaurantRepository.getLocation() != null &&restaurantRepository.streamFetchListRestaurantDetails() != null) {
             this.disposableRestaurant = restaurantRepository.streamFetchListRestaurantDetails().subscribeWith(getObserverRestaurants());
         } else {
-            snackBarText.setValue(R.string.no_location_message);
+            snackBarText.setValue(new Event<>(R.string.no_location_message));
             isLoading.setValue(false);
         }
     }

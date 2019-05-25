@@ -91,11 +91,21 @@ public class RestoDetailDialogFragment extends BottomSheetDialogFragment impleme
     }
 
     private void setupOpenPhoneIntent(){
-        viewModel.getPhoneNumber().observe(this, this::openPhoneIntent);
+        viewModel.getPhoneNumber().observe(this, openPhoneEvent -> {
+            String phoneNumber = openPhoneEvent.getContentIfNotHandle();
+            if(phoneNumber != null) {
+                this.openPhoneIntent(phoneNumber);
+            }
+        });
     }
 
     private void setupOpenWebsite(){
-        viewModel.getWebSite().observe(this, this::openWebViewIntent);
+        viewModel.getWebSite().observe(this, openWebsiteEvent -> {
+            String website = openWebsiteEvent.getContentIfNotHandle();
+            if(website != null) {
+                this.openWebViewIntent(website);
+            }
+        });
     }
 
     private void setupUsers(){

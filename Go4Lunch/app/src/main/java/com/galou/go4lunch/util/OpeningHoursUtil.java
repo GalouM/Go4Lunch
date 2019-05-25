@@ -37,7 +37,7 @@ public abstract class OpeningHoursUtil {
         if(openingHours.getOpenNow() != null && !openingHours.getOpenNow()){
             return R.string.closed;
         }
-        int dayOfTheWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)-1;
+        int dayOfTheWeek = (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) == 7 ? 0 : Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
         if(openingHours.getPeriods().size() >= dayOfTheWeek){
             PlaceResult.OpeningHours.Period periodOfTheDay = openingHours.getPeriods().get(dayOfTheWeek);
             if(periodOfTheDay.getClose() == null) return R.string.open_24_7;

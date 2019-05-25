@@ -7,7 +7,7 @@ import com.google.android.gms.maps.model.LatLng;
  */
 public interface MainActivityContract {
     void logoutUser();
-    void settings(Boolean setting);
+    void settings();
     void displayRestaurantDetail();
     void configureNotification(boolean isEnable);
     void configureAutocomplete(LatLng position);

@@ -13,6 +13,7 @@ import com.galou.go4lunch.base.BaseViewModel;
 import com.galou.go4lunch.repositories.RestaurantRepository;
 import com.galou.go4lunch.repositories.SaveDataRepository;
 import com.galou.go4lunch.repositories.UserRepository;
+import com.galou.go4lunch.util.Event;
 import com.galou.go4lunch.util.RetryAction;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -22,9 +23,9 @@ import com.google.android.gms.maps.model.LatLng;
 public class MainActivityViewModel extends BaseViewModel {
 
     //----- PRIVATE LIVE DATA -----
-    private final MutableLiveData<Object> logoutRequested = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> settingsRequested = new MutableLiveData<>();
-    private final MutableLiveData<Object> openDetailRestaurant = new MutableLiveData<>();
+    private final MutableLiveData<Event<Object>> logoutRequested = new MutableLiveData<>();
+    private final MutableLiveData<Event<Object>> settingsRequested = new MutableLiveData<>();
+    private final MutableLiveData<Event<Object>> openDetailRestaurant = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isNotificationEnable = new MutableLiveData<>();
     private final MutableLiveData<LatLng> location = new MutableLiveData<>();
 
@@ -41,11 +42,11 @@ public class MainActivityViewModel extends BaseViewModel {
     private SaveDataRepository saveDataRepository;
 
     //----- GETTER LIVE DATA -----
-    public LiveData<Object> getLogout() {
+    public LiveData<Event<Object>> getLogout() {
         return logoutRequested;
     }
-    public LiveData<Boolean> getSettings() { return settingsRequested; }
-    public LiveData<Object> getOpenDetailRestaurant() { return openDetailRestaurant; }
+    public LiveData<Event<Object>> getSettings() { return settingsRequested; }
+    public LiveData<Event<Object>> getOpenDetailRestaurant() { return openDetailRestaurant; }
     public LiveData<Boolean> getIsNotificationEnable(){ return isNotificationEnable; }
     public LiveData<LatLng> getLocation(){ return location; }
 
@@ -81,23 +82,22 @@ public class MainActivityViewModel extends BaseViewModel {
     public void logoutUserFromApp(){
         this.configureEspressoIdlingResource();
         this.incrementIdleResource();
-        logoutRequested.setValue(new Object());
-        snackBarText.setValue(R.string.logged_out_success);
+        logoutRequested.setValue(new Event<>(new Object()));
+        snackBarText.setValue(new Event<>(R.string.logged_out_success));
 
     }
 
     public void openSettings(){
-        settingsRequested.setValue(true);
+        settingsRequested.setValue(new Event<>(new Object()));
     }
-    public void closeSettings() { settingsRequested.setValue(false);}
 
     public void showUserRestaurant() {
         String uidRestaurant = user.getRestaurantUid();
         if(uidRestaurant != null) {
             restaurantRepository.setRestaurantSelected(uidRestaurant);
-            openDetailRestaurant.setValue(new Object());
+            openDetailRestaurant.setValue(new Event<>(new Object()));
         } else {
-            snackBarText.setValue(R.string.no_restaurant_picked_message);
+            snackBarText.setValue(new Event<>(R.string.no_restaurant_picked_message));
         }
     }
 
@@ -108,13 +108,13 @@ public class MainActivityViewModel extends BaseViewModel {
     }
 
     public void noLocationAvailable(){
-        snackBarText.setValue(R.string.no_location_message);
+        snackBarText.setValue(new Event<>(R.string.no_location_message));
 
     }
 
     public void showRestaurantSelected(String uid){
         restaurantRepository.setRestaurantSelected(uid);
-        openDetailRestaurant.setValue(new Object());
+        openDetailRestaurant.setValue(new Event<>(new Object()));
     }
 
     @Override

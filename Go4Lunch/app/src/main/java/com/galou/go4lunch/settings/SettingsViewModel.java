@@ -11,6 +11,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.base.BaseViewModel;
 import com.galou.go4lunch.repositories.SaveDataRepository;
+import com.galou.go4lunch.util.Event;
 import com.galou.go4lunch.util.SuccessOrign;
 import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.models.User;
@@ -48,14 +49,14 @@ public class SettingsViewModel extends BaseViewModel {
     public final MutableLiveData<Integer> errorMessageUsername = new MutableLiveData<>();
 
     //----- PRIVATE LIVE DATA -----
-    private final MutableLiveData<Object> deleteUser = new MutableLiveData<>();
-    private final MutableLiveData<Object> openDialog = new MutableLiveData<>();
+    private final MutableLiveData<Event<Object>> deleteUser = new MutableLiveData<>();
+    private final MutableLiveData<Event<Object>> openDialog = new MutableLiveData<>();
 
     //----- GETTER -----
-    public LiveData<Object> getDeleteUser(){
+    public LiveData<Event<Object>> getDeleteUser(){
         return deleteUser;
     }
-    public LiveData<Object> getOpenDialog() {
+    public LiveData<Event<Object>> getOpenDialog() {
         return openDialog;
     }
 
@@ -133,7 +134,7 @@ public class SettingsViewModel extends BaseViewModel {
     }
 
     public void deleteUserFromDBRequest() {
-        openDialog.setValue(new Object());
+        openDialog.setValue(new Event<>(new Object()));
 
     }
 
@@ -155,13 +156,13 @@ public class SettingsViewModel extends BaseViewModel {
     // --------------------
 
     private void disableNotification(){
-        snackBarText.setValue(R.string.notification_disabled);
+        snackBarText.setValue(new Event<>(R.string.notification_disabled));
         saveDataRepository.saveNotificationSettings(false, user.getUid());
 
     }
 
     private void enableNotification(){
-        snackBarText.setValue(R.string.notifications_enabled);
+        snackBarText.setValue(new Event<>(R.string.notifications_enabled));
         saveDataRepository.saveNotificationSettings(true, user.getUid());
 
     }
@@ -214,18 +215,18 @@ public class SettingsViewModel extends BaseViewModel {
         return aVoid -> {
             switch (origin){
                 case UPDATE_USER:
-                    snackBarText.setValue(R.string.information_updated);
+                    snackBarText.setValue(new Event<>(R.string.information_updated));
                     isLoading.setValue(false);
                     user.setEmail(newEmail);
                     user.setUsername(newUsername);
                     break;
                 case DELETE_USER:
-                    snackBarText.setValue(R.string.deleted_account_message);
-                    deleteUser.setValue(new Object());
+                    snackBarText.setValue(new Event<>(R.string.deleted_account_message));
+                    deleteUser.setValue(new Event<>(new Object()));
                     isLoading.setValue(false);
                     break;
                 case UPDATE_PHOTO:
-                    snackBarText.setValue(R.string.photo_updated_message);
+                    snackBarText.setValue(new Event<>(R.string.photo_updated_message));
                     isLoading.setValue(false);
                     urlPicture.setValue(newPhotoUrl);
                     user.setUrlPicture(newPhotoUrl);

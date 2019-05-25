@@ -20,6 +20,7 @@ import com.galou.go4lunch.injection.ViewModelFactory;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.restoDetails.RestoDetailDialogFragment;
 import com.galou.go4lunch.util.ItemClickSupport;
+import com.galou.go4lunch.util.RetryAction;
 import com.galou.go4lunch.util.SnackBarUtil;
 
 import java.util.ArrayList;
@@ -81,7 +82,8 @@ public class WorkmatesFragment extends Fragment implements WorkmateContract {
     }
 
     private void setupSnackBar(){
-        viewModel.getSnackBarMessage().observe(this, message -> {
+        viewModel.getSnackBarMessage().observe(this, messageEvent -> {
+            Integer message = messageEvent.getContentIfNotHandle();
             if(message != null){
                 SnackBarUtil.showSnackBar(getView(), getString(message));
             }
@@ -90,7 +92,8 @@ public class WorkmatesFragment extends Fragment implements WorkmateContract {
     }
 
     private void setupSnackBarWithAction(){
-        viewModel.getSnackBarWithAction().observe(this, action -> {
+        viewModel.getSnackBarWithAction().observe(this, actionEvent -> {
+            RetryAction action = actionEvent.getContentIfNotHandle();
             if(action != null){
                 SnackBarUtil.showSnackBarWithRetryButton(getView(), getString(R.string.error_unknown_error), viewModel, action);
             }
@@ -99,7 +102,11 @@ public class WorkmatesFragment extends Fragment implements WorkmateContract {
     }
 
     private void setupOpenDetailRestaurant(){
-        viewModel.getOpenDetailRestaurant().observe(this, open -> displayRestaurantDetail());
+        viewModel.getOpenDetailRestaurant().observe(this, openEvent -> {
+            if(openEvent.getContentIfNotHandle() != null) {
+                displayRestaurantDetail();
+            }
+        });
     }
 
     // --------------------

@@ -31,6 +31,7 @@ import com.galou.go4lunch.base.ButtonActionListener;
 import com.galou.go4lunch.databinding.ActivitySettingsBinding;
 import com.galou.go4lunch.injection.Injection;
 import com.galou.go4lunch.injection.ViewModelFactory;
+import com.galou.go4lunch.util.RetryAction;
 import com.galou.go4lunch.util.SnackBarUtil;
 
 import java.util.List;
@@ -120,17 +121,19 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
 
     private void setupSnackBar(){
         View view = findViewById(android.R.id.content);
-        viewModel.getSnackBarMessage().observe(this, message -> {
+        viewModel.getSnackBarMessage().observe(this, messageEvent -> {
+            Integer message = messageEvent.getContentIfNotHandle();
             if(message != null){
-                //this.decrementIdleResource();
                 SnackBarUtil.showSnackBar(view, getString(message));
             }
         });
+
     }
 
     private void setupSnackBarWithAction(){
         View view = findViewById(android.R.id.content);
-        viewModel.getSnackBarWithAction().observe(this, action -> {
+        viewModel.getSnackBarWithAction().observe(this, actionEvent -> {
+            RetryAction action = actionEvent.getContentIfNotHandle();
             if(action != null){
                 SnackBarUtil.showSnackBarWithRetryButton(view, getString(R.string.error_unknown_error), viewModel, action);
             }
@@ -139,11 +142,19 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
     }
 
     private void setupDeleteAccount(){
-        viewModel.getDeleteUser().observe(this, deleted -> deleteAccountAndGoBackToAuth());
+        viewModel.getDeleteUser().observe(this, deletedEvent -> {
+            if(deletedEvent.getContentIfNotHandle() != null) {
+                deleteAccountAndGoBackToAuth();
+            }
+        });
     }
 
     private void setupOpenConfirmationDialog(){
-        viewModel.getOpenDialog().observe(this, dialog -> openConfirmationDialog());
+        viewModel.getOpenDialog().observe(this, dialogEvent -> {
+            if(dialogEvent.getContentIfNotHandle() != null) {
+                openConfirmationDialog();
+            }
+        });
     }
 
     //----- LISTENER BUTTON -----

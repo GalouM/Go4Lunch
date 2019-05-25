@@ -15,6 +15,7 @@ import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.repositories.RestaurantRepository;
 import com.galou.go4lunch.repositories.SaveDataRepository;
 import com.galou.go4lunch.repositories.UserRepository;
+import com.galou.go4lunch.util.Event;
 import com.galou.go4lunch.util.OpeningHoursUtil;
 import com.galou.go4lunch.util.RatingUtil;
 import com.galou.go4lunch.util.SuccessOrign;
@@ -57,17 +58,17 @@ public class RestaurantDetailViewModel extends BaseViewModel {
 
     //----- PRIVATE LIVE DATA -----
     private MutableLiveData<List<User>> users = new MutableLiveData<>();
-    private MutableLiveData<String> phoneNumber = new MutableLiveData<>();
-    private MutableLiveData<String> webSite = new MutableLiveData<>();
+    private MutableLiveData<Event<String>> phoneNumber = new MutableLiveData<>();
+    private MutableLiveData<Event<String>> webSite = new MutableLiveData<>();
 
     //----- GETTER LIVE DATA -----
     public LiveData<List<User>> getUsers() {
         return users;
     }
-    public LiveData<String> getPhoneNumber() {
+    public LiveData<Event<String>> getPhoneNumber() {
         return phoneNumber;
     }
-    public LiveData<String> getWebSite() {
+    public LiveData<Event<String>> getWebSite() {
         return webSite;
     }
 
@@ -107,11 +108,11 @@ public class RestaurantDetailViewModel extends BaseViewModel {
     // --------------------
 
     public void fetchPhoneNumber(){
-        phoneNumber.setValue(restaurant.getPhoneNumber());
+        phoneNumber.setValue(new Event<>(restaurant.getPhoneNumber()));
     }
 
     public void fetchWebsite(){
-        webSite.setValue(restaurant.getWebSite());
+        webSite.setValue(new Event<>(restaurant.getWebSite()));
     }
 
     public void updateRestaurantLiked() {
@@ -234,7 +235,7 @@ public class RestaurantDetailViewModel extends BaseViewModel {
 
             @Override
             public void onError(Throwable e) {
-                snackBarWithAction.setValue(GET_RESTAURANT_DETAIL);
+                snackBarWithAction.setValue(new Event<>(GET_RESTAURANT_DETAIL));
                 isLoading.setValue(false);
 
             }
@@ -263,14 +264,14 @@ public class RestaurantDetailViewModel extends BaseViewModel {
         return aVoid -> {
             switch (origin){
                 case UPDATE_RESTAURANT_PICKED:
-                    snackBarText.setValue(R.string.eating_here_today);
+                    snackBarText.setValue(new Event<>(R.string.eating_here_today));
                     isRestaurantPicked.setValue(true);
                     restaurant.addUser(user);
                     fetchInfoRestaurant();
                     isLoading.setValue(false);
                     break;
                 case REMOVE_RESTAURANT_PICKED:
-                    snackBarText.setValue(R.string.not_eating_here);
+                    snackBarText.setValue(new Event<>(R.string.not_eating_here));
                     isRestaurantPicked.setValue(false);
                     restaurant.removeUser(user);
                     fetchInfoRestaurant();

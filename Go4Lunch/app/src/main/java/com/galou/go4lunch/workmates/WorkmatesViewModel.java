@@ -7,6 +7,7 @@ import com.galou.go4lunch.base.BaseViewModel;
 import com.galou.go4lunch.repositories.RestaurantRepository;
 import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.models.User;
+import com.galou.go4lunch.util.Event;
 import com.galou.go4lunch.util.RetryAction;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -22,12 +23,12 @@ public class WorkmatesViewModel extends BaseViewModel {
 
     //----- PRIVATE LIVE DATA -----
     private MutableLiveData<List<User>> users = new MutableLiveData<>();
-    private MutableLiveData<Object> openDetailRestaurant = new MutableLiveData<>();
+    private MutableLiveData<Event<Object>> openDetailRestaurant = new MutableLiveData<>();
 
     //----- GETTER LIVE DATA -----
     public LiveData<List<User>> getUsers(){ return users; }
 
-    public LiveData<Object> getOpenDetailRestaurant() {
+    public LiveData<Event<Object>> getOpenDetailRestaurant() {
         return openDetailRestaurant;
     }
 
@@ -77,7 +78,7 @@ public class WorkmatesViewModel extends BaseViewModel {
         String uidRestaurant = userSelected.getRestaurantUid();
         if(uidRestaurant != null) {
             restaurantRepository.setRestaurantSelected(uidRestaurant);
-            openDetailRestaurant.setValue(new Object());
+            openDetailRestaurant.setValue(new Event<>(new Object()));
         }
     }
 }

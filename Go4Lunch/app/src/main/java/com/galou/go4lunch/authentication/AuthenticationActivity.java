@@ -16,6 +16,7 @@ import com.galou.go4lunch.databinding.ActivityAuthenticationBinding;
 import com.galou.go4lunch.injection.Injection;
 import com.galou.go4lunch.injection.ViewModelFactory;
 import com.galou.go4lunch.main.MainActivity;
+import com.galou.go4lunch.util.RetryAction;
 import com.galou.go4lunch.util.SnackBarUtil;
 
 import java.util.Arrays;
@@ -73,7 +74,8 @@ public class AuthenticationActivity extends AppCompatActivity implements Authent
 
     private void setupSnackBar(){
         View view = findViewById(android.R.id.content);
-        viewModel.getSnackBarMessage().observe(this, message -> {
+        viewModel.getSnackBarMessage().observe(this, messageEvent -> {
+            Integer message = messageEvent.getContentIfNotHandle();
             if(message != null){
                 SnackBarUtil.showSnackBar(view, getString(message));
             }
@@ -83,7 +85,8 @@ public class AuthenticationActivity extends AppCompatActivity implements Authent
 
     private void setupSnackBarWithAction(){
         View view = findViewById(android.R.id.content);
-        viewModel.getSnackBarWithAction().observe(this, action -> {
+        viewModel.getSnackBarWithAction().observe(this, actionEvent -> {
+            RetryAction action = actionEvent.getContentIfNotHandle();
             if(action != null){
                 SnackBarUtil.showSnackBarWithRetryButton(view, getString(R.string.error_unknown_error), viewModel, action);
             }
@@ -92,11 +95,19 @@ public class AuthenticationActivity extends AppCompatActivity implements Authent
     }
 
     private void setupOpenMainActivity(){
-        viewModel.getOpenNewActivityEvent().observe(this, main -> openMainActivity());
+        viewModel.getOpenNewActivityEvent().observe(this, openMainEvent -> {
+            if(openMainEvent.getContentIfNotHandle() != null){
+            openMainActivity();
+            }
+        });
     }
 
     private void setupOpenSignInActivity(){
-        viewModel.getOpenSignInActivityEvent().observe(this, openSignIn -> startSignInActivity());
+        viewModel.getOpenSignInActivityEvent().observe(this, openSignInEvent ->{
+            if(openSignInEvent.getContentIfNotHandle() != null){
+                startSignInActivity();
+            }
+        });
     }
 
     // --------------------

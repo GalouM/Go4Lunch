@@ -16,7 +16,7 @@
             android:id="@+id/recycler_view_image_user"
             android:layout_width="@dimen/user_image_recyclerview_workmates_size"
             android:layout_height="@dimen/user_image_recyclerview_workmates_size"
-            android:background="@drawable/ic_anon_user_48dp"
+            android:background="@drawable/baseline_account_circle_24"
             android:scaleType="fitCenter" />
 
         <LinearLayout

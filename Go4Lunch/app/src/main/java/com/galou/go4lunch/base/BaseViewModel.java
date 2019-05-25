@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.models.User;
+import com.galou.go4lunch.util.Event;
 import com.galou.go4lunch.util.RetryAction;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -15,15 +16,15 @@ import com.google.firebase.auth.FirebaseAuth;
  */
 public abstract class BaseViewModel extends ViewModel {
 
-    protected final MutableLiveData<Integer> snackBarText = new MutableLiveData<>();
-    protected final MutableLiveData<RetryAction> snackBarWithAction = new MutableLiveData<>();
+    protected final MutableLiveData<Event<Integer>> snackBarText = new MutableLiveData<>();
+    protected final MutableLiveData<Event<RetryAction>> snackBarWithAction = new MutableLiveData<>();
 
     public final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
 
-    public LiveData<Integer> getSnackBarMessage(){
+    public LiveData<Event<Integer>> getSnackBarMessage(){
         return snackBarText;
     }
-    public LiveData<RetryAction> getSnackBarWithAction(){
+    public LiveData<Event<RetryAction>> getSnackBarWithAction(){
         return snackBarWithAction;
     }
 
@@ -45,7 +46,7 @@ public abstract class BaseViewModel extends ViewModel {
     public OnFailureListener onFailureListener(RetryAction retryAction){
         return e -> {
             isLoading.setValue(false);
-            snackBarWithAction.setValue(retryAction);
+            snackBarWithAction.setValue(new Event<>(retryAction));
         };
     }
 

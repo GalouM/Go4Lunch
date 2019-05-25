@@ -107,7 +107,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.createViewModelConnections();
         this.configureResetData();
         this.createNotificationChannel();
-        this.configureNotificationIntent();
         this.fetchLastKnowLocation();
 
     }
@@ -116,7 +115,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onResume() {
         super.onResume();
         viewModel.configureInfoUser();
-        viewModel.closeSettings();
         for (int i = 0; i < navigationView.getMenu().size(); i++) {
             navigationView.getMenu().getItem(i).setChecked(false);
         }
@@ -160,24 +158,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void setupSnackBar(){
         View view = findViewById(android.R.id.content);
-        viewModel.getSnackBarMessage().observe(this, message -> {
-            if(message != null){
+        viewModel.getSnackBarMessage().observe(this, messageEvent -> {
+            Integer message = messageEvent.getContentIfNotHandle();
+            if (message != null) {
                 SnackBarUtil.showSnackBar(view, getString(message));
             }
+
         });
 
     }
 
     private void setupLogoutRequest(){
-        viewModel.getLogout().observe(this, logout -> logoutUser());
+        viewModel.getLogout().observe(this, logOutEvent -> {
+            if(logOutEvent.getContentIfNotHandle() != null){
+                this.logoutUser();
+            }
+        });
     }
 
     private void setupSettingsRequest(){
-        viewModel.getSettings().observe(this, this::settings);
+        viewModel.getSettings().observe(this, settingEvent -> {
+            if(settingEvent.getContentIfNotHandle() != null){
+                this.settings();
+            }
+        });
     }
 
     private void setupOpenDetailRestaurant(){
-        viewModel.getOpenDetailRestaurant().observe(this, open -> displayRestaurantDetail());
+        viewModel.getOpenDetailRestaurant().observe(this, detailEvent -> {
+            if (detailEvent.getContentIfNotHandle() != null) {
+                displayRestaurantDetail();
+            }
+        });
     }
 
     private void setupNotification(){
@@ -339,11 +351,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void settings(Boolean setting) {
-        if(setting) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-        }
+    public void settings() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
 
     }
 
@@ -355,6 +365,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void configureNotification(boolean isEnable) {
+        configureNotificationIntent();
         if(isEnable) enableNotifications();
         if(!isEnable) disableNotification();
 
@@ -422,8 +433,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void enableNotifications() {
         Calendar notificationTime = Calendar.getInstance();
-        notificationTime.set(Calendar.HOUR_OF_DAY, 14);
-        notificationTime.set(Calendar.MINUTE, 12);
+        notificationTime.set(Calendar.HOUR_OF_DAY, TIME_NOTIFICATION[0]);
+        notificationTime.set(Calendar.MINUTE, TIME_NOTIFICATION[1]);
         AlarmManager manager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         manager.set(AlarmManager.RTC, notificationTime.getTimeInMillis(), pendingIntentAlarm);
 
@@ -505,8 +516,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         pendingIntentReset = PendingIntent.getBroadcast(this, 0,
                 notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         Calendar resetTime = Calendar.getInstance();
-        resetTime.set(Calendar.HOUR_OF_DAY, TIME_NOTIFICATION[0]);
-        resetTime.set(Calendar.MINUTE, TIME_NOTIFICATION[1]);
+        resetTime.set(Calendar.HOUR_OF_DAY, 14);
+        resetTime.set(Calendar.MINUTE, 0);
         AlarmManager manager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         manager.set(AlarmManager.RTC, resetTime.getTimeInMillis(), pendingIntentReset);
     }

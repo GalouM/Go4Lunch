@@ -17,162 +17,167 @@
 
     </data>
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+        android:layout_height="match_parent">
 
-    android:orientation="vertical">
-    <ImageView
-        android:id="@+id/image_restaurant"
-        android:layout_width="match_parent"
-        android:layout_height="250dip"
-        android:src="@drawable/go4lunch_icon"
-        app:imageUrl="@{viewmodel.urlPhoto}"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dip"
-        android:background="@color/colorPrimary"
-        android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginStart="@dimen/small_margin"
-            android:layout_marginBottom="@dimen/really_small_margin"
-            android:layout_marginTop="@dimen/small_margin">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorTextPrimary"
-                android:text="@{viewmodel.nameRestaurant}"
-                android:textStyle="bold"/>
-            <ImageView
-                android:id="@+id/first_star"
-                android:layout_width="15dip"
-                android:layout_height="15dip"
-                android:tint="@color/colorAccent"
-                android:layout_gravity="center"
-                app:displayRating="@{viewmodel.rating}"/>
-            <ImageView
-                android:id="@+id/second_star"
-                android:layout_width="15dip"
-                android:layout_height="15dip"
-                android:tint="@color/colorAccent"
-                android:layout_gravity="center"
-                app:displayRating="@{viewmodel.rating}"/>
-            <ImageView
-                android:id="@+id/third_star"
-                android:layout_width="15dip"
-                android:layout_height="15dip"
-                android:tint="@color/colorAccent"
-                android:layout_gravity="center"
-                app:displayRating="@{viewmodel.rating}"/>
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
 
-        </LinearLayout>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorTextPrimary"
-            android:text="@{viewmodel.addressRestaurant}"
-            android:layout_marginStart="@dimen/small_margin"/>
-    </LinearLayout>
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/image_restaurant"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dip"
+                    android:src="@drawable/go4lunch_icon"
+                    app:imageUrl="@{viewmodel.urlPhoto}"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="80dip"
+                    android:background="@color/colorPrimary"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginStart="@dimen/small_margin"
+                        android:layout_marginBottom="@dimen/really_small_margin"
+                        android:layout_marginTop="@dimen/small_margin">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorTextPrimary"
+                            android:text="@{viewmodel.nameRestaurant}"
+                            android:textStyle="bold"/>
+                        <ImageView
+                            android:id="@+id/first_star"
+                            android:layout_width="15dip"
+                            android:layout_height="15dip"
+                            android:tint="@color/colorAccent"
+                            android:layout_gravity="center"
+                            app:displayRating="@{viewmodel.rating}"/>
+                        <ImageView
+                            android:id="@+id/second_star"
+                            android:layout_width="15dip"
+                            android:layout_height="15dip"
+                            android:tint="@color/colorAccent"
+                            android:layout_gravity="center"
+                            app:displayRating="@{viewmodel.rating}"/>
+                        <ImageView
+                            android:id="@+id/third_star"
+                            android:layout_width="15dip"
+                            android:layout_height="15dip"
+                            android:tint="@color/colorAccent"
+                            android:layout_gravity="center"
+                            app:displayRating="@{viewmodel.rating}"/>
 
-    <androidx.gridlayout.widget.GridLayout
-        android:layout_margin="@dimen/small_margin"
-        android:layout_width="match_parent"
-        android:layout_height="100dip"
-        app:columnCount="3"
-        app:rowCount="2">
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorTextPrimary"
+                        android:text="@{viewmodel.addressRestaurant}"
+                        android:layout_marginStart="@dimen/small_margin"/>
+                </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/phone_button"
-            app:layout_column="0"
-            app:layout_row="0"
-            android:layout_width="30dip"
-            android:layout_height="30dip"
-            android:src="@drawable/baseline_phone_24"
-            app:layout_columnWeight="1"
-            android:tint="@color/colorPrimary"
-            android:background="@null"
-            android:visibility="@{viewmodel.phoneAvailable ? View.VISIBLE : View.INVISIBLE}"
-            android:onClick="@{(view) -> listener.onClick(view)}"/>
-        <TextView
-            app:layout_column="0"
-            app:layout_row="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/phone_button_text"
-            android:textColor="@color/colorPrimary"
-            app:layout_columnWeight="1"
-            android:gravity="center"
-            android:visibility="@{viewmodel.phoneAvailable ? View.VISIBLE : View.INVISIBLE}"/>
+                <androidx.gridlayout.widget.GridLayout
+                    android:layout_margin="@dimen/small_margin"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dip"
+                    app:columnCount="3"
+                    app:rowCount="2">
 
-        <ImageButton
-            android:id="@+id/like_button"
-            app:layout_column="1"
-            app:layout_row="0"
-            android:layout_width="30dip"
-            android:layout_height="30dip"
-            android:src="@drawable/baseline_star_24"
-            app:layout_columnWeight="1"
-            android:tint="@{viewmodel.isRestaurantLiked ? @color/colorAccent : @color/colorPrimary}"
-            android:onClick="@{(view) -> listener.onClick(view)}"
-            android:background="@null"/>
-        <TextView
-            app:layout_column="1"
-            app:layout_row="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{viewmodel.isRestaurantLiked ? @string/liked_text_button : @string/like_button_text}"
-            android:textColor="@{viewmodel.isRestaurantLiked ? @color/colorAccent : @color/colorPrimary}"
-            app:layout_columnWeight="1"
-            android:gravity="center" />
+                    <ImageButton
+                        android:id="@+id/phone_button"
+                        app:layout_column="0"
+                        app:layout_row="0"
+                        android:layout_width="30dip"
+                        android:layout_height="30dip"
+                        android:src="@drawable/baseline_phone_24"
+                        app:layout_columnWeight="1"
+                        android:tint="@color/colorPrimary"
+                        android:background="@null"
+                        android:visibility="@{viewmodel.phoneAvailable ? View.VISIBLE : View.INVISIBLE}"
+                        android:onClick="@{(view) -> listener.onClick(view)}"/>
+                    <TextView
+                        app:layout_column="0"
+                        app:layout_row="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/phone_button_text"
+                        android:textColor="@color/colorPrimary"
+                        app:layout_columnWeight="1"
+                        android:gravity="center"
+                        android:visibility="@{viewmodel.phoneAvailable ? View.VISIBLE : View.INVISIBLE}"/>
 
-        <ImageButton
-            android:id="@+id/website_button"
-            app:layout_column="2"
-            app:layout_row="0"
-            android:layout_width="30dip"
-            android:layout_height="30dip"
-            android:src="@drawable/baseline_public_24"
-            app:layout_columnWeight="1"
-            android:tint="@color/colorPrimary"
-            android:background="@null"
-            android:visibility="@{viewmodel.websiteAvailable ? View.VISIBLE : View.INVISIBLE}"
-            android:onClick="@{(view) -> listener.onClick(view)}"/>
-        <TextView
-            app:layout_column="2"
-            app:layout_row="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/website_button_text"
-            android:textColor="@color/colorPrimary"
-            app:layout_columnWeight="1"
-            android:gravity="center"
-            android:visibility="@{viewmodel.websiteAvailable ? View.VISIBLE : View.INVISIBLE}"/>
+                    <ImageButton
+                        android:id="@+id/like_button"
+                        app:layout_column="1"
+                        app:layout_row="0"
+                        android:layout_width="30dip"
+                        android:layout_height="30dip"
+                        android:src="@drawable/baseline_star_24"
+                        app:layout_columnWeight="1"
+                        android:tint="@{viewmodel.isRestaurantLiked ? @color/colorAccent : @color/colorPrimary}"
+                        android:onClick="@{(view) -> listener.onClick(view)}"
+                        android:background="@null"/>
+                    <TextView
+                        app:layout_column="1"
+                        app:layout_row="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewmodel.isRestaurantLiked ? @string/liked_text_button : @string/like_button_text}"
+                        android:textColor="@{viewmodel.isRestaurantLiked ? @color/colorAccent : @color/colorPrimary}"
+                        app:layout_columnWeight="1"
+                        android:gravity="center" />
 
-    </androidx.gridlayout.widget.GridLayout>
+                    <ImageButton
+                        android:id="@+id/website_button"
+                        app:layout_column="2"
+                        app:layout_row="0"
+                        android:layout_width="30dip"
+                        android:layout_height="30dip"
+                        android:src="@drawable/baseline_public_24"
+                        app:layout_columnWeight="1"
+                        android:tint="@color/colorPrimary"
+                        android:background="@null"
+                        android:visibility="@{viewmodel.websiteAvailable ? View.VISIBLE : View.INVISIBLE}"
+                        android:onClick="@{(view) -> listener.onClick(view)}"/>
+                    <TextView
+                        app:layout_column="2"
+                        app:layout_row="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/website_button_text"
+                        android:textColor="@color/colorPrimary"
+                        app:layout_columnWeight="1"
+                        android:gravity="center"
+                        android:visibility="@{viewmodel.websiteAvailable ? View.VISIBLE : View.INVISIBLE}"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_detail_resto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-</LinearLayout>
-        
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/pick_restaurant_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@{viewmodel.isRestaurantPicked ? @drawable/baseline_check_circle_24 : @drawable/baseline_check_circle_outline_24}"
-            app:layout_anchor="@id/image_restaurant"
-            app:layout_anchorGravity="bottom|right|end"
-            android:theme="@style/AppTheme"
-            android:onClick="@{(view) -> listener.onClick(view)}"/>
+                </androidx.gridlayout.widget.GridLayout>
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view_detail_resto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/pick_restaurant_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@{viewmodel.isRestaurantPicked ? @drawable/baseline_check_circle_24 : @drawable/baseline_check_circle_outline_24}"
+                        app:layout_anchor="@id/image_restaurant"
+                        app:layout_anchorGravity="bottom|right|end"
+                        android:theme="@style/AppTheme"
+                        android:onClick="@{(view) -> listener.onClick(view)}"/>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </ScrollView>
 
 
 

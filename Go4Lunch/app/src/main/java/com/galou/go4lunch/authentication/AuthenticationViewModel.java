@@ -12,6 +12,7 @@ import com.galou.go4lunch.R;
 import com.galou.go4lunch.base.BaseViewModel;
 import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.models.User;
+import com.galou.go4lunch.util.Event;
 import com.galou.go4lunch.util.RetryAction;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,18 +28,18 @@ import static com.galou.go4lunch.util.RetryAction.FETCH_USER;
  */
 public class AuthenticationViewModel extends BaseViewModel {
 
-    private final MutableLiveData<Object> openNewActivityEvent = new MutableLiveData<>();
-    private final MutableLiveData<Object> openSignInActivityEvent = new MutableLiveData<>();
+    private final MutableLiveData<Event<Object>> openNewActivityEvent = new MutableLiveData<>();
+    private final MutableLiveData<Event<Object>> openSignInActivityEvent = new MutableLiveData<>();
 
     private User user;
 
     // LiveData getters
 
-    public LiveData<Object> getOpenNewActivityEvent() {
+    public LiveData<Event<Object>> getOpenNewActivityEvent() {
         return openNewActivityEvent;
     }
 
-    public LiveData<Object> getOpenSignInActivityEvent() {
+    public LiveData<Event<Object>> getOpenSignInActivityEvent() {
         return openSignInActivityEvent;
     }
 
@@ -52,11 +53,11 @@ public class AuthenticationViewModel extends BaseViewModel {
                 this.fetchCurrentUserFromFirestore();
             } else { // ERRORS
                 if (response == null && response.getError() != null) {
-                    snackBarText.setValue(R.string.error_authentication_canceled);
+                    snackBarText.setValue(new Event<>(R.string.error_authentication_canceled));
                 } else if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
-                    snackBarWithAction.setValue(FETCH_USER);
+                    snackBarWithAction.setValue(new Event<>(FETCH_USER));
                 } else if (response.getError().getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
-                    snackBarWithAction.setValue(FETCH_USER);
+                    snackBarWithAction.setValue(new Event<>(FETCH_USER));
                 }
             }
         }
@@ -65,17 +66,14 @@ public class AuthenticationViewModel extends BaseViewModel {
 
     void checkIfUserIsLogged(){
         if (isCurrentUserLogged()){
-            Log.e("here", "fetching");
             this.fetchCurrentUserFromFirestore();
         } else {
-            Log.e("here", "open sign in");
-            openSignInActivityEvent.setValue(new Object());
+            openSignInActivityEvent.setValue(new Event<>(new Object()));
         }
     }
 
     private void fetchCurrentUserFromFirestore(){
         if (isCurrentUserLogged()) {
-            Log.e("current user", getCurrentUser().getDisplayName());
             userRepository.getUserFromFirebase(getCurrentUser().getUid())
                     .addOnFailureListener(this.onFailureListener(FETCH_USER))
                     .addOnSuccessListener(documentSnapshot -> {
@@ -84,7 +82,7 @@ public class AuthenticationViewModel extends BaseViewModel {
                             createUserInFirestore();
                         } else {
                             userRepository.updateUserRepository(user);
-                            openNewActivityEvent.setValue(new Object());
+                            openNewActivityEvent.setValue(new Event<>(new Object()));
                         }
                     });
 

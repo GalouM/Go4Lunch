@@ -2,9 +2,11 @@ package com.galou.go4lunch.restaurantsList;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.galou.go4lunch.R;
@@ -12,6 +14,8 @@ import com.galou.go4lunch.injection.Injection;
 import com.galou.go4lunch.injection.ViewModelFactory;
 import com.galou.go4lunch.models.Restaurant;
 import com.galou.go4lunch.restoDetails.RestoDetailDialogFragment;
+import com.galou.go4lunch.util.Event;
+import com.galou.go4lunch.util.RetryAction;
 import com.galou.go4lunch.util.SnackBarUtil;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.model.LatLng;
@@ -64,17 +68,9 @@ public abstract class BaseRestaurantsListFragment extends Fragment implements Re
         viewModel.getRestaurantsList().observe(this, this::displayRestaurants);
     }
 
-    protected void setupSnackBarWithAction(){
-        viewModel.getSnackBarWithAction().observe(this, action -> {
-            if(action != null){
-                SnackBarUtil.showSnackBarWithRetryButton(getView(), getString(R.string.error_unknown_error), viewModel, action);
-            }
-        });
-
-    }
-
     protected void setupSnackBar(){
-        viewModel.getSnackBarMessage().observe(this, message -> {
+        viewModel.getSnackBarMessage().observe(this, messageEvent -> {
+            Integer message = messageEvent.getContentIfNotHandle();
             if(message != null){
                 SnackBarUtil.showSnackBar(getView(), getString(message));
             }
@@ -82,8 +78,24 @@ public abstract class BaseRestaurantsListFragment extends Fragment implements Re
 
     }
 
+    protected void setupSnackBarWithAction(){
+        viewModel.getSnackBarWithAction().observe(this, actionEvent -> {
+            RetryAction action = actionEvent.getContentIfNotHandle();
+            if(action != null){
+                SnackBarUtil.showSnackBarWithRetryButton(getView(), getString(R.string.error_unknown_error), viewModel, action);
+            }
+        });
+
+    }
+
     protected void setupOpenDetailRestaurant(){
-        viewModel.getOpenDetailRestaurant().observe(this, open -> displayRestaurantDetail());
+        viewModel.getOpenDetailRestaurant().observe(this, openDetailEvent -> {
+            if(openDetailEvent.getContentIfNotHandle() != null){
+                displayRestaurantDetail();
+
+            }
+
+        });
     }
 
     protected void setupRequestLocation(){
