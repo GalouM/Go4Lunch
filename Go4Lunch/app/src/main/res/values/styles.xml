@@ -48,6 +48,12 @@
         <item name="android:textStyle">italic</item>
     </style>
 
+    <!-- TEXT USERS DECIDED -->
+    <style name="UserDecidedText" parent="Go4LunchText">
+        <item name="android:textColor">@color/colorTextOnWhite</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
     <!-- TEXT TIME CLOSES -->
     <style name="TimeRestaurantClosed" parent="Go4LunchText">
         <item name="android:textColor">@color/colorTextRed</item>
