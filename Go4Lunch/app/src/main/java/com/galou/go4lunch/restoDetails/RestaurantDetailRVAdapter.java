@@ -1,6 +1,7 @@
 package com.galou.go4lunch.restoDetails;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,7 @@ public class RestaurantDetailRVAdapter extends RecyclerView.Adapter<RestaurantDe
 
     void update(List<User> users){
         this.users = users;
+        Log.e("update", users.toString());
         notifyDataSetChanged();
     }
 }

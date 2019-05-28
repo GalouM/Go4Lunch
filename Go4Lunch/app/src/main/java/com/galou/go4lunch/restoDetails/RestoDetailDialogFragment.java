@@ -18,6 +18,7 @@ import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.workmates.WorkmatesRecyclerViewAdapter;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -160,6 +161,7 @@ public class RestoDetailDialogFragment extends BottomSheetDialogFragment impleme
     @Override
     public void showUsers(List<User> users){
         this.users = users;
+        Log.e("show", users.toString());
         adapter.update(this.users);
 
     }

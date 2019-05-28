@@ -27,9 +27,21 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField ('String', "ApiPlaceBase", baseApi)
+            buildConfigField ('String', "ApiPlaceKey", placeApiKey)
+            resValue ('string', "facebookId", facebookId)
+            resValue ('string', "facebookProtocol", facebookProtocol)
+            resValue ('string', 'twitterApiKey', twitterApiKey)
+            resValue ('string','twitterSecret', twitterSecret)
         }
         debug {
             testCoverageEnabled true
+            buildConfigField ('String', "ApiPlaceBase", baseApi)
+            buildConfigField ('String', "ApiPlaceKey", placeApiKey)
+            resValue ('string', "facebookId", facebookId)
+            resValue ('string', "facebookProtocol", facebookProtocol)
+            resValue ('string', 'twitterApiKey', twitterApiKey)
+            resValue ('string', 'twitterSecret', twitterSecret)
         }
     }
     compileOptions {

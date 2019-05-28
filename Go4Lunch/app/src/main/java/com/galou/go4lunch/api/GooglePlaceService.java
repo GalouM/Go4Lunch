@@ -1,5 +1,6 @@
 package com.galou.go4lunch.api;
 
+import com.galou.go4lunch.BuildConfig;
 import com.galou.go4lunch.models.ApiDetailResponse;
 import com.galou.go4lunch.models.ApiNearByResponse;
 import com.galou.go4lunch.models.DistanceApiResponse;
@@ -16,8 +17,8 @@ import retrofit2.http.Query;
  */
 public interface GooglePlaceService {
 
-    final static String BASE_URL = "https://maps.googleapis.com/maps/api/";
-    final static String API_KEY = "AIzaSyAsyZraxhl3hj1_bjYCPLVHbMgd6s62mxc";
+    final static String BASE_URL = BuildConfig.ApiPlaceBase;
+    final static String API_KEY = BuildConfig.ApiPlaceKey;
 
     @GET("place/nearbysearch/json?type=restaurant&radius=1500&key=" + API_KEY)
     Observable<ApiNearByResponse> getRestaurantsNearBy(@Query("location") String location);

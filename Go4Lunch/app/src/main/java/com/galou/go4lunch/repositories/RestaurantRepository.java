@@ -2,6 +2,7 @@ package com.galou.go4lunch.repositories;
 
 import android.location.Location;
 
+import com.galou.go4lunch.BuildConfig;
 import com.galou.go4lunch.api.GooglePlaceService;
 import com.galou.go4lunch.models.ApiDetailResponse;
 import com.galou.go4lunch.models.ApiNearByResponse;
@@ -83,7 +84,8 @@ public class RestaurantRepository {
     }
 
     public String getPhotoRestaurant(String photoReference){
-        return String.format("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=%s&key=AIzaSyAsyZraxhl3hj1_bjYCPLVHbMgd6s62mxc", photoReference);
+        return String.format("%splace/photo?maxwidth=400&photoreference=%s&key=%s",
+                BuildConfig.ApiPlaceBase, photoReference, BuildConfig.ApiPlaceKey);
     }
 
     public List<Restaurant> getRestaurantsLoaded(){

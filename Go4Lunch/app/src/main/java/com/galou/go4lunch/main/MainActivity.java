@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
     private Intent autoCompleteIntent;
 
-    private static int[] TIME_NOTIFICATION = {12, 0};
+    private static int[] TIME_NOTIFICATION = {13, 50};
 
     // FOR GPS PERMISSION
     private static final String PERMS = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -436,7 +436,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         notificationTime.set(Calendar.HOUR_OF_DAY, TIME_NOTIFICATION[0]);
         notificationTime.set(Calendar.MINUTE, TIME_NOTIFICATION[1]);
         AlarmManager manager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        manager.set(AlarmManager.RTC, notificationTime.getTimeInMillis(), pendingIntentAlarm);
+        manager.setRepeating(AlarmManager.RTC, notificationTime.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntentAlarm);
 
     }
 
@@ -519,7 +519,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         resetTime.set(Calendar.HOUR_OF_DAY, 14);
         resetTime.set(Calendar.MINUTE, 0);
         AlarmManager manager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        manager.set(AlarmManager.RTC, resetTime.getTimeInMillis(), pendingIntentReset);
+        manager.setRepeating(AlarmManager.RTC, resetTime.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntentReset);
     }
 }
 

@@ -96,7 +96,7 @@ public class RestaurantDetailViewModel extends BaseViewModel {
             }
         }
         if(isRestaurantStored){
-            configureInfoRestaurant();
+            fetchUsersGoing();
 
         } else{
             fetchDetailFromApi(uidSelection);
@@ -174,6 +174,7 @@ public class RestaurantDetailViewModel extends BaseViewModel {
         urlPhoto.setValue(restaurant.getUrlPhoto());
         rating.setValue(restaurant.getRating());
         users.setValue(restaurant.getUsersEatingHere());
+        Log.e("configure", restaurant.getUsersEatingHere().toString());
         websiteAvailable.setValue(restaurant.getWebSite() != null);
         phoneAvailable.setValue(restaurant.getPhoneNumber() != null);
         isRestaurantLiked.setValue(checkIfRestaurantIsLiked());
@@ -204,6 +205,7 @@ public class RestaurantDetailViewModel extends BaseViewModel {
     }
 
     private void fetchUsersGoing() {
+        List<User> userToAdd = new ArrayList<>();
         userRepository.getAllUsersFromFirebase()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()){
@@ -211,11 +213,12 @@ public class RestaurantDetailViewModel extends BaseViewModel {
                         if(user != null && user.getRestaurantUid() != null){
                             String restaurantUid = user.getRestaurantUid();
                             if(restaurantUid.equals(restaurant.getUid())){
-                                restaurant.addUser(user);
+                                userToAdd.add(user);
                             }
 
                         }
                     }
+                    restaurant.setUserGoingEating(userToAdd);
                     configureInfoRestaurant();
 
                 });
@@ -266,15 +269,14 @@ public class RestaurantDetailViewModel extends BaseViewModel {
                 case UPDATE_RESTAURANT_PICKED:
                     snackBarText.setValue(new Event<>(R.string.eating_here_today));
                     isRestaurantPicked.setValue(true);
-                    restaurant.addUser(user);
-                    fetchInfoRestaurant();
+                    Log.e("add", "here");
+                    fetchUsersGoing();
                     isLoading.setValue(false);
                     break;
                 case REMOVE_RESTAURANT_PICKED:
                     snackBarText.setValue(new Event<>(R.string.not_eating_here));
                     isRestaurantPicked.setValue(false);
-                    restaurant.removeUser(user);
-                    fetchInfoRestaurant();
+                    fetchUsersGoing();
                     isLoading.setValue(false);
                     break;
                 case UPDATE_RESTAURANT_LIKED:

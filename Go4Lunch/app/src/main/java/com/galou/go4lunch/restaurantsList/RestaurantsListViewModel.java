@@ -206,16 +206,18 @@ public class RestaurantsListViewModel extends BaseViewModel {
     }
 
     private void checkUserRestaurant(){
-        for (User user : users) {
-            if (user.getRestaurantUid() != null) {
-                String restaurantPicked = user.getRestaurantUid();
-                for (Restaurant restaurant : restaurants) {
-                    String restaurantUid = restaurant.getUid();
+        for (Restaurant restaurant : restaurants) {
+            List<User> userToAdd = new ArrayList<>();
+            String restaurantUid = restaurant.getUid();
+            for (User user : users) {
+                if (user.getRestaurantUid() != null) {
+                    String restaurantPicked = user.getRestaurantUid();
                     if (restaurantUid.equals(restaurantPicked)) {
-                        restaurant.addUser(user);
+                        userToAdd.add(user);
                     }
                 }
             }
+            restaurant.setUserGoingEating(userToAdd);
         }
         restaurantsList.setValue(restaurants);
         restaurantRepository.updateRestaurants(restaurants);
