@@ -174,7 +174,6 @@ public class RestaurantDetailViewModel extends BaseViewModel {
         urlPhoto.setValue(restaurant.getUrlPhoto());
         rating.setValue(restaurant.getRating());
         users.setValue(restaurant.getUsersEatingHere());
-        Log.e("configure", restaurant.getUsersEatingHere().toString());
         websiteAvailable.setValue(restaurant.getWebSite() != null);
         phoneAvailable.setValue(restaurant.getPhoneNumber() != null);
         isRestaurantLiked.setValue(checkIfRestaurantIsLiked());
@@ -269,7 +268,6 @@ public class RestaurantDetailViewModel extends BaseViewModel {
                 case UPDATE_RESTAURANT_PICKED:
                     snackBarText.setValue(new Event<>(R.string.eating_here_today));
                     isRestaurantPicked.setValue(true);
-                    Log.e("add", "here");
                     fetchUsersGoing();
                     isLoading.setValue(false);
                     break;

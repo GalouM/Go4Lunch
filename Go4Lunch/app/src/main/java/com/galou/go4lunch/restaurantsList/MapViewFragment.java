@@ -2,7 +2,9 @@ package com.galou.go4lunch.restaurantsList;
 
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -176,6 +178,7 @@ public class MapViewFragment extends BaseRestaurantsListFragment implements OnMa
 
     @Override
     public void displayRestaurants(List<Restaurant> restaurants){
+        Log.e("here", "display");
         if(googleMap != null) {
             for (Restaurant restaurant : restaurants) {
                 Double latitude = restaurant.getLatitude();
@@ -199,5 +202,6 @@ public class MapViewFragment extends BaseRestaurantsListFragment implements OnMa
         }
 
     }
+
 
 }

@@ -51,7 +51,6 @@ public class RestaurantDetailRVAdapter extends RecyclerView.Adapter<RestaurantDe
 
     void update(List<User> users){
         this.users = users;
-        Log.e("update", users.toString());
         notifyDataSetChanged();
     }
 }

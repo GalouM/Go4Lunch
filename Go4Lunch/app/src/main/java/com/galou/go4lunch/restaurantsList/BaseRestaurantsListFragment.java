@@ -2,10 +2,13 @@ package com.galou.go4lunch.restaurantsList;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -28,7 +31,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 /**
  * Created by galou on 2019-05-09
  */
-public abstract class BaseRestaurantsListFragment extends Fragment implements RestaurantsListViewContract, EasyPermissions.PermissionCallbacks {
+public abstract class BaseRestaurantsListFragment extends Fragment implements RestaurantsListViewContract, EasyPermissions.PermissionCallbacks, DialogInterface.OnDismissListener {
 
     protected RestaurantsListViewModel viewModel;
 
@@ -108,8 +111,13 @@ public abstract class BaseRestaurantsListFragment extends Fragment implements Re
 
     @Override
     public void displayRestaurantDetail(){
+        FragmentManager fragmentManager = getFragmentManager();
         RestoDetailDialogFragment restoDetailDialogFragment = new RestoDetailDialogFragment();
-        restoDetailDialogFragment.show(getActivity().getSupportFragmentManager(), "MODAL");
+        restoDetailDialogFragment.show(fragmentManager, "MODAL");
+        fragmentManager.executePendingTransactions();
+        if(restoDetailDialogFragment.getDialog() != null) {
+            restoDetailDialogFragment.getDialog().setOnDismissListener(this);
+        }
     }
 
     // --------------------
@@ -133,6 +141,13 @@ public abstract class BaseRestaurantsListFragment extends Fragment implements Re
                         viewModel.noLocationAvailable();
                     }
                 });
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialogInterface) {
+        Log.e("here", "dismiss)");
+        viewModel.updateDisplayRestaurant();
+
     }
 
     // --------------------

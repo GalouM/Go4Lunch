@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -39,7 +40,7 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class SettingsActivity extends AppCompatActivity implements SettingsContract, EasyPermissions.PermissionCallbacks {
+public class SettingsActivity extends AppCompatActivity implements SettingsContract {
 
     private ActivitySettingsBinding binding;
     private SettingsViewModel viewModel;
@@ -192,6 +193,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
                     this, getString(R.string.need_permission_message), RC_IMAGE_PERMS, PERMS);
             return;
         }
+        Log.e("here", "ehre");
         Intent photoIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(photoIntent, RC_CHOOSE_PHOTO);
     }
@@ -230,21 +232,6 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
                 .setPositiveButton(R.string.yes_button, (dialogInterface, i) -> viewModel.deleteUserFromDB())
                 .setNegativeButton(R.string.cancel_button, null)
                 .show();
-    }
-
-    // -----------------
-    // PERMISSIONS
-    // -----------------
-
-    @Override
-    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-        chooseImageFromPhone();
-
-    }
-
-    @Override
-    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
-
     }
 
 

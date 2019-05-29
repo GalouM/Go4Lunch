@@ -114,6 +114,14 @@ public class RestaurantsListViewModel extends BaseViewModel {
         if (this.disposableDistance != null && !this.disposableDistance.isDisposed()) this.disposableDistance.dispose();
     }
 
+    public void updateDisplayRestaurant(){
+        if(restaurants == null){
+            this.requestListRestaurants();
+        }
+        checkUserRestaurant();
+
+    }
+
     // --------------------
     // OBSERVER API
     // --------------------
@@ -230,7 +238,7 @@ public class RestaurantsListViewModel extends BaseViewModel {
         if(restaurantRepository.getLocation() == null){
             requestLocation.setValue(new Object());
         }
-        if(restaurantRepository.getLocation() != null &&restaurantRepository.streamFetchListRestaurantDetails() != null) {
+        if(restaurantRepository.getLocation() != null && restaurantRepository.streamFetchListRestaurantDetails() != null) {
             this.disposableRestaurant = restaurantRepository.streamFetchListRestaurantDetails().subscribeWith(getObserverRestaurants());
         } else {
             snackBarText.setValue(new Event<>(R.string.no_location_message));

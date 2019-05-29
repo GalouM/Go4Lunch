@@ -6,8 +6,10 @@ import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -85,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
     private Intent autoCompleteIntent;
 
-    private static int[] TIME_NOTIFICATION = {13, 50};
+    private static int[] TIME_NOTIFICATION = {22, 37};
 
     // FOR GPS PERMISSION
     private static final String PERMS = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -435,14 +437,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Calendar notificationTime = Calendar.getInstance();
         notificationTime.set(Calendar.HOUR_OF_DAY, TIME_NOTIFICATION[0]);
         notificationTime.set(Calendar.MINUTE, TIME_NOTIFICATION[1]);
+        notificationTime.set(Calendar.SECOND, 0);
+
+        Calendar calendar = Calendar.getInstance();
+        if(notificationTime.before(calendar)){
+            notificationTime.add(Calendar.DATE, 1);
+        }
+
+        ComponentName receiver = new ComponentName(getApplicationContext(), NotificationLunchService.class);
+
+        PackageManager pm = getApplicationContext().getPackageManager();
+
+        pm.setComponentEnabledSetting(receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP);
+
         AlarmManager manager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        manager.setRepeating(AlarmManager.RTC, notificationTime.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntentAlarm);
+        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntentAlarm);
+
 
     }
 
     private void disableNotification() {
         AlarmManager manager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         manager.cancel(pendingIntentAlarm);
+
+        ComponentName receiver = new ComponentName(getApplicationContext(), NotificationLunchService.class);
+        PackageManager pm = getApplicationContext().getPackageManager();
+
+        pm.setComponentEnabledSetting(receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                PackageManager.DONT_KILL_APP);
 
     }
 
@@ -509,17 +534,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // --------------------
 
     /*
-    this shouln't be done from the application but from a central server instead
+    this shouldn't be done from the application but from a central server instead
      */
     private void configureResetData(){
         Intent notificationIntent = new Intent(this, EraseRestaurantInfo.class);
         pendingIntentReset = PendingIntent.getBroadcast(this, 0,
                 notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         Calendar resetTime = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
+        resetTime.setTimeInMillis(System.currentTimeMillis());
         resetTime.set(Calendar.HOUR_OF_DAY, 14);
         resetTime.set(Calendar.MINUTE, 0);
+        resetTime.set(Calendar.SECOND, 0);
+
+        if(resetTime.before(calendar)){
+            resetTime.add(Calendar.DATE, 1);
+        }
+
+        ComponentName receiver = new ComponentName(getApplicationContext(), EraseRestaurantInfo.class);
+        PackageManager pm = getApplicationContext().getPackageManager();
+
+        pm.setComponentEnabledSetting(receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP);
+
         AlarmManager manager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        manager.setRepeating(AlarmManager.RTC, resetTime.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntentReset);
+        manager.setInexactRepeating(AlarmManager.RTC, resetTime.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntentReset);
+
     }
 }
 

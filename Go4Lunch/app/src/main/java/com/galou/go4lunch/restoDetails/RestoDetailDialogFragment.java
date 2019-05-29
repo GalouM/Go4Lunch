@@ -1,10 +1,13 @@
 package com.galou.go4lunch.restoDetails;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -161,7 +164,6 @@ public class RestoDetailDialogFragment extends BottomSheetDialogFragment impleme
     @Override
     public void showUsers(List<User> users){
         this.users = users;
-        Log.e("show", users.toString());
         adapter.update(this.users);
 
     }

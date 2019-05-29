@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:name="androidx.multidex.MultiDexApplication"
@@ -58,12 +59,19 @@
         <!-- NOTIFICATION SERVICE -->
         <receiver
             android:name=".notification.NotificationLunchService"
-            android:exported="true">
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+            </intent-filter>
         </receiver>
 
         <!-- ERASE INFOS SERVICE -->
         <receiver android:name=".notification.EraseRestaurantInfo"
-            android:exported="true"/>
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
