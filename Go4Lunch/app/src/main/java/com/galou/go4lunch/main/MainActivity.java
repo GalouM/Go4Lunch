@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
     private Intent autoCompleteIntent;
 
-    private static int[] TIME_NOTIFICATION = {22, 37};
+    private static int[] TIME_NOTIFICATION = {12, 0};
 
     // FOR GPS PERMISSION
     private static final String PERMS = Manifest.permission.ACCESS_FINE_LOCATION;
