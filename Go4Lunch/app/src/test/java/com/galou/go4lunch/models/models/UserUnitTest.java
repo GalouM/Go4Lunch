@@ -1,4 +1,4 @@
-package com.galou.go4lunch.models.utils;
+package com.galou.go4lunch.models.models;
 
 import com.galou.go4lunch.models.Restaurant;
 import com.galou.go4lunch.models.User;
@@ -19,11 +19,18 @@ import static org.junit.Assert.assertEquals;
 @RunWith(JUnit4.class)
 public class UserUnitTest {
     private User user;
-    private Restaurant restaurant;
     private String name;
     private String uid;
     private String email;
     private String photoUrl;
+    private String restaurantUid;
+    private String restaurantName;
+    private String restaurantAddress;
+
+    private String likedRestaurant1;
+    private String likedRestaurant2;
+    private String likedRestaurant3;
+
     private List<String> likedRestaurants;
 
     @Before
@@ -31,13 +38,18 @@ public class UserUnitTest {
         name = "Jean Michel";
         uid = "12345";
         photoUrl = "http://photo";
-        restaurant = new Restaurant();
         email = "name@email.com";
         user = new User(uid, name, email, photoUrl);
+        restaurantUid = "54321";
+        restaurantName = "nameResto";
+        restaurantAddress = "123 adresse Resto";
+        likedRestaurant1 = "uid1";
+        likedRestaurant2 = "uid2";
+        likedRestaurant3 = "uid3";
         likedRestaurants = new ArrayList<>();
-        likedRestaurants.add("uid1");
-        likedRestaurants.add("uid2");
-        likedRestaurants.add("uid3");
+        likedRestaurants.add(likedRestaurant1);
+        likedRestaurants.add(likedRestaurant2);
+        likedRestaurants.add(likedRestaurant3);
     }
 
     @Test
@@ -55,17 +67,24 @@ public class UserUnitTest {
         String newPhotoUrl = "http://newphoto";
         String newEmail = "new@email.com";
         user.setUsername(newName);
-        user.setRestaurantUid(restaurant);
         user.setUid(newUid);
         user.setUrlPicture(newPhotoUrl);
         user.setEmail(newEmail);
-        user.setLikedRestaurants(likedRestaurants);
+        user.setRestaurantUid(restaurantUid);
+        user.setRestaurantName(restaurantName);
+        user.setRestaurantAddress(restaurantAddress);
+        user.addLikedRestaurant(likedRestaurant1);
+        user.addLikedRestaurant(likedRestaurant2);
+        user.addLikedRestaurant(likedRestaurant3);
+
 
         assertEquals(newUid, user.getUid());
         assertEquals(newName, user.getUsername());
         assertEquals(newEmail, user.getEmail());
         assertEquals(newPhotoUrl, user.getUrlPicture());
-        assertEquals(restaurant, user.getRestaurantUid());
+        assertEquals(restaurantUid, user.getRestaurantUid());
+        assertEquals(restaurantName, user.getRestaurantName());
+        assertEquals(restaurantAddress, user.getRestaurantAddress());
         assertEquals(likedRestaurants, user.getLikedRestaurants());
     }
 
