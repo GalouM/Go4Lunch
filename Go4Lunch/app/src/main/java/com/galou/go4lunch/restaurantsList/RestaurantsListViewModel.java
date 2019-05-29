@@ -1,5 +1,7 @@
 package com.galou.go4lunch.restaurantsList;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -117,8 +119,10 @@ public class RestaurantsListViewModel extends BaseViewModel {
     public void updateDisplayRestaurant(){
         if(restaurants == null){
             this.requestListRestaurants();
+        } else {
+            this.fetchListUser();
         }
-        checkUserRestaurant();
+
 
     }
 
@@ -180,8 +184,8 @@ public class RestaurantsListViewModel extends BaseViewModel {
         if(restaurantRepository.getRestaurantsLoaded() == null || restaurantRepository.getRestaurantsLoaded().size() == 0) {
             this.fetchListRestaurant();
         } else {
-            restaurantsList.setValue(restaurantRepository.getRestaurantsLoaded());
-            isLoading.setValue(false);
+            restaurants = restaurantRepository.getRestaurantsLoaded();
+            this.fetchListUser();
         }
 
     }
@@ -218,14 +222,15 @@ public class RestaurantsListViewModel extends BaseViewModel {
             List<User> userToAdd = new ArrayList<>();
             String restaurantUid = restaurant.getUid();
             for (User user : users) {
-                if (user.getRestaurantUid() != null) {
-                    String restaurantPicked = user.getRestaurantUid();
+                String restaurantPicked = user.getRestaurantUid();
+                if (restaurantPicked != null) {
                     if (restaurantUid.equals(restaurantPicked)) {
                         userToAdd.add(user);
                     }
                 }
             }
             restaurant.setUserGoingEating(userToAdd);
+            Log.e(restaurant.getName(), String.valueOf(restaurant.getUsersEatingHere().size()));
         }
         restaurantsList.setValue(restaurants);
         restaurantRepository.updateRestaurants(restaurants);

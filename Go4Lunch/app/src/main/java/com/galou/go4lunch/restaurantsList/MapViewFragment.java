@@ -178,8 +178,8 @@ public class MapViewFragment extends BaseRestaurantsListFragment implements OnMa
 
     @Override
     public void displayRestaurants(List<Restaurant> restaurants){
-        Log.e("here", "display");
         if(googleMap != null) {
+            googleMap.clear();
             for (Restaurant restaurant : restaurants) {
                 Double latitude = restaurant.getLatitude();
                 Double longitude = restaurant.getLongitude();
