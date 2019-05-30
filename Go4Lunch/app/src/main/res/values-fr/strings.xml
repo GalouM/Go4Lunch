@@ -45,7 +45,7 @@
     <string name="phone_button_text">TELEPHONE</string>
     <string name="photo_updated_message">Votre photo a été mis a jour</string>
     <string name="retry_button">Réessayer</string>
-    <string name="restaurant_liked">Vous aim</string>
+    <string name="restaurant_liked">Vous aimé</string>
     <string name="search_hint">Rechercher des restaurants</string>
     <string name="settings_delete_account">Supprimer le compte</string>
     <string name="settings_email_address">Adresse email</string>
@@ -59,4 +59,5 @@
     <string name="website_button_text">Site Internet</string>
     <string name="yes_button">Oui</string>
     <string name="format_date_display">HH:mm</string>
+    <string name="format_time_display">HH:mm</string>
 </resources>

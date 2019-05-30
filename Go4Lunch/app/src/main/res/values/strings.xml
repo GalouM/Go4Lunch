@@ -89,6 +89,7 @@
     <string name="subtitle_notification">You have a lunch setup for today</string>
     <string name="closing_soon">Close soon</string>
     <string name="display_text_user_list">%s is eating at %s</string>
+    <string name="restaurant_liked">You like this restaurant</string>
 
 
     <!-- NEW -->
