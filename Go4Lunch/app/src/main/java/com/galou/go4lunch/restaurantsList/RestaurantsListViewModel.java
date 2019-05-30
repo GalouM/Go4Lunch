@@ -43,7 +43,7 @@ public class RestaurantsListViewModel extends BaseViewModel {
     //----- PRIVATE LIVE DATA -----
     private MutableLiveData<List<Restaurant>> restaurantsList = new MutableLiveData<>();
     private MutableLiveData<Event<Object>> openDetailRestaurant = new MutableLiveData<>();
-    private MutableLiveData<Object> requestLocation = new MutableLiveData<>();
+    private MutableLiveData<Event<Object>> requestLocation = new MutableLiveData<>();
     private MutableLiveData<LatLng> locationUser = new MutableLiveData<>();
 
     //----- GETTER LIVE DATA -----
@@ -53,7 +53,7 @@ public class RestaurantsListViewModel extends BaseViewModel {
     public LiveData<Event<Object>> getOpenDetailRestaurant() {
         return openDetailRestaurant;
     }
-    public LiveData<Object> getRequestLocation() {
+    public LiveData<Event<Object>> getRequestLocation() {
         return requestLocation;
     }
     public LiveData<LatLng> getLocationUser() {return locationUser;}
@@ -70,7 +70,7 @@ public class RestaurantsListViewModel extends BaseViewModel {
     public void checkIfLocationIsAvailable(){
         LatLng location = restaurantRepository.getLocation();
         if(location == null){
-            requestLocation.setValue(new Object());
+            requestLocation.setValue(new Event<>(new Object()));
         } else {
             this.requestListRestaurants();
             locationUser.setValue(location);
@@ -181,10 +181,10 @@ public class RestaurantsListViewModel extends BaseViewModel {
     // --------------------
     private void requestListRestaurants(){
         isLoading.setValue(true);
-        if(restaurantRepository.getRestaurantsLoaded() == null || restaurantRepository.getRestaurantsLoaded().size() == 0) {
+        restaurants = restaurantRepository.getRestaurantsLoaded();
+        if(restaurants == null || restaurants.size() == 0) {
             this.fetchListRestaurant();
         } else {
-            restaurants = restaurantRepository.getRestaurantsLoaded();
             this.fetchListUser();
         }
 
@@ -230,7 +230,6 @@ public class RestaurantsListViewModel extends BaseViewModel {
                 }
             }
             restaurant.setUserGoingEating(userToAdd);
-            Log.e(restaurant.getName(), String.valueOf(restaurant.getUsersEatingHere().size()));
         }
         restaurantsList.setValue(restaurants);
         restaurantRepository.updateRestaurants(restaurants);
@@ -241,7 +240,7 @@ public class RestaurantsListViewModel extends BaseViewModel {
 
     private void fetchListRestaurant(){
         if(restaurantRepository.getLocation() == null){
-            requestLocation.setValue(new Object());
+            requestLocation.setValue(new Event<>(new Object()));
         }
         if(restaurantRepository.getLocation() != null && restaurantRepository.streamFetchListRestaurantDetails() != null) {
             this.disposableRestaurant = restaurantRepository.streamFetchListRestaurantDetails().subscribeWith(getObserverRestaurants());

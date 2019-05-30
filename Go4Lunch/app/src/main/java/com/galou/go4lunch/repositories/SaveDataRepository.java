@@ -37,23 +37,29 @@ public class SaveDataRepository {
 
     //-----SAVE------
     public void saveNotificationSettings(boolean state, String userId){
-        editor = preferences.edit();
-        editor.putBoolean(userId, state);
-        editor.apply();
+        if(preferences != null) {
+            editor = preferences.edit();
+            editor.putBoolean(userId, state);
+            editor.apply();
+        }
     }
 
     public void saveUserId(String userId){
-        editor = preferences.edit();
-        editor.putString(KEY_PREF_USER_ID, userId);
-        editor.apply();
+        if(preferences != null) {
+            editor = preferences.edit();
+            editor.putString(KEY_PREF_USER_ID, userId);
+            editor.apply();
+        }
     }
 
     //-----GET------
     public Boolean getNotificationSettings(String userId){
+        if(preferences == null) return true;
         return preferences.getBoolean(userId, true);
     }
 
     public String getUserId(){
+        if(preferences == null) return null;
         return preferences.getString(KEY_PREF_USER_ID, null);
     }
 }

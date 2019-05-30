@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -15,6 +16,8 @@ import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.repositories.SaveDataRepository;
 import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.util.TextUtil;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
@@ -54,7 +57,7 @@ public class NotificationLunchService extends BroadcastReceiver {
         saveDataRepository.configureContext(context);
         currentUserId = saveDataRepository.getUserId();
         if(saveDataRepository.getNotificationSettings(currentUserId)
-                && saveDataRepository.getUserId() != null){
+                && getCurrentUser() != null){
             this.fetchUsers();
         }
 
@@ -93,6 +96,12 @@ public class NotificationLunchService extends BroadcastReceiver {
             showNotification();
         }
     }
+
+    @Nullable
+    private FirebaseUser getCurrentUser(){
+        return FirebaseAuth.getInstance().getCurrentUser();
+    }
+
 
     // -------------------
     // SHOW NOTIFICATION

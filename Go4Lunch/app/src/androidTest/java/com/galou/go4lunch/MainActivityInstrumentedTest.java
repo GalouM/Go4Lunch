@@ -94,31 +94,24 @@ public class MainActivityInstrumentedTest {
         onView(ViewMatchers.withId(R.id.action_map)).check(matches(withTitle(context.getString(R.string.bottom_navigation_menu_map_view))));
         onView(ViewMatchers.withId(R.id.action_list)).check(matches(withTitle(context.getString(R.string.bottom_navigation_menu_list_view))));
         onView(ViewMatchers.withId(R.id.action_workmates)).check(matches(withTitle(context.getString(R.string.bottom_navigation_menu_workmates))));
-        onView(ViewMatchers.withId(R.id.action_chat)).check(matches(withTitle(context.getString(R.string.bottom_navigation_menu_chat))));
     }
 
     @Test
     public void clickMapButton_showMap(){
         onView(withId(R.id.action_map)).perform(click());
-        onView(withId(R.id.map_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.mapView)).check(matches(isDisplayed()));
     }
 
     @Test
     public void clickListButton_showList(){
         onView(withId(R.id.action_list)).perform(click());
-        onView(withId(R.id.list_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.recycler_view_resto)).check(matches(isDisplayed()));
     }
 
     @Test
     public void clickWorkmatesButton_showWorkmates(){
         onView(withId(R.id.action_workmates)).perform(click());
         onView(withId(R.id.frame_layout_workmates)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void clickChatButton_showChat(){
-        onView(withId(R.id.action_chat)).perform(click());
-        onView(withId(R.id.chat_view)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -140,9 +133,5 @@ public class MainActivityInstrumentedTest {
         //onView(withId(R.id.auth_activity_layout)).check(matches(isDisplayed()));
     }
 
-    private void waitForNetworkCall(){
-        this.idlingResource = mainActivityTestRule.getActivity().getEspressoIdlingResourceForMainActivity();
-        IdlingRegistry.getInstance().register(idlingResource);
-    }
 
 }

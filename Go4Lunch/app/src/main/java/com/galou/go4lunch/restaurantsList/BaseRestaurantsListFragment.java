@@ -4,12 +4,10 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.util.Log;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.galou.go4lunch.R;
@@ -17,7 +15,6 @@ import com.galou.go4lunch.injection.Injection;
 import com.galou.go4lunch.injection.ViewModelFactory;
 import com.galou.go4lunch.models.Restaurant;
 import com.galou.go4lunch.restoDetails.RestoDetailDialogFragment;
-import com.galou.go4lunch.util.Event;
 import com.galou.go4lunch.util.RetryAction;
 import com.galou.go4lunch.util.SnackBarUtil;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -102,7 +99,11 @@ public abstract class BaseRestaurantsListFragment extends Fragment implements Re
     }
 
     protected void setupRequestLocation(){
-        viewModel.getRequestLocation().observe(this, request -> fetchLastKnowLocation());
+        viewModel.getRequestLocation().observe(this, requestEvent -> {
+            if(requestEvent.getContentIfNotHandle() != null) {
+                fetchLastKnowLocation();
+            }
+        });
     }
 
     protected void setupLocationUser(){
@@ -145,7 +146,6 @@ public abstract class BaseRestaurantsListFragment extends Fragment implements Re
 
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
-        Log.e("here", "dismiss)");
         viewModel.updateDisplayRestaurant();
 
     }

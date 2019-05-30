@@ -34,10 +34,6 @@ public class MainActivityViewModel extends BaseViewModel {
     public final MutableLiveData<String> email = new MutableLiveData<>();
     public final MutableLiveData<String> urlPicture = new MutableLiveData<>();
 
-    // FOR TESTING
-    @VisibleForTesting
-    protected CountingIdlingResource espressoTestIdlingResource;
-
     private RestaurantRepository restaurantRepository;
     private SaveDataRepository saveDataRepository;
 
@@ -54,7 +50,6 @@ public class MainActivityViewModel extends BaseViewModel {
         this.userRepository = userRepository;
         this.restaurantRepository = restaurantRepository;
         this.saveDataRepository = saveDataRepository;
-        this.user = userRepository.getUser();
     }
 
     // --------------------
@@ -68,6 +63,7 @@ public class MainActivityViewModel extends BaseViewModel {
     }
 
     public void configureInfoUser(){
+        this.user = userRepository.getUser();
         username.setValue(user.getUsername());
         email.setValue(user.getEmail());
         urlPicture.setValue(user.getUrlPicture());
@@ -80,8 +76,6 @@ public class MainActivityViewModel extends BaseViewModel {
     // --------------------
 
     public void logoutUserFromApp(){
-        this.configureEspressoIdlingResource();
-        this.incrementIdleResource();
         logoutRequested.setValue(new Event<>(new Object()));
         snackBarText.setValue(new Event<>(R.string.logged_out_success));
 
@@ -92,7 +86,7 @@ public class MainActivityViewModel extends BaseViewModel {
     }
 
     public void showUserRestaurant() {
-        String uidRestaurant = user.getRestaurantUid();
+        String uidRestaurant = userRepository.getUser().getRestaurantUid();
         if(uidRestaurant != null) {
             restaurantRepository.setRestaurantSelected(uidRestaurant);
             openDetailRestaurant.setValue(new Event<>(new Object()));
@@ -120,26 +114,6 @@ public class MainActivityViewModel extends BaseViewModel {
     @Override
     public void retry(RetryAction retryAction) {
 
-    }
-
-    // -----------------
-    // FOR TESTING
-    // -----------------
-
-    @VisibleForTesting
-    public CountingIdlingResource getEspressoIdlingResource() { return espressoTestIdlingResource; }
-
-    @VisibleForTesting
-    private void configureEspressoIdlingResource(){
-        this.espressoTestIdlingResource = new CountingIdlingResource("Network_Call");
-    }
-
-    void incrementIdleResource(){
-        if (BuildConfig.DEBUG) this.espressoTestIdlingResource.increment();
-    }
-
-    void decrementIdleResource(){
-        if (BuildConfig.DEBUG) this.espressoTestIdlingResource.decrement();
     }
 
 }

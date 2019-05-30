@@ -57,7 +57,6 @@ import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -344,7 +343,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void logoutUser() {
         AuthUI.getInstance().signOut(this)
                 .addOnSuccessListener(aVoid -> {
-                    viewModel.decrementIdleResource();
                     Intent intent = new Intent(this, AuthenticationActivity.class);
                     startActivity(intent);
                 })
@@ -400,7 +398,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }
             }
-            if(isRestaurant) {
+            if(isRestaurant || place.getTypes() == null) {
                 viewModel.showRestaurantSelected(place.getId());
             }
         } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
@@ -520,14 +518,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-
-    // --------------------
-    // TESTING
-    // --------------------
-    @VisibleForTesting
-    public CountingIdlingResource getEspressoIdlingResourceForMainActivity() {
-        return viewModel.getEspressoIdlingResource();
-    }
 
     // --------------------
     // RESET DATA RESTAURANT EVERY DAY

@@ -39,14 +39,14 @@ import static com.galou.go4lunch.util.TextUtil.isTextLongEnough;
 public class SettingsViewModel extends BaseViewModel {
 
     //----- PUBLIC LIVE DATA -----
-    public final MutableLiveData<String> username = new MutableLiveData<>();
-    public final MutableLiveData<String> email = new MutableLiveData<>();
-    public final MutableLiveData<String> urlPicture = new MutableLiveData<>();
-    public final MutableLiveData<Boolean> isNotificationEnabled = new MutableLiveData<>();
-    public final MutableLiveData<Boolean> isEmailError = new MutableLiveData<>();
-    public final MutableLiveData<Integer> errorMessageEmail = new MutableLiveData<>();
-    public final MutableLiveData<Boolean> isUsernameError = new MutableLiveData<>();
-    public final MutableLiveData<Integer> errorMessageUsername = new MutableLiveData<>();
+    public MutableLiveData<String> username = new MutableLiveData<>();
+    public MutableLiveData<String> email = new MutableLiveData<>();
+    public MutableLiveData<String> urlPicture = new MutableLiveData<>();
+    public MutableLiveData<Boolean> isNotificationEnabled = new MutableLiveData<>();
+    public MutableLiveData<Boolean> isEmailError = new MutableLiveData<>();
+    public MutableLiveData<Integer> errorMessageEmail = new MutableLiveData<>();
+    public MutableLiveData<Boolean> isUsernameError = new MutableLiveData<>();
+    public MutableLiveData<Integer> errorMessageUsername = new MutableLiveData<>();
 
     //----- PRIVATE LIVE DATA -----
     private final MutableLiveData<Event<Object>> deleteUser = new MutableLiveData<>();
@@ -124,7 +124,7 @@ public class SettingsViewModel extends BaseViewModel {
         newUsername = username.getValue();
         newEmail = email.getValue();
         if(isNewUserInfosCorrect(newEmail, newUsername)){
-            userRepository.updateUserNameAndEmail(newUsername, newEmail, getCurrentUserUid())
+            userRepository.updateUserNameAndEmail(newUsername, newEmail, user.getUid())
                     .addOnFailureListener(this.onFailureListener(UPDATE_INFO_USER_DB))
                     .addOnSuccessListener(this.onSuccessListener(UPDATE_USER));
         } else {

@@ -57,7 +57,6 @@
     <string name="cancel_button">Cancel</string>
 
     <!-- LIST USER DISPLAY -->
-    <string name="display_text_user_list">%s is eating at %s</string>
     <string name="display_text_user_list_not_decided">%s hasn\'t decided yet</string>
 
     <string name="incorrect_email">Incorrect Email</string>
@@ -65,7 +64,6 @@
     <string name="retry_button">Retry</string>
     <string name="title_activity_test">Map</string>
     <string name="no_location_message">Turn on your GPS</string>
-    <string name="closing_soon">Closing soon</string>
     <string name="open_until">Open until %s</string>
     <string name="opening_soon">Opening soon</string>
     <string name="closed">Closed</string>
@@ -79,18 +77,18 @@
     <string name="website_button_text">WEBSITE</string>
     <string name="liked_text_button">LIKED</string>
     <string name="eating_here_today">You are eating here today</string>
-    <string name="restaurant_liked">You liked this restaurantUid</string>
     <string name="not_eating_here">You are not eating here anymore</string>
     <string name="is_joining">%s is joining!</string>
     <string name="no_restaurant_picked_message">You haven\'t picked a restaurant yet</string>
-    <string name="notificcationChannel">notificationChannel</string>
+    <string name="notificcationChannel" translatable="false">notificationChannel</string>
     <string name="title_notification">Your lunch today</string>
     <string name="notification_message">You are eating at %s with %s on %s</string>
-    <string name="name_channel">Go4Lunch channel</string>
-    <string name="description_channel">Notification channel</string>
+    <string name="name_channel" translatable="false">Go4Lunch channel</string>
+    <string name="description_channel" translatable="false">Notification channel</string>
     <string name="message_notification_alone">You are eating at %s on %s</string>
     <string name="subtitle_notification">You have a lunch setup for today</string>
-    <string name="channel_notification_name">Message provenant de Firebase</string>
+    <string name="closing_soon">Close soon</string>
+    <string name="display_text_user_list">%s is eating at %s</string>
 
 
     <!-- NEW -->
