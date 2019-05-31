@@ -85,6 +85,8 @@ public class SettingViewModelUnitTest {
         assertNotNull(viewModel.getOpenDialog().getValue().getContentIfNotHandle());
     }
 
+    /*
+
     @Test
     public void updateInfoUser_correct(){
         String newUsername = "new username";
@@ -96,4 +98,5 @@ public class SettingViewModelUnitTest {
         //assertFalse(viewModel.isUsernameError.getValue());
         verify(userRepository).updateUserNameAndEmail(newUsername, user.getEmail(), user.getUid());
     }
+    */
 }

@@ -10,9 +10,10 @@ env:
 
 android:
   components:
-    - build-tools-$ANDROID_BUILD_TOOLS_VERSION
-    - android-$EMULATOR_API_LEVEL
-    - sys-img-armeabi-v7a-android-$EMULATOR_API_LEVEL
+    - tools
+    - platform-tools
+    - tools
+    - extra-android-m2repository
     - add-on
     - extra
 
