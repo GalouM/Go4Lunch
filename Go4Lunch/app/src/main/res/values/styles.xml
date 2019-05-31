@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Go4LunchTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -19,6 +19,13 @@
     <style name="Go4LunchButton" parent="Widget.AppCompat.Button">
         <item name="android:textColor">@color/colorTextPrimary</item>
         <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <!-- BUTTON RESTAURANT -->
+    <style name="Go4LunchButtonInfoRestaurant" parent="Widget.AppCompat.ImageButton">
+        <item name="android:layout_width">@dimen/size_image_button_restaurant</item>
+        <item name="android:layout_height">@dimen/size_image_button_restaurant</item>
+        <item name="android:tint">@color/colorPrimary</item>
     </style>
 
     <!-- TOOLBAR THEME -->
@@ -73,7 +80,7 @@
     </style>
 
     <!-- STYLE SIGN-IN ACTIVITY -->
-    <style name="LoginTheme" parent="AppTheme">
+    <style name="LoginTheme" parent="Go4LunchTheme">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>

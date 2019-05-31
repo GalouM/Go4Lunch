@@ -96,14 +96,12 @@
                         android:id="@+id/phone_button"
                         app:layout_column="0"
                         app:layout_row="0"
-                        android:layout_width="30dip"
-                        android:layout_height="30dip"
                         android:src="@drawable/baseline_phone_24"
                         app:layout_columnWeight="1"
-                        android:tint="@color/colorPrimary"
                         android:background="@null"
                         android:visibility="@{viewmodel.phoneAvailable ? View.VISIBLE : View.INVISIBLE}"
-                        android:onClick="@{(view) -> listener.onClick(view)}"/>
+                        android:onClick="@{(view) -> listener.onClick(view)}"
+                        style="@style/Go4LunchButtonInfoRestaurant"/>
                     <TextView
                         app:layout_column="0"
                         app:layout_row="1"
@@ -119,8 +117,8 @@
                         android:id="@+id/like_button"
                         app:layout_column="1"
                         app:layout_row="0"
-                        android:layout_width="30dip"
-                        android:layout_height="30dip"
+                        android:layout_width="@dimen/size_image_button_restaurant"
+                        android:layout_height="@dimen/size_image_button_restaurant"
                         android:src="@drawable/baseline_star_24"
                         app:layout_columnWeight="1"
                         android:tint="@{viewmodel.isRestaurantLiked ? @color/colorAccent : @color/colorPrimary}"
@@ -140,14 +138,12 @@
                         android:id="@+id/website_button"
                         app:layout_column="2"
                         app:layout_row="0"
-                        android:layout_width="30dip"
-                        android:layout_height="30dip"
                         android:src="@drawable/baseline_public_24"
                         app:layout_columnWeight="1"
-                        android:tint="@color/colorPrimary"
                         android:background="@null"
                         android:visibility="@{viewmodel.websiteAvailable ? View.VISIBLE : View.INVISIBLE}"
-                        android:onClick="@{(view) -> listener.onClick(view)}"/>
+                        android:onClick="@{(view) -> listener.onClick(view)}"
+                        style="@style/Go4LunchButtonInfoRestaurant"/>
                     <TextView
                         app:layout_column="2"
                         app:layout_row="1"
@@ -174,7 +170,7 @@
                         android:src="@{viewmodel.isRestaurantPicked ? @drawable/baseline_check_circle_24 : @drawable/baseline_check_circle_outline_24}"
                         app:layout_anchor="@id/image_restaurant"
                         app:layout_anchorGravity="bottom|right|end"
-                        android:theme="@style/AppTheme"
+                        android:theme="@style/Go4LunchTheme"
                         android:onClick="@{(view) -> listener.onClick(view)}"/>
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>

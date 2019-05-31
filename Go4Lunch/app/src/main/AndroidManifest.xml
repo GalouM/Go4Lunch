@@ -20,7 +20,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Go4LunchTheme">
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -65,7 +65,7 @@
             </intent-filter>
         </receiver>
 
-        <!-- ERASE INFOS SERVICE -->
+        <!-- ERASE INFO SERVICE -->
         <receiver android:name=".notification.EraseRestaurantInfo"
             android:enabled="false">
             <intent-filter>

@@ -30,5 +30,6 @@
     <dimen name="margin_text_restaurant_list">3dp</dimen>
     <dimen name="list_item_spacing">16dp</dimen>
     <dimen name="list_item_spacing_half">8dp</dimen>
+    <dimen name="size_image_button_restaurant">30dip</dimen>
 
 </resources>
