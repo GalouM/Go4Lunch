@@ -1,7 +1,5 @@
 package com.galou.go4lunch.restaurantsList;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 

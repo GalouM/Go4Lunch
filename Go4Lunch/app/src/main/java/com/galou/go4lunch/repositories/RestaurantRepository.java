@@ -1,7 +1,5 @@
 package com.galou.go4lunch.repositories;
 
-import android.location.Location;
-
 import com.galou.go4lunch.BuildConfig;
 import com.galou.go4lunch.api.GooglePlaceService;
 import com.galou.go4lunch.models.ApiDetailResponse;
@@ -9,7 +7,6 @@ import com.galou.go4lunch.models.ApiNearByResponse;
 import com.galou.go4lunch.models.DistanceApiResponse;
 import com.galou.go4lunch.models.Restaurant;
 import com.galou.go4lunch.models.ResultApiPlace;
-import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.util.OpeningHoursUtil;
 import com.galou.go4lunch.util.PositionUtil;
 import com.galou.go4lunch.util.RatingUtil;

@@ -1,8 +1,5 @@
 package com.galou.go4lunch.restoDetails;
 
-import android.content.Context;
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -13,13 +10,10 @@ import com.galou.go4lunch.models.Restaurant;
 import com.galou.go4lunch.models.ResultApiPlace;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.repositories.RestaurantRepository;
-import com.galou.go4lunch.repositories.SaveDataRepository;
 import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.util.Event;
-import com.galou.go4lunch.util.OpeningHoursUtil;
-import com.galou.go4lunch.util.RatingUtil;
-import com.galou.go4lunch.util.SuccessOrign;
 import com.galou.go4lunch.util.RetryAction;
+import com.galou.go4lunch.util.SuccessOrign;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -31,11 +25,11 @@ import io.reactivex.observers.DisposableObserver;
 
 import static com.galou.go4lunch.util.RetryAction.GET_RESTAURANT_DETAIL;
 import static com.galou.go4lunch.util.RetryAction.UPDATE_LIKED_RESTAURANT;
+import static com.galou.go4lunch.util.RetryAction.UPDATE_PICKED_RESTAURANT;
 import static com.galou.go4lunch.util.SuccessOrign.REMOVE_RESTAURANT_LIKED;
 import static com.galou.go4lunch.util.SuccessOrign.REMOVE_RESTAURANT_PICKED;
 import static com.galou.go4lunch.util.SuccessOrign.UPDATE_RESTAURANT_LIKED;
 import static com.galou.go4lunch.util.SuccessOrign.UPDATE_RESTAURANT_PICKED;
-import static com.galou.go4lunch.util.RetryAction.UPDATE_PICKED_RESTAURANT;
 
 /**
  * Created by galou on 2019-05-14

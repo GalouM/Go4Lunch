@@ -3,6 +3,9 @@ package com.galou.go4lunch.restoDetails;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
@@ -10,18 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.galou.go4lunch.R;
 import com.galou.go4lunch.base.ButtonActionListener;
 import com.galou.go4lunch.databinding.FragmentItemListDialogBinding;
 import com.galou.go4lunch.injection.Injection;
 import com.galou.go4lunch.injection.ViewModelFactory;
 import com.galou.go4lunch.models.User;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.galou.go4lunch.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -148,11 +146,6 @@ public class RestoDetailDialogFragment extends BottomSheetDialogFragment impleme
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlWebsite));
         startActivity(intent);
 
-
-    }
-
-    @Override
-    public void saveRestaurantPicked(String id) {
 
     }
 

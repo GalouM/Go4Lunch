@@ -4,12 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.galou.go4lunch.repositories.SaveDataRepository;
-import com.galou.go4lunch.restaurantsList.RestaurantsListViewModel;
-import com.galou.go4lunch.repositories.RestaurantRepository;
-import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.authentication.AuthenticationViewModel;
 import com.galou.go4lunch.main.MainActivityViewModel;
+import com.galou.go4lunch.repositories.RestaurantRepository;
+import com.galou.go4lunch.repositories.SaveDataRepository;
+import com.galou.go4lunch.repositories.UserRepository;
+import com.galou.go4lunch.restaurantsList.RestaurantsListViewModel;
 import com.galou.go4lunch.restoDetails.RestaurantDetailViewModel;
 import com.galou.go4lunch.settings.SettingsViewModel;
 import com.galou.go4lunch.workmates.WorkmatesViewModel;

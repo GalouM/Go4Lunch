@@ -1,7 +1,5 @@
 package com.galou.go4lunch.util;
 
-import android.util.Log;
-
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.models.OpeningHoursApiPlace;
 import com.google.android.libraries.places.api.internal.impl.net.pablo.PlaceResult;
@@ -11,8 +9,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by galou on 2019-05-12

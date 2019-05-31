@@ -1,17 +1,14 @@
 package com.galou.go4lunch.notification;
 
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.galou.go4lunch.R;
-import com.galou.go4lunch.authentication.AuthenticationActivity;
 import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.repositories.SaveDataRepository;
 import com.galou.go4lunch.repositories.UserRepository;

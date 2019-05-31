@@ -1,7 +1,5 @@
 package com.galou.go4lunch.util;
 
-import android.location.Location;
-
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.SphericalUtil;

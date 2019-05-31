@@ -12,13 +12,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -27,7 +25,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.test.espresso.idling.CountingIdlingResource;
 
 import com.firebase.ui.auth.AuthUI;
 import com.galou.go4lunch.R;
@@ -46,7 +43,6 @@ import com.galou.go4lunch.util.PositionUtil;
 import com.galou.go4lunch.util.RetryAction;
 import com.galou.go4lunch.util.SnackBarUtil;
 import com.galou.go4lunch.workmates.WorkmatesFragment;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
@@ -56,7 +52,6 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.widget.Autocomplete;
-import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -401,9 +396,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if(isRestaurant || place.getTypes() == null) {
                 viewModel.showRestaurantSelected(place.getId());
             }
-        } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
-            Status status = Autocomplete.getStatusFromIntent(data);
-        } else if (resultCode == RESULT_CANCELED) {
         }
     }
 

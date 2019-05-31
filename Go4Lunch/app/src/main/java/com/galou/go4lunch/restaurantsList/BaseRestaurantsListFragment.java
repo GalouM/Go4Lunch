@@ -3,7 +3,6 @@ package com.galou.go4lunch.restaurantsList;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

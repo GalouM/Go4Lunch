@@ -1,7 +1,6 @@
 package com.galou.go4lunch.models;
 
 import com.google.android.libraries.places.api.internal.impl.net.pablo.PlaceResult;
-import com.google.android.libraries.places.api.internal.impl.net.pablo.PlaceResult.OpeningHours;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

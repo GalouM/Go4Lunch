@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.models.User;
+import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.util.Event;
 import com.galou.go4lunch.util.RetryAction;
 import com.google.android.gms.tasks.OnFailureListener;

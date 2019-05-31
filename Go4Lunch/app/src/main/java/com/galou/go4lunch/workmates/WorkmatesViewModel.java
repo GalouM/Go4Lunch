@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.galou.go4lunch.base.BaseViewModel;
+import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.repositories.RestaurantRepository;
 import com.galou.go4lunch.repositories.UserRepository;
-import com.galou.go4lunch.models.User;
 import com.galou.go4lunch.util.Event;
 import com.galou.go4lunch.util.RetryAction;
 import com.google.firebase.firestore.DocumentSnapshot;
