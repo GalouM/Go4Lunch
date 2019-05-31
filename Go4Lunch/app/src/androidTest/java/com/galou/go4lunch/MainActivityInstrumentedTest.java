@@ -5,6 +5,7 @@ package com.galou.go4lunch;
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.Gravity;
 
 import androidx.test.core.app.ApplicationProvider;
@@ -35,6 +36,7 @@ import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static com.galou.go4lunch.BottomNavigationItemViewMatcher.withTitle;
 import static org.mockito.Mockito.when;
 
@@ -43,21 +45,25 @@ public class MainActivityInstrumentedTest {
 
     private User user;
 
-    @Mock
     private UserRepository userRepository;
 
     private Context context;
-    private IdlingResource idlingResource;
 
     @Rule
-    public final ActivityTestRule<MainActivity> mainActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+    public final ActivityTestRule<MainActivity> mainActivityTestRule = new ActivityTestRule<>(MainActivity.class, false, false);
 
     @Before
     public void setup(){
         MockitoAnnotations.initMocks(this);
         user = new User("uid", "name", "email", "urlPhoto");
-        when(userRepository.getUser()).thenReturn(user);
+        user.setRestaurantUid("restoUid");
+        user.setRestaurantName("name Resto");
+        user.setRestaurantAddress("123 address");
+        userRepository = UserRepository.getInstance();
+        userRepository.createUser(user.getUid(), user.getUsername(), user.getEmail(), null);
+        userRepository.updateRestaurantPicked(user.getRestaurantUid(), user.getRestaurantName(), user.getRestaurantAddress(), user.getUid());
         this.context = ApplicationProvider.getApplicationContext();
+        mainActivityTestRule.launchActivity(new Intent());
 
     }
 
@@ -73,9 +79,7 @@ public class MainActivityInstrumentedTest {
     @Test
     public void clickItemNavDrawer_closeDrawer(){
         onView(withId(R.id.drawer_view)).check(matches(isClosed(Gravity.LEFT)))
-                .perform(DrawerActions.open());
-        //onView(withId(R.id.drawer_view)).perform(NavigationViewActions.navigateTo(R.id.main_activity_drawer_lunch));
-        //onView(withId(R.id.main_activity_nav_view)).check(matches(not(isDisplayed())));
+                .perform(DrawerActions.open());;
 
     }
 
@@ -108,6 +112,7 @@ public class MainActivityInstrumentedTest {
         onView(withId(R.id.recycler_view_resto)).check(matches(isDisplayed()));
     }
 
+
     @Test
     public void clickWorkmatesButton_showWorkmates(){
         onView(withId(R.id.action_workmates)).perform(click());
@@ -118,9 +123,18 @@ public class MainActivityInstrumentedTest {
     public void clickSettings_openSettingsActivity(){
         onView(withId(R.id.drawer_view)).check(matches(isClosed(Gravity.LEFT)))
                 .perform(DrawerActions.open());
-        //onView(withId(R.id.navigation_view)).perform(NavigationViewActions.navigateTo(R.id.main_activity_drawer_settings));
+        onView(withId(R.id.navigation_view)).perform(NavigationViewActions.navigateTo(R.id.main_activity_drawer_settings));
 
-        //onView(withId(R.id.activity_setting_layout)).check(matches(isDisplayed()));
+        onView(withId(R.id.activity_setting_layout)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void clickLunch_openDetailRestaurantActivity(){
+        onView(withId(R.id.drawer_view)).check(matches(isClosed(Gravity.LEFT)))
+                .perform(DrawerActions.open());
+        onView(withId(R.id.navigation_view)).perform(NavigationViewActions.navigateTo(R.id.main_activity_drawer_lunch));
+
+        onView(withId(R.id.detail_restaurant_rootView)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -131,6 +145,14 @@ public class MainActivityInstrumentedTest {
         //waitForNetworkCall();
 
         //onView(withId(R.id.auth_activity_layout)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void checkNavHeaderInfo_equalsUserInfo(){
+        onView(withId(R.id.drawer_view)).check(matches(isClosed(Gravity.LEFT)))
+                .perform(DrawerActions.open());
+        onView(withId(R.id.nav_header_username)).check(matches(withText(user.getUsername())));
+        onView(withId(R.id.nav_header_email)).check(matches(withText(user.getEmail())));
     }
 
 
