@@ -1,6 +1,7 @@
 package com.galou.go4lunch;
 
 import android.content.Context;
+import android.content.Intent;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.IdlingRegistry;
@@ -8,6 +9,8 @@ import androidx.test.espresso.IdlingResource;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import androidx.test.rule.ActivityTestRule;
 
+import com.galou.go4lunch.models.User;
+import com.galou.go4lunch.repositories.UserRepository;
 import com.galou.go4lunch.settings.SettingsActivity;
 
 import org.junit.Before;
@@ -32,15 +35,23 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4ClassRunner.class)
 public class SettingsActivityInstrumentedTest {
 
+    private User user;
+
+    private UserRepository userRepository;
+
     private Context context;
     private IdlingResource idlingResource;
 
     @Rule
-    public final ActivityTestRule<SettingsActivity> settingsActivityTestRule = new ActivityTestRule<>(SettingsActivity.class);
+    public final ActivityTestRule<SettingsActivity> settingsActivityTestRule = new ActivityTestRule<>(SettingsActivity.class, false, false);
 
     @Before
     public void setup(){
+        user = new User("uid", "name", "email@email.com", "urlPhoto");
+        userRepository = UserRepository.getInstance();
+        userRepository.createUser(user.getUid(), user.getUsername(), user.getEmail(), null);
         this.context = ApplicationProvider.getApplicationContext();
+        settingsActivityTestRule.launchActivity(new Intent());
 
     }
 

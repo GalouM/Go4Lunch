@@ -54,7 +54,6 @@ public class MainActivityInstrumentedTest {
 
     @Before
     public void setup(){
-        MockitoAnnotations.initMocks(this);
         user = new User("uid", "name", "email", "urlPhoto");
         user.setRestaurantUid("restoUid");
         user.setRestaurantName("name Resto");
