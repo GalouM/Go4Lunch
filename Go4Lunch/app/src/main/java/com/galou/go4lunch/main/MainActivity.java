@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Intent autoCompleteIntent;
 
     private static int[] TIME_NOTIFICATION = {12, 0};
+    private static int[] TIME_RESET = {23, 59};
 
     // FOR GPS PERMISSION
     private static final String PERMS = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -526,8 +527,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Calendar resetTime = Calendar.getInstance();
         Calendar calendar = Calendar.getInstance();
         resetTime.setTimeInMillis(System.currentTimeMillis());
-        resetTime.set(Calendar.HOUR_OF_DAY, 14);
-        resetTime.set(Calendar.MINUTE, 0);
+        resetTime.set(Calendar.HOUR_OF_DAY, TIME_RESET[0]);
+        resetTime.set(Calendar.MINUTE, TIME_RESET[1]);
         resetTime.set(Calendar.SECOND, 0);
 
         if(resetTime.before(calendar)){
