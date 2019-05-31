@@ -1,5 +1,7 @@
 package com.galou.go4lunch.util;
 
+import android.util.Log;
+
 import com.galou.go4lunch.R;
 import com.galou.go4lunch.models.OpeningHoursApiPlace;
 import com.google.android.libraries.places.api.internal.impl.net.pablo.PlaceResult;
@@ -33,12 +35,16 @@ public abstract class OpeningHoursUtil {
         if(openingHours.getOpenNow() != null && !openingHours.getOpenNow()){
             return R.string.closed;
         }
-        int dayOfTheWeek = (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) == 7 ? 0 : Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
-        if(openingHours.getPeriods().size() >= dayOfTheWeek){
+
+        int dayOfTheWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) -1;
+        if(openingHours.getPeriods().size() >= dayOfTheWeek+1){
             PlaceResult.OpeningHours.Period periodOfTheDay = openingHours.getPeriods().get(dayOfTheWeek);
+
             if(periodOfTheDay.getClose() == null) return R.string.open_24_7;
+
             String closureString = periodOfTheDay.getClose().getTime();
             int closure = Integer.parseInt(closureString);
+
             Date todayDate = Calendar.getInstance().getTime();
             DateFormat dateFormat = new SimpleDateFormat(FORMAT_HOURS);
             String todayDateString = dateFormat.format(todayDate);
