@@ -3,6 +3,7 @@ package com.galou.go4lunch.restaurantsList;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -27,7 +28,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 /**
  * Created by galou on 2019-05-09
  */
-public abstract class BaseRestaurantsListFragment extends Fragment implements RestaurantsListViewContract, EasyPermissions.PermissionCallbacks, DialogInterface.OnDismissListener {
+public abstract class BaseRestaurantsListFragment extends Fragment implements RestaurantsListViewContract, EasyPermissions.PermissionCallbacks {
 
     protected RestaurantsListViewModel viewModel;
 
@@ -114,10 +115,15 @@ public abstract class BaseRestaurantsListFragment extends Fragment implements Re
         FragmentManager fragmentManager = getFragmentManager();
         RestoDetailDialogFragment restoDetailDialogFragment = new RestoDetailDialogFragment();
         restoDetailDialogFragment.show(fragmentManager, "MODAL");
-        fragmentManager.executePendingTransactions();
-        if(restoDetailDialogFragment.getDialog() != null) {
-            restoDetailDialogFragment.getDialog().setOnDismissListener(this);
-        }
+        fragmentManager.registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
+            @Override
+            public void onFragmentDestroyed(@NonNull FragmentManager fm, @NonNull Fragment f) {
+                super.onFragmentDestroyed(fm, f);
+                viewModel.updateDisplayRestaurant();
+                fragmentManager.unregisterFragmentLifecycleCallbacks(this);
+            }
+        }, false);
+
     }
 
     // --------------------
@@ -143,11 +149,6 @@ public abstract class BaseRestaurantsListFragment extends Fragment implements Re
                 });
     }
 
-    @Override
-    public void onDismiss(DialogInterface dialogInterface) {
-        viewModel.updateDisplayRestaurant();
-
-    }
 
     // --------------------
     // PERMISSIONS

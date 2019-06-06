@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -525,15 +526,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Calendar resetTime = Calendar.getInstance();
-        Calendar calendar = Calendar.getInstance();
         resetTime.setTimeInMillis(System.currentTimeMillis());
         resetTime.set(Calendar.HOUR_OF_DAY, TIME_RESET[0]);
         resetTime.set(Calendar.MINUTE, TIME_RESET[1]);
         resetTime.set(Calendar.SECOND, 0);
-
-        if(resetTime.before(calendar)){
-            resetTime.add(Calendar.DATE, 1);
-        }
 
         ComponentName receiver = new ComponentName(getApplicationContext(), EraseRestaurantInfo.class);
         PackageManager pm = getApplicationContext().getPackageManager();
