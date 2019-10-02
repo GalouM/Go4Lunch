@@ -29,8 +29,10 @@ You will be remembered everyday at noon where you are going to eat and who is co
 ## API
 * [Google Map API](https://maps.googleapis.com)
 
-## Pattern
-MVVM (with data binding)
+## App Architecture
+* MVVM
+* databinding
+* Java
 
 ## Developed By
 
