@@ -1,12 +1,20 @@
 # Go4Lunch
 -------------
-An Android App to find a place to eat lunch with your coworker
-You can 
+An Android App to find a place to eat lunch with your coworker.
+
+You can: 
 * Visualize the restaurants around you on a map or on a list
 * Display the details of each restaurant and call them directly to book a table
 * See where your cowrker wants to eat
 * Pick a restaurant for todays' lunch
+
 You will be remembered everyday at noon where you are going to eat and who is coming with you
+
+<img src="./screenshots/go4l_auth.jpg" width="30%" height="30%">
+<img src="./screenshots/go4l_menu.jpg" width="30%" height="30%">&ensp;<img src="./screenshots/go4l_settings.jpg" width="30%" height="30%">
+<img src="./screenshots/go4l_list.jpg" width="30%" height="30%">&ensp;<img src="./screenshots/go4l_map.jpg" width="30%" height="30%">&ensp;<img src="./screenshots/go4l_coworkers.jpg" width="30%" height="30%">
+<img src="./screenshots/go4l_details.jpg" width="30%" height="30%">&ensp;<img src="./screenshots/go4l_detailsOpen.jpg" width="30%" height="30%">
+<img src="./screenshots/go4l_search.jpg" width="30%" height="30%">
 
 ## Library
 * [Android Support Library](https://developer.android.com/topic/libraries/support-library/)
